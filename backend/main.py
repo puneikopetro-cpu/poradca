@@ -48,6 +48,33 @@ register_exception_handlers(app)
 Base.metadata.create_all(bind=engine)
 logger.info("DB tables ensured via create_all")
 
+# Auto-seed NBS questions if table is empty
+def _seed_questions():
+    try:
+        import json as _json
+        from backend.database import SessionLocal as _SL
+        from backend.quiz.models import Question as _Q
+        _db = _SL()
+        try:
+            if _db.query(_Q).count() == 0:
+                _json_path = os.path.join(os.path.dirname(__file__), "..", "scripts", "questions.json")
+                if os.path.exists(_json_path):
+                    with open(_json_path, encoding="utf-8") as f:
+                        qs = _json.load(f)
+                    for q in qs:
+                        _db.add(_Q(number=q["number"], section=q["section"],
+                                   sector=q["sector"], level=q["level"],
+                                   text=q["text"], options=q["options"],
+                                   correct=q["correct"]))
+                    _db.commit()
+                    logger.info("Seeded %d NBS questions", len(qs))
+        finally:
+            _db.close()
+    except Exception as e:
+        logger.warning("Question seed failed: %s", e)
+
+_seed_questions()
+
 app.include_router(auth_router)
 app.include_router(profile_router)
 app.include_router(rec_router)
