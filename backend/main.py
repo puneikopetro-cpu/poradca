@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
+import os
 
 from backend.config import settings
 from backend.database import Base, engine
@@ -49,9 +51,21 @@ app.include_router(rec_router)
 app.include_router(leads_router)
 
 
-@app.get("/", tags=["health"])
+@app.get("/health", tags=["health"])
 def health_check():
     return {"status": "ok", "service": "Financial Advisor API"}
+
+
+@app.get("/", include_in_schema=False)
+def serve_frontend():
+    frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend", "index.html")
+    return FileResponse(frontend_path)
+
+
+# Serve static frontend files
+_frontend_dir = os.path.join(os.path.dirname(__file__), "..", "frontend")
+if os.path.isdir(_frontend_dir):
+    app.mount("/static", StaticFiles(directory=_frontend_dir), name="static")
 
 
 @app.post("/telegram/webhook", tags=["telegram"])
