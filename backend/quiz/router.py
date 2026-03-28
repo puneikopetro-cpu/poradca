@@ -63,13 +63,8 @@ def list_sectors(db: Session = Depends(get_db)):
 
 @router.get("/stats")
 def stats(db: Session = Depends(get_db)):
-    total = db.query(Question).count()
-    by_sector = {}
-    for sector, count in db.query(Question.sector, db.query(Question).filter(
-            Question.sector == Question.sector).count.__class__):
-        pass
-    # Simple approach
     from sqlalchemy import func
+    total = db.query(Question).count()
     rows = db.query(Question.sector, func.count(Question.id)).group_by(Question.sector).all()
     return {
         "total": total,
