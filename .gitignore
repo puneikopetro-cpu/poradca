@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+dev.db
+config.env
+.env
+*.egg-info/
+dist/
+.DS_Store
+alembic_temp/
