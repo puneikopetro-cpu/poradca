@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a56db;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e429f;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="60" y="60" width="1080" height="510" rx="20" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+
+  <!-- Logo icon -->
+  <circle cx="140" cy="140" r="50" fill="rgba(255,255,255,0.15)"/>
+  <text x="140" y="152" font-family="Arial" font-size="40" font-weight="bold" fill="white" text-anchor="middle">FA</text>
+
+  <!-- Main title -->
+  <text x="600" y="260" font-family="Arial" font-size="72" font-weight="bold" fill="white" text-anchor="middle">FinAdvisor SK</text>
+
+  <!-- Subtitle -->
+  <text x="600" y="340" font-family="Arial" font-size="32" fill="rgba(255,255,255,0.85)" text-anchor="middle">Financny poradca pre Slovensko</text>
+
+  <!-- Tags -->
+  <rect x="200" y="400" width="200" height="50" rx="25" fill="rgba(255,255,255,0.15)"/>
+  <text x="300" y="431" font-family="Arial" font-size="20" fill="white" text-anchor="middle">Investicie</text>
+
+  <rect x="430" y="400" width="200" height="50" rx="25" fill="rgba(255,255,255,0.15)"/>
+  <text x="530" y="431" font-family="Arial" font-size="20" fill="white" text-anchor="middle">Hypoteky</text>
+
+  <rect x="660" y="400" width="200" height="50" rx="25" fill="rgba(255,255,255,0.15)"/>
+  <text x="760" y="431" font-family="Arial" font-size="20" fill="white" text-anchor="middle">Poistenie</text>
+
+  <rect x="890" y="400" width="200" height="50" rx="25" fill="rgba(255,255,255,0.15)"/>
+  <text x="990" y="431" font-family="Arial" font-size="20" fill="white" text-anchor="middle">Dane</text>
+
+  <!-- CTA -->
+  <text x="600" y="530" font-family="Arial" font-size="24" fill="rgba(255,255,255,0.7)" text-anchor="middle">finadvisor.sk · Bezplatna konzultacia</text>
+</svg>

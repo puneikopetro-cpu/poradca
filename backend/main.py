@@ -83,6 +83,12 @@ def admin_panel():
     return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "admin.html"))
 
 
+@app.get("/og-image.png", include_in_schema=False)
+@app.get("/og-image.svg", include_in_schema=False)
+def og_image():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "og-image.svg"), media_type="image/svg+xml")
+
+
 @app.exception_handler(404)
 async def not_found_handler(request: Request, exc):
     path_404 = os.path.join(os.path.dirname(__file__), "..", "frontend", "404.html")
