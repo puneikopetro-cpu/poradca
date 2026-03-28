@@ -9,6 +9,11 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     TELEGRAM_BOT_TOKEN: Optional[str] = None
+    SMTP_HOST: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+    SMTP_USER: Optional[str] = None
+    SMTP_PASSWORD: Optional[str] = None
+    NOTIFY_EMAIL: str = "petropuneiko@gmail.com"
 
     class Config:
         env_file = ".env"

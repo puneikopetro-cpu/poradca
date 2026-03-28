@@ -209,6 +209,85 @@
     .footer-links a:hover { color: #fff; }
     .footer-bottom { border-top: 1px solid #374151; padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: .8rem; }
 
+    /* TESTIMONIALS */
+    .testimonials { background: var(--white); }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .testimonial-card {
+      background: var(--light); border-radius: var(--radius); padding: 32px;
+      border: 1px solid #e5e7eb; position: relative;
+    }
+    .testimonial-stars { color: #f59e0b; font-size: 1rem; margin-bottom: 16px; letter-spacing: 2px; }
+    .testimonial-text { color: #374151; font-size: .92rem; line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .testimonial-avatar {
+      width: 44px; height: 44px; border-radius: 50%; background: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 1rem; flex-shrink: 0;
+    }
+    .testimonial-name { font-weight: 700; font-size: .9rem; color: var(--dark); }
+    .testimonial-role { font-size: .8rem; color: var(--gray); }
+    .quote-icon {
+      position: absolute; top: 20px; right: 24px;
+      font-size: 2.5rem; opacity: .07; color: var(--blue); font-weight: 800; line-height: 1;
+    }
+
+    /* FAQ */
+    .faq { background: var(--light); }
+    .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .faq-item {
+      background: var(--white); border-radius: var(--radius); border: 1px solid #e5e7eb;
+      overflow: hidden; transition: box-shadow .2s;
+    }
+    .faq-item:hover { box-shadow: var(--shadow); }
+    .faq-q {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 24px; cursor: pointer; font-weight: 600; font-size: .95rem;
+      color: var(--dark); user-select: none;
+    }
+    .faq-q:hover { color: var(--blue); }
+    .faq-icon { font-size: 1.2rem; color: var(--blue); transition: transform .2s; flex-shrink: 0; margin-left: 16px; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s;
+      padding: 0 24px; color: var(--gray); font-size: .9rem; line-height: 1.7;
+    }
+    .faq-item.open .faq-a { max-height: 300px; padding: 0 24px 20px; }
+
+    /* PRICING */
+    .pricing { background: var(--white); }
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto; }
+    .pricing-card {
+      background: var(--white); border-radius: 20px; padding: 40px 32px;
+      border: 2px solid #e5e7eb; text-align: center; position: relative;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.1); }
+    .pricing-card.featured {
+      border-color: var(--blue); background: linear-gradient(180deg, #f0f5ff 0%, #fff 50%);
+      box-shadow: 0 8px 40px rgba(26,86,219,.15);
+    }
+    .pricing-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--blue); color: #fff; font-size: .75rem; font-weight: 700;
+      padding: 4px 16px; border-radius: 999px; white-space: nowrap;
+    }
+    .pricing-name { font-size: 1rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .pricing-price { font-size: 2.8rem; font-weight: 800; color: var(--dark); line-height: 1; }
+    .pricing-price span { font-size: 1rem; font-weight: 500; color: var(--gray); }
+    .pricing-desc { font-size: .88rem; color: var(--gray); margin: 12px 0 28px; }
+    .pricing-features { list-style: none; text-align: left; margin-bottom: 32px; display: flex; flex-direction: column; gap: 10px; }
+    .pricing-features li { display: flex; align-items: flex-start; gap: 10px; font-size: .9rem; color: #374151; }
+    .pricing-features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .btn-pricing {
+      display: block; width: 100%; padding: 13px; border-radius: 10px;
+      font-weight: 700; font-size: .95rem; text-decoration: none; text-align: center;
+      transition: all .2s;
+    }
+    .btn-pricing-outline { border: 2px solid var(--blue); color: var(--blue); background: transparent; }
+    .btn-pricing-outline:hover { background: var(--blue); color: #fff; }
+    .btn-pricing-filled { background: var(--blue); color: #fff; border: 2px solid var(--blue); }
+    .btn-pricing-filled:hover { background: var(--blue-d); border-color: var(--blue-d); }
+
     /* TOAST */
     .toast {
       position: fixed; bottom: 24px; right: 24px; z-index: 999;
@@ -242,8 +321,10 @@
   <div class="logo">Fin<span>Advisor</span> SK</div>
   <ul class="nav-links">
     <li><a href="#sluzby">Sluzby</a></li>
+    <li><a href="#ceny">Ceny</a></li>
     <li><a href="#ako-to-funguje">Ako to funguje</a></li>
-    <li><a href="#preco-my">Preco my</a></li>
+    <li><a href="#referencie">Referencie</a></li>
+    <li><a href="#faq">FAQ</a></li>
     <li><a href="#kontakt">Kontakt</a></li>
   </ul>
   <a href="#kontakt" class="nav-cta">Bezplatna konzultacia</a>
@@ -393,6 +474,157 @@
   </div>
 </section>
 
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="referencie">
+  <div class="section-inner">
+    <div class="section-label">Referencie</div>
+    <h2 class="section-title">Co hovoria nasi klienti</h2>
+    <p class="section-sub">Viac ako 500 spokojnych klientov po celom Slovensku. Tu su niektore z ich skusenosti.</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="quote-icon">"</div>
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Pred sporupracou s FinAdvisor SK som mal uspory len na sporiacom ucte s 0,5% urokom. Dnes mam diverzifikovane portfoio v ETF fondoch a za 2 roky som zarobil takmer 18%. Velmi odporucam!"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MH</div>
+          <div>
+            <div class="testimonial-name">Martin Horvath</div>
+            <div class="testimonial-role">IT specialista, Bratislava</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="quote-icon">"</div>
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Pomohli mi vybrat najlepsiu hypoteku — uspori sme viac ako €130 mesacne oproti ponuke mojej banky. Cely process bol jednoduch a bezstresovy. Skvelá komunikacia a profesionálny pristup."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">LK</div>
+          <div>
+            <div class="testimonial-name">Lucia Kovacova</div>
+            <div class="testimonial-role">Ucitelka, Kosice</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="quote-icon">"</div>
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Vdaka danovym optimalizaciám a spravnemu nastaveniu II. a III. piliera som za rok uspori vyse €600 na daniach. To som vobec neveril, ze je to mozne. Dnes si posielam o 20% menej na dane."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">PV</div>
+          <div>
+            <div class="testimonial-name">Peter Valent</div>
+            <div class="testimonial-role">Zivnostnik, Zilina</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="ceny">
+  <div class="section-inner">
+    <div class="section-label">Cennik</div>
+    <h2 class="section-title">Transparentne ceny, ziadne prekvapenia</h2>
+    <p class="section-sub">Zacnite zadarmo. Platite len za to, co naozaj potrebujete.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-name">Bezplatna konzultacia</div>
+        <div class="pricing-price">0€</div>
+        <div class="pricing-desc">Idealne pre prvý krok — zistite, kde ste a kde by ste mohli byt.</div>
+        <ul class="pricing-features">
+          <li>Uvodni rozhovor (30 min)</li>
+          <li>Analyza vasej aktualnej situacie</li>
+          <li>Orientacne odporucania</li>
+          <li>Bez zaviazkov</li>
+        </ul>
+        <a href="#kontakt" class="btn-pricing btn-pricing-outline">Ziadat konzultaciu</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Najoblubenejsie</div>
+        <div class="pricing-name">Personal poradca</div>
+        <div class="pricing-price">od 50€<span>/hod</span></div>
+        <div class="pricing-desc">Pre klientov, ktori chcu konkretny plan a odbornú pomoc pri realizacii.</div>
+        <ul class="pricing-features">
+          <li>Osobna alebo online konzultacia</li>
+          <li>Personalny financny plan</li>
+          <li>Porovnanie produktov (ETF, hypoteka, poistenie)</li>
+          <li>Pomoc s realizaciou</li>
+          <li>Email podpora 30 dni</li>
+        </ul>
+        <a href="#kontakt" class="btn-pricing btn-pricing-filled">Ziadat o ponuku</a>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-name">Premium</div>
+        <div class="pricing-price">od 200€<span>/mes</span></div>
+        <div class="pricing-desc">Kompletna financna starostlivost pre klientov, ktori chcu mat vsetko v poriadku.</div>
+        <ul class="pricing-features">
+          <li>Vsetko z Personal poradca</li>
+          <li>Mesacny monitoring portfolia</li>
+          <li>Kvartalna revízia planu</li>
+          <li>Prioritna email a telefon podpora</li>
+          <li>Daňové priznanie — pomoc</li>
+          <li>Neobmedzene konzultacie</li>
+        </ul>
+        <a href="#kontakt" class="btn-pricing btn-pricing-outline">Ziadat o Premium</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-inner">
+    <div class="section-label">Caste otazky</div>
+    <h2 class="section-title">Mate otazky? My mame odpovede.</h2>
+    <p class="section-sub">Najcastejsie otazky nasich klientov o financnom poradenstve na Slovensku.</p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>Je prvá konzultacia naozaj zadarmo?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">Ano, prva konzultacia je vzdy bezplatna a bez akychkolvek zaviazkov. Pocas nej sa dozviete, kde sa financne nachádzate a ake moznoti mate. Rozhodnutie o dalšej spolupraci je kompletne na vas.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>Ako funguje II. a III. pilier — ake su rozdiely?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">II. pilier je starobné poistenie — cast vasich odvodov ide do vasho osobneho uctu. III. pilier (doplnkové dochodkove sporenie) je dobrovolne sporenie, na ktore vam stat prida az €180/rok. Oba su silnym nastrojom na sporenié na dochodok — pomoze vam ich spravne nastavit.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>Colko mozem usetrit na daniach ako zamestnanec?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">Priemerny zamestnanec moze usetrit €200-500/rok spravnym vyuzitim odratatelnych poloziek, príspevkami do III. piliera a daňovym bonusom na deti. Pre zivnostnikov je potencial este väčší — az €800+/rok.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>Je investovanie do ETF fondov bezpecne?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">ETF fondy su regulovane a transparentne investicné nastroje. Investujú do tisícok spolocnosti naraz (napr. MSCI World obsahuje 1 500+ firiem). Kratkodoba volatilita existuje, ale z dlhodobeho pohladu (5+ rokov) ETF fondy konzistentne rastú. Vazne odporucame dlhodoby investicny horizont.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>Aká je minimalna suma na zaciatok investovania?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">Zacat mozete uz od €25/mes pri III. pilieri alebo od €50/mes pri ETF fondoch cez brokerov. Dolezitejsie ako vyska sumy je pravidelnost a cas. Kto zacne investovat o 10 rokov neskor, moze stratit statisíce na zlozenom urokovani.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>Ako si vybrat najlepsiu hypoteku na Slovensku?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">Dolezite su: urokova sadzba, fixacia (1, 3, 5, 10 rokov), poplatky za vybavenie, moznost mimoriadnych splatok a podmienky refinancovania. Rozdiel medzi bankami moze byt az €100-200/mes. Preto odporucame porovnat minimálne 5 bank a nerozhodoat sa len podla reklamy — pomoze vam s tym nas bezplatny servis.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section class="contact" id="kontakt">
   <div class="section-inner">
@@ -498,6 +730,14 @@
         </ul>
       </div>
       <div class="footer-links">
+        <h4>Informacie</h4>
+        <ul>
+          <li><a href="#ceny">Cennik</a></li>
+          <li><a href="#faq">Caste otazky</a></li>
+          <li><a href="/privacy">Ochrana osobnych udajov</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
         <h4>Kontakt</h4>
         <ul>
           <li><a href="mailto:petropuneiko@gmail.com">petropuneiko@gmail.com</a></li>
@@ -517,6 +757,13 @@
 <div class="toast" id="toast"></div>
 
 <script>
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains("open");
+    document.querySelectorAll(".faq-item.open").forEach(i => i.classList.remove("open"));
+    if (!isOpen) item.classList.add("open");
+  }
+
   const API = "https://finadvisor.sk";
 
   function showToast(msg, type="") {

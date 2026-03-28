@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stranka nenajdena — FinAdvisor SK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:    #1a56db;
+      --blue-d:  #1e429f;
+      --blue-l:  #e8f0fe;
+      --dark:    #111827;
+      --gray:    #6b7280;
+      --light:   #f9fafb;
+      --white:   #ffffff;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--dark);
+      background: linear-gradient(135deg, #f0f5ff 0%, #ffffff 60%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 68px;
+      background: rgba(255,255,255,.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .logo { font-size: 1.35rem; font-weight: 800; color: var(--blue); letter-spacing: -.5px; text-decoration: none; }
+    .logo span { color: var(--dark); }
+
+    .error-container {
+      max-width: 560px;
+      padding: 60px 40px;
+    }
+
+    .error-code {
+      font-size: clamp(6rem, 15vw, 10rem);
+      font-weight: 800;
+      color: var(--blue);
+      line-height: 1;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-d) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .error-icon {
+      font-size: 4rem;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: var(--dark);
+    }
+
+    p {
+      color: var(--gray);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--blue); color: #fff; padding: 14px 32px; border-radius: 10px;
+      font-weight: 700; font-size: 1rem; border: none; cursor: pointer;
+      text-decoration: none; transition: transform .2s, background .2s; display: inline-block;
+    }
+    .btn-primary:hover { background: var(--blue-d); transform: translateY(-2px); }
+
+    .btn-outline {
+      background: transparent; color: var(--blue); padding: 14px 32px; border-radius: 10px;
+      font-weight: 700; font-size: 1rem; border: 2px solid var(--blue); cursor: pointer;
+      text-decoration: none; transition: all .2s; display: inline-block;
+    }
+    .btn-outline:hover { background: var(--blue); color: #fff; transform: translateY(-2px); }
+
+    .quick-links {
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .quick-links a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 500;
+      transition: color .2s;
+    }
+
+    .quick-links a:hover { color: var(--blue); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Fin<span>Advisor</span> SK</a>
+</nav>
+
+<div class="error-container">
+  <span class="error-icon">🔍</span>
+  <div class="error-code">404</div>
+  <h1>Stranka nenajdena</h1>
+  <p>Tato stranka neexistuje alebo bola premiestnena. Skuste sa vratit na hlavnu stranku alebo nas kontaktujte — radi pomozeme.</p>
+
+  <div class="btn-group">
+    <a href="/" class="btn-primary">Ist na hlavnu stranku</a>
+    <a href="/#kontakt" class="btn-outline">Kontaktovat nas</a>
+  </div>
+
+  <div class="quick-links">
+    <a href="/#sluzby">Nase sluzby</a>
+    <a href="/#ako-to-funguje">Ako to funguje</a>
+    <a href="/#preco-my">Preco my</a>
+    <a href="/privacy">Ochrana udajov</a>
+  </div>
+</div>
+
+</body>
+</html>

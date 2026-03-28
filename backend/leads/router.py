@@ -6,6 +6,7 @@ from backend.database import get_db
 from backend.leads.models import Lead
 from backend.leads.schemas import LeadCreate, LeadOut
 from backend.logger import get_logger
+from backend.email_service import send_lead_notification
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/leads", tags=["leads"])
@@ -18,6 +19,16 @@ def create_lead(data: LeadCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(lead)
     logger.info("New lead: %s <%s> interest=%s source=%s", lead.full_name, lead.email, lead.interest, lead.source)
+    try:
+        send_lead_notification(
+            lead_name=lead.full_name,
+            lead_email=lead.email,
+            lead_phone=lead.phone or "",
+            interest=str(lead.interest.value) if lead.interest else "",
+            message=lead.message or "",
+        )
+    except Exception as e:
+        logger.warning("Email notification failed: %s", e)
     return lead
 
 

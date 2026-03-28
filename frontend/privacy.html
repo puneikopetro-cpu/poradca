@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ochrana osobnych udajov — FinAdvisor SK</title>
+  <meta name="description" content="Zasady ochrany osobnych udajov pre finadvisor.sk" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:    #1a56db;
+      --blue-d:  #1e429f;
+      --blue-l:  #e8f0fe;
+      --green:   #0e9f6e;
+      --dark:    #111827;
+      --gray:    #6b7280;
+      --light:   #f9fafb;
+      --white:   #ffffff;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(0,0,0,.08);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--dark); background: var(--white); line-height: 1.7; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 68px;
+      background: rgba(255,255,255,.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .logo { font-size: 1.35rem; font-weight: 800; color: var(--blue); letter-spacing: -.5px; text-decoration: none; }
+    .logo span { color: var(--dark); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--gray); font-size: .9rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-cta {
+      background: var(--blue); color: #fff; border: none; border-radius: 8px;
+      padding: 10px 22px; font-size: .9rem; font-weight: 600; cursor: pointer;
+      text-decoration: none; transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--blue-d); }
+
+    .page-hero {
+      padding: 120px 5% 60px;
+      background: linear-gradient(135deg, #f0f5ff 0%, #ffffff 60%);
+    }
+    .page-hero-inner { max-width: 800px; margin: 0 auto; }
+    .page-label { font-size: .8rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
+    .page-hero h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; margin-bottom: 16px; }
+    .page-hero p { color: var(--gray); font-size: 1rem; }
+
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 5% 80px;
+    }
+
+    .policy-section { margin-bottom: 48px; }
+    .policy-section h2 {
+      font-size: 1.2rem; font-weight: 700; color: var(--dark);
+      margin-bottom: 12px; padding-bottom: 10px;
+      border-bottom: 2px solid var(--blue-l);
+    }
+    .policy-section p { color: #374151; margin-bottom: 12px; font-size: .95rem; }
+    .policy-section ul { list-style: none; padding: 0; }
+    .policy-section ul li {
+      padding: 8px 0 8px 28px;
+      position: relative;
+      color: #374151;
+      font-size: .95rem;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .policy-section ul li::before {
+      content: '✓';
+      position: absolute; left: 0;
+      color: var(--blue); font-weight: 700;
+    }
+
+    .highlight-box {
+      background: var(--blue-l);
+      border-left: 4px solid var(--blue);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+    .highlight-box p { margin: 0; color: var(--dark); font-size: .95rem; }
+
+    .contact-box {
+      background: var(--light);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin-top: 40px;
+      border: 1px solid #e5e7eb;
+    }
+    .contact-box h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .contact-box p { color: var(--gray); font-size: .9rem; margin-bottom: 6px; }
+    .contact-box a { color: var(--blue); text-decoration: none; font-weight: 600; }
+    .contact-box a:hover { text-decoration: underline; }
+
+    footer { background: var(--dark); color: #9ca3af; padding: 48px 5% 32px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 32px; margin-bottom: 40px; }
+    .footer-brand .logo { font-size: 1.2rem; margin-bottom: 10px; display: block; }
+    .footer-brand p { font-size: .85rem; max-width: 280px; }
+    .footer-links h4 { color: #fff; font-size: .9rem; font-weight: 700; margin-bottom: 16px; }
+    .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-links a { color: #9ca3af; text-decoration: none; font-size: .85rem; transition: color .2s; }
+    .footer-links a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid #374151; padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: .8rem; }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Fin<span>Advisor</span> SK</a>
+  <ul class="nav-links">
+    <li><a href="/#sluzby">Sluzby</a></li>
+    <li><a href="/#kontakt">Kontakt</a></li>
+    <li><a href="/privacy">Ochrana udajov</a></li>
+  </ul>
+  <a href="/#kontakt" class="nav-cta">Bezplatna konzultacia</a>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-label">Pravne informacie</div>
+    <h1>Ochrana osobnych udajov</h1>
+    <p>Posledna aktualizacia: 1. januara 2025 &nbsp;|&nbsp; Platnost pre: finadvisor.sk</p>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="highlight-box">
+    <p><strong>Vase sukromie je pre nas dolezite.</strong> Tato stranka vam vysvetluje, ake osobne udaje zbierate, preco ich pouzivame a ake su vase prava podla nariadenia GDPR (EU) 2016/679.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>1. Prevadzkovatel osobnych udajov</h2>
+    <p>Prevadzkovatelom osobnych udajov v zmysle clanku 4 bodu 7 nariadenia GDPR je:</p>
+    <p><strong>Petro Puneiko</strong><br />
+    Webova stranka: <strong>finadvisor.sk</strong><br />
+    Email: <a href="mailto:petropuneiko@gmail.com">petropuneiko@gmail.com</a><br />
+    Tel.: +421 908 118 957</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>2. Ake osobne udaje zbierame</h2>
+    <p>Pri vyplneni kontaktneho formulara na nasej webstranke zbierate nasledujuce udaje:</p>
+    <ul>
+      <li>Meno a priezvisko</li>
+      <li>Emailova adresa</li>
+      <li>Telefonny kontakt (volitelne)</li>
+      <li>Oblast zaujmu (investicie, hypoteka, poistenie, dane)</li>
+      <li>Obsah spravy / otazky</li>
+      <li>Zdroj ziadosti (web, Telegram)</li>
+    </ul>
+    <p style="margin-top:16px;">Pri pouzivani Telegram bota mozeme spracuvat:</p>
+    <ul>
+      <li>Telegram ID a pouzivatelske meno</li>
+      <li>Financne udaje zadane dobrovolne v ramci analyzy (prijem, vydavky, sporenia)</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>3. Ucel spracovania a pravny zaklad</h2>
+    <ul>
+      <li><strong>Vybavenie ziadosti o konzultaciu</strong> — pravny zaklad: Clanok 6 ods. 1 pism. b) GDPR (plnenie zmluvy / predzmluvne rokovanie)</li>
+      <li><strong>Financne poradenstvo a zostavenie osobneho planu</strong> — pravny zaklad: Clanok 6 ods. 1 pism. b) GDPR</li>
+      <li><strong>Odosielanie informacnych materialov</strong> — pravny zaklad: Clanok 6 ods. 1 pism. a) GDPR (suhlas dotknutej osoby)</li>
+      <li><strong>Vedenie evidencie klientov</strong> — pravny zaklad: Clanok 6 ods. 1 pism. c) GDPR (pravna povinnost)</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>4. Doba uchovania udajov</h2>
+    <p>Vase osobne udaje uchovavame po dobu nevyhnutne potrebnu na naplnenie ucelu, na ktory boli ziskane:</p>
+    <ul>
+      <li>Kontaktne udaje z formulara — <strong>2 roky</strong> od poslednej komunikacie</li>
+      <li>Udaje z Telegram bota — <strong>1 rok</strong> od poslednej interakcie</li>
+      <li>Zmluvna dokumentacia — <strong>10 rokov</strong> podla zakona o uchovaní uchovnich zaznamov</li>
+    </ul>
+    <p>Po uplynutí doby uchovania su udaje bezpecne vymazane alebo anonymizovane.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>5. Odovzdavanie udajov tretim stranam</h2>
+    <p>Vase udaje <strong>nepredavame</strong> tretim stranam na komerene ucely. Udaje mozu byt sprístupnene:</p>
+    <ul>
+      <li>Poskytovatelom IT infrastruktury (Railway.app — hosting v EU)</li>
+      <li>Spolocnosti Telegram (len technicky nevyhnutne metadata pre fungovanie bota)</li>
+      <li>Statnym organom — len na zaklade zakonnej povinnosti</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>6. Vase prava podla GDPR</h2>
+    <p>Ako dotknutá osoba mate nasledujuce prava:</p>
+    <ul>
+      <li><strong>Pravo na pristup</strong> — mozete poziadat o kópiu vasich osobnych udajov, ktore spracúvame</li>
+      <li><strong>Pravo na opravu</strong> — mozete poziadat o opravu nepresnych alebo neuplnych udajov</li>
+      <li><strong>Pravo na vymazanie ("zabudnutie")</strong> — mozete poziadat o vymazanie vasich udajov za podmienok stanovenych GDPR</li>
+      <li><strong>Pravo na obmedzenie spracovania</strong> — mozete poziadat o docasne obmedzenie spracovania vasich udajov</li>
+      <li><strong>Pravo na prenositelnost</strong> — mate pravo ziskat udaje v strukturovanom, bezne pouzitelnom formate</li>
+      <li><strong>Pravo namietat</strong> — mozete namieta spracovanie vasich udajov na ucel priameho marketingu</li>
+      <li><strong>Pravo odvolat suhlas</strong> — ak je spracovanie zalozene na suhlase, mozete ho kedykolvek odvolat</li>
+    </ul>
+    <p style="margin-top:16px;">Na uplatnenie svojich prav nas kontaktujte emailom: <a href="mailto:petropuneiko@gmail.com">petropuneiko@gmail.com</a>. Na vasu ziadost odpovieme do 30 dni.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>7. Zabezpecenie osobnych udajov</h2>
+    <p>Prijali sme primerané technické a organizacne opatrenia na ochranu vasich osobnych udajov pred neautorizovanym pristupom, stratou alebo znicenim:</p>
+    <ul>
+      <li>Sifrovane HTTPS spojenie (SSL/TLS)</li>
+      <li>Sifrovanie hesiel a citlivych dat v databaze</li>
+      <li>Pristup k udajom ma iba opravnena osoba</li>
+      <li>Pravidelne zalohovanie dat</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>8. Subory cookie</h2>
+    <p>Nasa webstranka pouziva iba technicky nevyhnutne cookie (sessionove cookie pre fungovanie API). Nepouzivame analytické ani marketingove cookie bez vasho suhlasu.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>9. Pravo podat saznost</h2>
+    <p>Ak sa domnievate, ze spracovanie vasich osobnych udajov je v rozpore s nariadenim GDPR, mate pravo podat saznost na dozorny organ:</p>
+    <p><strong>Urad na ochranu osobnych udajov Slovenskej republiky</strong><br />
+    Hranicna 12, 820 07 Bratislava 27<br />
+    Web: <a href="https://www.dataprotection.gov.sk" target="_blank">www.dataprotection.gov.sk</a></p>
+  </div>
+
+  <div class="policy-section">
+    <h2>10. Zmeny zasad ochrany osobnych udajov</h2>
+    <p>Tieto zasady mozeme priebezne aktualizovat. O podstatnych zmenach vas budeme informovat emailom alebo prostrednictvom oznamenia na nasej webstranke. Odporucame pravidelne kontrolovat tuto stranku.</p>
+  </div>
+
+  <div class="contact-box">
+    <h3>Kontaktujte nas</h3>
+    <p>Ak mate otazky tykajuce sa ochrany vasich osobnych udajov alebo si chcete uplatnit vase prava, kontaktujte nas:</p>
+    <p>Email: <a href="mailto:petropuneiko@gmail.com">petropuneiko@gmail.com</a></p>
+    <p>Tel.: <a href="tel:+421908118957">+421 908 118 957</a></p>
+    <p style="margin-top:12px;"><a href="/" class="nav-cta" style="display:inline-block;padding:10px 22px;border-radius:8px;font-size:.9rem;font-weight:600;background:var(--blue);color:#fff;text-decoration:none;">Spat na hlavnu stranku</a></p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="logo" style="color:var(--blue);">Fin<span style="color:#fff">Advisor</span> SK</a>
+        <p>Profesionalny financny poradca na Slovensku. Investicie, hypoteky, poistenie a danove poradenstvo.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Sluzby</h4>
+        <ul>
+          <li><a href="/#sluzby">Investovanie</a></li>
+          <li><a href="/#sluzby">Hypoteky</a></li>
+          <li><a href="/#sluzby">Poistenie</a></li>
+          <li><a href="/#sluzby">Danove optimalizacie</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Informacie</h4>
+        <ul>
+          <li><a href="/privacy">Ochrana osobnych udajov</a></li>
+          <li><a href="mailto:petropuneiko@gmail.com">petropuneiko@gmail.com</a></li>
+          <li><a href="tel:+421908118957">+421 908 118 957</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 FinAdvisor SK. Vsetky prava vyhradene.</span>
+      <span>Licencovany financny sprostredkovatel | NBS</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

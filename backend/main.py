@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.exceptions import HTTPException as FastAPIHTTPException
 import os
 
 from backend.config import settings
@@ -60,6 +61,34 @@ def health_check():
 def serve_frontend():
     frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend", "index.html")
     return FileResponse(frontend_path)
+
+
+@app.get("/robots.txt", include_in_schema=False)
+def robots():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "robots.txt"), media_type="text/plain")
+
+
+@app.get("/sitemap.xml", include_in_schema=False)
+def sitemap():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "sitemap.xml"), media_type="application/xml")
+
+
+@app.get("/privacy", include_in_schema=False)
+def privacy():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "privacy.html"))
+
+
+@app.get("/admin", include_in_schema=False)
+def admin_panel():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "admin.html"))
+
+
+@app.exception_handler(404)
+async def not_found_handler(request: Request, exc):
+    path_404 = os.path.join(os.path.dirname(__file__), "..", "frontend", "404.html")
+    if os.path.exists(path_404):
+        return FileResponse(path_404, status_code=404)
+    return JSONResponse({"error": "Not found"}, status_code=404)
 
 
 # Serve static frontend files
