@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from backend.auth.dependencies import get_current_user
 from backend.database import get_db
 from backend.leads.models import Lead
 from backend.leads.schemas import LeadCreate, LeadOut
@@ -21,6 +22,6 @@ def create_lead(data: LeadCreate, db: Session = Depends(get_db)):
 
 
 @router.get("", response_model=list[LeadOut])
-def list_leads(db: Session = Depends(get_db)):
+def list_leads(db: Session = Depends(get_db), _=Depends(get_current_user)):
     """Admin endpoint — list all leads."""
     return db.query(Lead).order_by(Lead.created_at.desc()).all()
