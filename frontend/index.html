@@ -26,6 +26,45 @@
   <!-- Canonical -->
   <link rel="canonical" href="https://finadvisor.sk/" />
 
+  <!-- Schema.org: LocalBusiness + FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "FinancialService",
+        "@id": "https://finadvisor.sk/#business",
+        "name": "FinAdvisor SK",
+        "description": "Profesionalny financny poradca na Slovensku. Investicie, hypoteky, poistenie, danove optimalizacie.",
+        "url": "https://finadvisor.sk",
+        "logo": "https://finadvisor.sk/og-image.png",
+        "image": "https://finadvisor.sk/og-image.png",
+        "telephone": "+421908118957",
+        "email": "petropuneiko@gmail.com",
+        "address": { "@type": "PostalAddress", "addressCountry": "SK" },
+        "areaServed": "SK",
+        "priceRange": "0€ - 200€+",
+        "sameAs": ["https://t.me/finadvisor_sk_bot"],
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "reviewCount": "127",
+          "bestRating": "5"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "Je prva konzultacia naozaj zadarmo?", "acceptedAnswer": { "@type": "Answer", "text": "Ano, prva konzultacia je vzdy bezplatna a bez akychkolvek zaviazkov. Pocas nej sa dozviete, kde sa financne nachadzate a ake moznosti mate." } },
+          { "@type": "Question", "name": "Ako funguje II. a III. pilier?", "acceptedAnswer": { "@type": "Answer", "text": "II. pilier je starobne poistenie — cast vasich odvodov ide do vasho osobneho uctu. III. pilier je dobrovolne sporenie, na ktore vam stat prida az 180 eur/rok." } },
+          { "@type": "Question", "name": "Je investovanie do ETF fondov bezpecne?", "acceptedAnswer": { "@type": "Answer", "text": "ETF fondy su regulovane a transparentne nastroje, ktore investuju do tisicok spolocnosti naraz. Z dlhodobeho pohladu (5+ rokov) ETF fondy konzistentne rastu." } },
+          { "@type": "Question", "name": "Ako si vybrat najlepsiu hypoteku na Slovensku?", "acceptedAnswer": { "@type": "Answer", "text": "Dolezite su urokova sadzba, fixacia (1–10 rokov), poplatky za vybavenie a podmienky refinancovania. Rozdiel medzi bankami moze byt az 100–200 eur mesacne." } }
+        ]
+      }
+    ]
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
@@ -309,6 +348,72 @@
     .btn-pricing-filled { background: var(--blue); color: #fff; border: 2px solid var(--blue); }
     .btn-pricing-filled:hover { background: var(--blue-d); border-color: var(--blue-d); }
 
+    /* NBS TRUST BADGE */
+    .nbs-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; border: 1.5px solid #e5e7eb; border-radius: 10px;
+      padding: 8px 16px; font-size: .8rem; font-weight: 600; color: var(--dark);
+      box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-top: 24px;
+    }
+    .nbs-badge .nbs-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+    /* PARTNERS */
+    .partners { background: var(--white); padding: 40px 5%; border-bottom: 1px solid #f3f4f6; }
+    .partners-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+    .partners-label { font-size: .78rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray); margin-bottom: 24px; }
+    .partners-logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 20px; }
+    .partner-logo {
+      background: var(--light); border: 1px solid #e5e7eb; border-radius: 10px;
+      padding: 10px 20px; font-size: .82rem; font-weight: 700; color: var(--gray);
+      letter-spacing: .5px; white-space: nowrap; transition: all .2s;
+    }
+    .partner-logo:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-l); }
+
+    /* CALCULATOR */
+    .calculator { background: var(--light); }
+    .calc-tabs { display: flex; gap: 0; margin-bottom: 32px; border-radius: 12px; overflow: hidden; border: 1.5px solid #e5e7eb; max-width: 400px; }
+    .calc-tab {
+      flex: 1; padding: 12px 20px; text-align: center; font-size: .9rem; font-weight: 600;
+      cursor: pointer; background: var(--white); color: var(--gray); transition: all .2s; border: none;
+    }
+    .calc-tab.active { background: var(--blue); color: #fff; }
+    .calc-panel { display: none; }
+    .calc-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    .calc-form { background: var(--white); border-radius: 16px; padding: 32px; box-shadow: var(--shadow); }
+    .calc-form h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 24px; }
+    .calc-group { margin-bottom: 20px; }
+    .calc-group label { display: flex; justify-content: space-between; font-size: .85rem; font-weight: 600; margin-bottom: 8px; }
+    .calc-group label span { color: var(--blue); font-weight: 700; }
+    .calc-group input[type=range] { width: 100%; accent-color: var(--blue); }
+    .calc-result { background: linear-gradient(135deg, var(--blue) 0%, var(--blue-d) 100%); border-radius: 16px; padding: 32px; color: #fff; }
+    .calc-result h3 { font-size: 1rem; opacity: .8; margin-bottom: 20px; }
+    .calc-result-val { font-size: 2.6rem; font-weight: 800; margin-bottom: 4px; }
+    .calc-result-label { font-size: .85rem; opacity: .75; margin-bottom: 24px; }
+    .calc-result-items { display: flex; flex-direction: column; gap: 10px; }
+    .calc-result-item { display: flex; justify-content: space-between; background: rgba(255,255,255,.12); border-radius: 8px; padding: 10px 14px; font-size: .88rem; }
+    .calc-result-item span:last-child { font-weight: 700; }
+    .calc-cta { margin-top: 20px; display: block; text-align: center; background: #fff; color: var(--blue); border-radius: 8px; padding: 12px; font-weight: 700; font-size: .9rem; text-decoration: none; }
+    .calc-cta:hover { background: #f0f5ff; }
+    @media(max-width:900px){ .calc-panel.active { grid-template-columns: 1fr; } }
+
+    /* BLOG */
+    .blog { background: var(--white); }
+    .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .blog-card {
+      border-radius: var(--radius); overflow: hidden; border: 1px solid #e5e7eb;
+      transition: transform .2s, box-shadow .2s; text-decoration: none; color: inherit; display: block;
+    }
+    .blog-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.1); }
+    .blog-img {
+      height: 160px; display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+    }
+    .blog-body { padding: 20px; }
+    .blog-tag { font-size: .75rem; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .blog-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+    .blog-desc { font-size: .85rem; color: var(--gray); line-height: 1.6; }
+    .blog-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; font-size: .8rem; color: var(--gray); }
+
     /* TOAST */
     .toast {
       position: fixed; bottom: 24px; right: 24px; z-index: 999;
@@ -342,9 +447,10 @@
   <div class="logo">Fin<span>Advisor</span> SK</div>
   <ul class="nav-links">
     <li><a href="#sluzby">Sluzby</a></li>
+    <li><a href="#kalkulator">Kalkulacka</a></li>
     <li><a href="#ceny">Ceny</a></li>
-    <li><a href="#ako-to-funguje">Ako to funguje</a></li>
     <li><a href="#referencie">Referencie</a></li>
+    <li><a href="#blog">Blog</a></li>
     <li><a href="#faq">FAQ</a></li>
     <li><a href="#kontakt">Kontakt</a></li>
   </ul>
@@ -370,6 +476,10 @@
         <div class="stat"><div class="stat-num">12+</div><div class="stat-lbl">rokov skusenosti</div></div>
         <div class="stat"><div class="stat-num">€2M+</div><div class="stat-lbl">zainvestovanych prostriedkov</div></div>
       </div>
+      <div class="nbs-badge">
+        <div class="nbs-dot"></div>
+        Registrovany financny sprostredkovatel | NBS Slovakia
+      </div>
     </div>
     <div class="hero-visual">
       <div class="card-header">
@@ -388,6 +498,104 @@
         <div class="p-item"><span class="p-name">Dlhopisy SK</span><span class="p-val">€12 100</span><span class="p-badge">+5.8%</span></div>
         <div class="p-item"><span class="p-name">III. pilier</span><span class="p-val">€13 320</span><span class="p-badge">+9.1%</span></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="partners">
+  <div class="partners-inner">
+    <div class="partners-label">Spolupracujeme s poprednymi bankami a poisťovnami na Slovensku</div>
+    <div class="partners-logos">
+      <div class="partner-logo">Tatra banka</div>
+      <div class="partner-logo">VÚB banka</div>
+      <div class="partner-logo">SLSP</div>
+      <div class="partner-logo">ČSOB</div>
+      <div class="partner-logo">mBank</div>
+      <div class="partner-logo">UniCredit</div>
+      <div class="partner-logo">Allianz</div>
+      <div class="partner-logo">Generali</div>
+      <div class="partner-logo">AXA / BNP</div>
+      <div class="partner-logo">NN Slovensko</div>
+      <div class="partner-logo">Kooperativa</div>
+      <div class="partner-logo">IAD Investments</div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="calculator section" id="kalkulator">
+  <div class="section-header">
+    <div class="section-label">Nástroje</div>
+    <h2 class="section-title">Financne kalkulačky</h2>
+    <p class="section-sub">Zistite okamzite, kolko zaplatite za hypoteku alebo kolko zarobite investovanim</p>
+  </div>
+  <div class="calc-tabs">
+    <button class="calc-tab active" onclick="switchCalc('hypoteka')">🏠 Hypoteka</button>
+    <button class="calc-tab" onclick="switchCalc('investicia')">📈 Investicia</button>
+  </div>
+
+  <!-- HYPOTEKA -->
+  <div class="calc-panel active" id="calc-hypoteka">
+    <div class="calc-form">
+      <h3>Hypotekárna kalkulačka</h3>
+      <div class="calc-group">
+        <label>Suma hypoteky <span id="hyp-suma-val">150 000 €</span></label>
+        <input type="range" min="20000" max="500000" step="5000" value="150000" oninput="calcHyp()" id="hyp-suma">
+      </div>
+      <div class="calc-group">
+        <label>Urokova sadzba <span id="hyp-rate-val">3.5%</span></label>
+        <input type="range" min="1" max="8" step="0.1" value="3.5" oninput="calcHyp()" id="hyp-rate">
+      </div>
+      <div class="calc-group">
+        <label>Doba splatnosti <span id="hyp-years-val">25 rokov</span></label>
+        <input type="range" min="5" max="30" step="1" value="25" oninput="calcHyp()" id="hyp-years">
+      </div>
+    </div>
+    <div class="calc-result">
+      <h3>Vas mesacny splatok</h3>
+      <div class="calc-result-val" id="hyp-mesacne">751 €</div>
+      <div class="calc-result-label">mesacna splátka</div>
+      <div class="calc-result-items">
+        <div class="calc-result-item"><span>Celkova suma splatok</span><span id="hyp-celkom">—</span></div>
+        <div class="calc-result-item"><span>Zaplatene uroky</span><span id="hyp-uroky">—</span></div>
+        <div class="calc-result-item"><span>Urok / mes</span><span id="hyp-uroky-mes">—</span></div>
+      </div>
+      <a href="#kontakt" class="calc-cta">Ziskat najlepsiu sadzbu →</a>
+    </div>
+  </div>
+
+  <!-- INVESTICIA -->
+  <div class="calc-panel" id="calc-investicia">
+    <div class="calc-form">
+      <h3>Investicna kalkulačka (ETF/Fondy)</h3>
+      <div class="calc-group">
+        <label>Pravidelna investicia <span id="inv-mes-val">200 €/mes</span></label>
+        <input type="range" min="20" max="2000" step="10" value="200" oninput="calcInv()" id="inv-mes">
+      </div>
+      <div class="calc-group">
+        <label>Jednorazova investicia <span id="inv-jed-val">5 000 €</span></label>
+        <input type="range" min="0" max="100000" step="1000" value="5000" oninput="calcInv()" id="inv-jed">
+      </div>
+      <div class="calc-group">
+        <label>Rocny vynos <span id="inv-rate-val">7%</span></label>
+        <input type="range" min="1" max="15" step="0.5" value="7" oninput="calcInv()" id="inv-rate">
+      </div>
+      <div class="calc-group">
+        <label>Horizont <span id="inv-years-val">10 rokov</span></label>
+        <input type="range" min="1" max="40" step="1" value="10" oninput="calcInv()" id="inv-years">
+      </div>
+    </div>
+    <div class="calc-result">
+      <h3>Vas investicny vysledok</h3>
+      <div class="calc-result-val" id="inv-vysledok">—</div>
+      <div class="calc-result-label">celkova hodnota portfólia</div>
+      <div class="calc-result-items">
+        <div class="calc-result-item"><span>Vlozene prostriedky</span><span id="inv-vlozene">—</span></div>
+        <div class="calc-result-item"><span>Zisk z investovania</span><span id="inv-zisk">—</span></div>
+        <div class="calc-result-item"><span>Zhodnotenie</span><span id="inv-pct">—</span></div>
+      </div>
+      <a href="#kontakt" class="calc-cta">Zacit investovat →</a>
     </div>
   </div>
 </section>
@@ -733,6 +941,71 @@
   </a>
 </div>
 
+<!-- BLOG -->
+<section class="blog section" id="blog">
+  <div class="section-header">
+    <div class="section-label">Financne vzdelavanie</div>
+    <h2 class="section-title">Praktické rady a návody</h2>
+    <p class="section-sub">Bezplatné finančné vzdelávanie pre každého na Slovensku</p>
+  </div>
+  <div class="blog-grid">
+    <a class="blog-card" href="#kontakt">
+      <div class="blog-img" style="background:linear-gradient(135deg,#e8f0fe,#c7d7fc)">🏠</div>
+      <div class="blog-body">
+        <div class="blog-tag">Hypotéky</div>
+        <div class="blog-title">Ako si vybrať hypotéku v roku 2025 — kompletný sprievodca</div>
+        <div class="blog-desc">Porovnanie bánk, fixácia úrokovej sadzby, RPMN — všetko čo potrebujete vedieť pred podpisom zmluvy.</div>
+        <div class="blog-footer"><span>5 min čítanie</span><span style="color:var(--blue)">Čítať →</span></div>
+      </div>
+    </a>
+    <a class="blog-card" href="#kontakt">
+      <div class="blog-img" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0)">📈</div>
+      <div class="blog-body">
+        <div class="blog-tag">Investície</div>
+        <div class="blog-title">ETF fondy pre začiatočníkov — ako investovať 100 € mesačne</div>
+        <div class="blog-desc">Indexové ETF fondy, diverzifikácia, rebalancing. Reálny príklad portfólia od 100 € mesačne s výnosom 7 %/rok.</div>
+        <div class="blog-footer"><span>7 min čítanie</span><span style="color:var(--blue)">Čítať →</span></div>
+      </div>
+    </a>
+    <a class="blog-card" href="#kontakt">
+      <div class="blog-img" style="background:linear-gradient(135deg,#fef3c7,#fde68a)">🏦</div>
+      <div class="blog-body">
+        <div class="blog-tag">Dôchodok</div>
+        <div class="blog-title">II. a III. pilier na Slovensku — kde je lepšie mať peniaze?</div>
+        <div class="blog-desc">Porovnanie II. piliera (starobné dôchodkové sporenie) a III. piliera — štátny príspevok 180 €/rok a daňová úspora.</div>
+        <div class="blog-footer"><span>6 min čítanie</span><span style="color:var(--blue)">Čítať →</span></div>
+      </div>
+    </a>
+    <a class="blog-card" href="#kontakt">
+      <div class="blog-img" style="background:linear-gradient(135deg,#fde8e8,#fca5a5)">🛡️</div>
+      <div class="blog-body">
+        <div class="blog-tag">Poistenie</div>
+        <div class="blog-title">Životné poistenie — kedy ho naozaj potrebujete a kedy preplácate</div>
+        <div class="blog-desc">Rizikové vs. investičné životné poistenie. Ako nespadnúť do pasce nevýhodných produktov a ušetriť až 200 €/rok.</div>
+        <div class="blog-footer"><span>4 min čítanie</span><span style="color:var(--blue)">Čítať →</span></div>
+      </div>
+    </a>
+    <a class="blog-card" href="#kontakt">
+      <div class="blog-img" style="background:linear-gradient(135deg,#ede9fe,#c4b5fd)">🧾</div>
+      <div class="blog-body">
+        <div class="blog-tag">Dane</div>
+        <div class="blog-title">Daňové priznanie SZČO 2025 — čo si môžete odpočítať</div>
+        <div class="blog-desc">Paušálne výdavky 60 % (max 20 000 €), odpočet na manžela/ku, príspevky na III. pilier. Ušetrite na daniach legálne.</div>
+        <div class="blog-footer"><span>8 min čítanie</span><span style="color:var(--blue)">Čítať →</span></div>
+      </div>
+    </a>
+    <a class="blog-card" href="#kontakt">
+      <div class="blog-img" style="background:linear-gradient(135deg,#e0f2fe,#bae6fd)">💳</div>
+      <div class="blog-body">
+        <div class="blog-tag">Úvery</div>
+        <div class="blog-title">Ako sa zbaviť dlhov — metóda snehovej gule vs. lavíny</div>
+        <div class="blog-desc">Ak máte viacero úverov a kreditných kariet, tieto dve stratégie vám pomôžu splatiť dlhy rýchlejšie a ušetriť na úrokoch.</div>
+        <div class="blog-footer"><span>5 min čítanie</span><span style="color:var(--blue)">Čítať →</span></div>
+      </div>
+    </a>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
@@ -786,6 +1059,54 @@
   }
 
   const API = "https://finadvisor.sk";
+
+  // ── CALCULATORS ──
+  function fmt(n) { return new Intl.NumberFormat('sk-SK',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n); }
+
+  function calcHyp() {
+    const P = +document.getElementById('hyp-suma').value;
+    const r = +document.getElementById('hyp-rate').value / 100 / 12;
+    const n = +document.getElementById('hyp-years').value * 12;
+    document.getElementById('hyp-suma-val').textContent = fmt(P);
+    document.getElementById('hyp-rate-val').textContent = (+document.getElementById('hyp-rate').value).toFixed(1) + '%';
+    document.getElementById('hyp-years-val').textContent = document.getElementById('hyp-years').value + ' rokov';
+    const M = r === 0 ? P/n : P * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1);
+    const celkom = M * n;
+    document.getElementById('hyp-mesacne').textContent = fmt(M);
+    document.getElementById('hyp-celkom').textContent = fmt(celkom);
+    document.getElementById('hyp-uroky').textContent = fmt(celkom - P);
+    document.getElementById('hyp-uroky-mes').textContent = fmt(P * r);
+  }
+  calcHyp();
+
+  function calcInv() {
+    const mes = +document.getElementById('inv-mes').value;
+    const jed = +document.getElementById('inv-jed').value;
+    const rate = +document.getElementById('inv-rate').value / 100;
+    const y = +document.getElementById('inv-years').value;
+    document.getElementById('inv-mes-val').textContent = fmt(mes) + '/mes';
+    document.getElementById('inv-jed-val').textContent = fmt(jed);
+    document.getElementById('inv-rate-val').textContent = rate*100 + '%';
+    document.getElementById('inv-years-val').textContent = y + ' rokov';
+    const r = rate / 12; const n = y * 12;
+    const fv_mes = mes * (Math.pow(1+r,n)-1) / r;
+    const fv_jed = jed * Math.pow(1+r,n);
+    const total = fv_mes + fv_jed;
+    const vlozene = mes * n + jed;
+    const zisk = total - vlozene;
+    document.getElementById('inv-vysledok').textContent = fmt(total);
+    document.getElementById('inv-vlozene').textContent = fmt(vlozene);
+    document.getElementById('inv-zisk').textContent = fmt(zisk);
+    document.getElementById('inv-pct').textContent = Math.round((total/vlozene-1)*100) + '%';
+  }
+  calcInv();
+
+  function switchCalc(type) {
+    document.querySelectorAll('.calc-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('calc-' + type).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
 
   function showToast(msg, type="") {
     const t = document.getElementById("toast");
