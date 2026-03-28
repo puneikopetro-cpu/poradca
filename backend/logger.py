@@ -40,7 +40,7 @@ class _JsonFormatter(logging.Formatter):
         for key, val in record.__dict__.items():
             if key not in logging.LogRecord.__dict__ and not key.startswith("_"):
                 payload[key] = val
-        return json.dumps(payload, ensure_ascii=False)
+        return json.dumps(payload, ensure_ascii=False, default=str)
 
 
 def configure_logging() -> None:
