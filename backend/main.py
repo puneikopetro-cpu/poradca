@@ -39,10 +39,9 @@ app.add_middleware(
 
 register_exception_handlers(app)
 
-# Auto-create tables only in SQLite dev mode; prod uses Alembic migrations
-if settings.DATABASE_URL.startswith("sqlite"):
-    Base.metadata.create_all(bind=engine)
-    logger.info("SQLite dev DB — tables created via create_all")
+# Auto-create all tables on startup (SQLite dev + PostgreSQL prod)
+Base.metadata.create_all(bind=engine)
+logger.info("DB tables ensured via create_all")
 
 app.include_router(auth_router)
 app.include_router(profile_router)
