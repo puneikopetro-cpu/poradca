@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: finadvisor-sk
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: finadvisor-db
+          property: connectionString
+      - key: SECRET_KEY
+        value: a0c119e248a43bd828fe21d5ff241fb4ccd20d88ed53a24f414a530a1e6bb760
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "60"
+      - key: TELEGRAM_BOT_TOKEN
+        value: "8428211519:AAHFE29WHqaPQMYZ56cNc6zlA3iK9QadFTc"
+      - key: WEBHOOK_URL
+        value: https://finadvisor.sk/telegram/webhook
+
+databases:
+  - name: finadvisor-db
+    plan: free
+    databaseName: finadvisor
+    user: postgres
