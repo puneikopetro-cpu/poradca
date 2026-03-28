@@ -52,6 +52,17 @@ TIPS = [
 _tip_index = 0
 
 
+def api_get(path: str):
+    url = f"{API_BASE}{path}"
+    req = urllib.request.Request(url, headers={"Accept": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=5) as r:
+            return json.loads(r.read())
+    except Exception as e:
+        logger.error("API GET error %s: %s", path, e)
+        return None
+
+
 def api_post(path: str, data: dict):
     url = f"{API_BASE}{path}"
     body = json.dumps(data).encode()
@@ -417,6 +428,35 @@ async def menu_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await smart_response(update, ctx)
 
 
+async def cmd_test(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    """Send a random NBS exam question."""
+    sector = None
+    if ctx.args:
+        sector = " ".join(ctx.args)
+
+    path = "/quiz/question/random"
+    if sector:
+        path += "?sector=" + urllib.parse.quote(sector)
+
+    data = api_get(path)
+    if not data:
+        await update.message.reply_text("Nepodarilo sa nacitat otazku. Skuste neskor.")
+        return
+
+    opts = data.get("options", {})
+    opts_lines = "\n".join(f"  {k}. {v}" for k, v in sorted(opts.items()))
+    correct = data.get("correct", "?").upper()
+    msg = (
+        f"Otazka c. {data['number']}\n"
+        f"Sekcia: {data['section']}\n\n"
+        f"{data['text']}\n\n"
+        f"{opts_lines}\n\n"
+        f"Spravna odpoved: [ {correct} ]\n\n"
+        f"Dalsia otazka: /test"
+    )
+    await update.message.reply_text(msg)
+
+
 def _register_handlers(app: Application):
     conv = ConversationHandler(
         entry_points=[
@@ -444,6 +484,7 @@ def _register_handlers(app: Application):
     app.add_handler(CommandHandler("hypoteka", cmd_hypoteka))
     app.add_handler(CommandHandler("kontakt", contact))
     app.add_handler(CommandHandler("tip", tip))
+    app.add_handler(CommandHandler("test", cmd_test))
     app.add_handler(conv)
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, menu_handler))
 

@@ -14,12 +14,14 @@ from backend.auth.router import router as auth_router
 from backend.financial_profile.router import router as profile_router
 from backend.recommendations.router import router as rec_router
 from backend.leads.router import router as leads_router
+from backend.quiz.router import router as quiz_router
 
 # Register models
 import backend.auth.models  # noqa
 import backend.financial_profile.models  # noqa
 import backend.recommendations.models  # noqa
 import backend.leads.models  # noqa
+import backend.quiz.models  # noqa
 
 configure_logging()
 logger = get_logger(__name__)
@@ -50,6 +52,7 @@ app.include_router(auth_router)
 app.include_router(profile_router)
 app.include_router(rec_router)
 app.include_router(leads_router)
+app.include_router(quiz_router)
 
 
 @app.get("/health", tags=["health"])
