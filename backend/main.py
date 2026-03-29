@@ -103,7 +103,7 @@ async def maintenance_gate(request: Request, call_next):
     path = request.url.path
 
     # Always allow API / internal paths
-    if path in _PUBLIC_PATHS or path.startswith(("/leads", "/auth", "/quiz", "/profile", "/rec", "/admin", "/static", "/subscribe", "/app")):
+    if path in _PUBLIC_PATHS or path.startswith(("/leads", "/auth", "/quiz", "/profile", "/rec", "/admin", "/static", "/subscribe", "/app", "/learn")):
         return await call_next(request)
 
     # Allow if secret token passed in query → set cookie and redirect
@@ -199,6 +199,11 @@ def admin_panel():
 @app.get("/app", include_in_schema=False)
 def serve_app():
     return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "app.html"))
+
+
+@app.get("/learn", include_in_schema=False)
+def serve_learn():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "learn.html"))
 
 
 @app.get("/og-image.png", include_in_schema=False)
