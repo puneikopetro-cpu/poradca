@@ -180,8 +180,15 @@ section{padding:48px 24px;max-width:960px;margin:0 auto}
 <nav class="nav">
   <a class="nav-logo" href="/app">💹 FinAdvisor</a>
   <div class="nav-links">
-    <a class="nav-link nav-link-ghost" href="/app">Plány</a>
-    <a class="nav-link nav-link-blue" href="/app#pricing">Predplatné</a>
+    <div class="lang-switcher" style="display:flex;gap:2px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:3px">
+      <button onclick="setLearnLang('sk')" id="ll-sk" style="border:none;background:var(--blue);color:#fff;font-size:11px;font-weight:700;padding:4px 7px;border-radius:7px;cursor:pointer">SK</button>
+      <button onclick="setLearnLang('en')" id="ll-en" style="border:none;background:transparent;color:var(--muted);font-size:11px;font-weight:700;padding:4px 7px;border-radius:7px;cursor:pointer">EN</button>
+      <button onclick="setLearnLang('uk')" id="ll-uk" style="border:none;background:transparent;color:var(--muted);font-size:11px;font-weight:700;padding:4px 7px;border-radius:7px;cursor:pointer">UA</button>
+      <button onclick="setLearnLang('pl')" id="ll-pl" style="border:none;background:transparent;color:var(--muted);font-size:11px;font-weight:700;padding:4px 7px;border-radius:7px;cursor:pointer">PL</button>
+      <button onclick="setLearnLang('de')" id="ll-de" style="border:none;background:transparent;color:var(--muted);font-size:11px;font-weight:700;padding:4px 7px;border-radius:7px;cursor:pointer">DE</button>
+      <button onclick="setLearnLang('hu')" id="ll-hu" style="border:none;background:transparent;color:var(--muted);font-size:11px;font-weight:700;padding:4px 7px;border-radius:7px;cursor:pointer">HU</button>
+    </div>
+    <a class="nav-link nav-link-blue" href="/app#pricing" id="learn-nav-cta">Predplatné</a>
   </div>
 </nav>
 
@@ -931,6 +938,19 @@ function nbsNext(dir) {
   document.getElementById('nbs-front').style.display = 'block';
   document.getElementById('nbs-back').style.display = 'none';
 }
+
+// ── i18n ──
+const LT={sk:{nav_cta:'Predplatné',hero_sub:'Jediná platforma v SR ktorá kombinuje vzdelávanie pre začiatočníkov s profesionálnymi nástrojmi. Sleduj pokrok číslom 0–850.',mode_beginner:'🌱 Začiatočník',mode_pro:'💼 Poradca Pro'},en:{nav_cta:'Subscription',hero_sub:'The only platform combining beginner education with professional tools. Track your progress 0–850.',mode_beginner:'🌱 Beginner',mode_pro:'💼 Advisor Pro'},uk:{nav_cta:'Підписка',hero_sub:'Єдина платформа яка поєднує навчання для початківців з профінструментами. Відстежуй прогрес 0–850.',mode_beginner:'🌱 Початківець',mode_pro:'💼 Радник Pro'},pl:{nav_cta:'Subskrypcja',hero_sub:'Jedyna platforma łącząca edukację z profesjonalnymi narzędziami. Śledź postępy 0–850.',mode_beginner:'🌱 Początkujący',mode_pro:'💼 Doradca Pro'},de:{nav_cta:'Abonnement',hero_sub:'Die einzige Plattform die Anfänger-Bildung mit professionellen Tools kombiniert. Score 0–850.',mode_beginner:'🌱 Anfänger',mode_pro:'💼 Berater Pro'},hu:{nav_cta:'Előfizetés',hero_sub:'Az egyetlen platform amely kezdők oktatását ötvözi professzionális eszközökkel. 0–850 pontszám.',mode_beginner:'🌱 Kezdő',mode_pro:'💼 Tanácsadó Pro'}};
+function setLearnLang(l){
+  ['sk','en','uk','pl','de','hu'].forEach(c=>{const b=document.getElementById('ll-'+c);if(b){b.style.background=c===l?'var(--blue)':'transparent';b.style.color=c===l?'#fff':'var(--muted)';}});
+  const t=LT[l]||LT.sk;
+  const nc=document.getElementById('learn-nav-cta');if(nc)nc.textContent=t.nav_cta;
+  const hs=document.querySelector('#hero-section .hero-sub');if(hs)hs.textContent=t.hero_sub;
+  document.querySelector('.mode-btn.beginner').innerHTML=t.mode_beginner;
+  document.querySelector('.mode-btn.pro').innerHTML=t.mode_pro;
+}
+const _bl=(navigator.language||'sk').substring(0,2).toLowerCase();
+setLearnLang({sk:'sk',cs:'sk',en:'en',uk:'uk',pl:'pl',de:'de',hu:'hu'}[_bl]||'sk');
 </script>
 </body>
 </html>
