@@ -420,7 +420,10 @@
         <!-- LEGISLATION PAGE -->
         <div class="page" id="page-legislation">
           <div class="card">
-            <div class="card-header"><h3>⚖️ Kľúčová legislatíva SR pre finančného poradcu</h3></div>
+            <div class="card-header">
+              <h3>⚖️ Kľúčová legislatíva SR pre finančného poradcu</h3>
+              <button class="tts-read-btn" style="font-size:13px;padding:6px 14px" onclick="loadQuickText('legislation');goto('reader');setTimeout(ttsPlay,400)">🔊 Počúvať</button>
+            </div>
             <div class="card-body">
               <ul class="law-list">
                 <li class="law-item">
@@ -2512,7 +2515,35 @@ Rebalancing, vyvažovanie portfólia. Raz ročne v januári: porovnaj aktuálne 
 
 DCA stratégia, Dollar Cost Averaging. Každý mesiac fixná suma bez ohľadu na cenu. Kupuješ viac keď je lacno, menej keď je draho. Za dvadsať rokov prekonáva väčšinu aktívnych manažérov.
 
-Riadenie rizika. Diverzifikácia medzi triedami aktív. Žiadna akcia viac ako päť percent portfólia. Žiadny sektor viac ako dvadsaťpäť percent. Vždy tri až šesť mesiacov výdavkov na sporiacom účte pred investovaním. Automatické DCA eliminuje behaviorálne riziko, teda paniku pri poklese trhu.`
+Riadenie rizika. Diverzifikácia medzi triedami aktív. Žiadna akcia viac ako päť percent portfólia. Žiadny sektor viac ako dvadsaťpäť percent. Vždy tri až šesť mesiacov výdavkov na sporiacom účte pred investovaním. Automatické DCA eliminuje behaviorálne riziko, teda paniku pri poklese trhu.`,
+
+    legislation: `Kľúčová legislatíva Slovenskej republiky pre finančného poradcu.
+
+Zákon číslo stoosemdesiatšesť z roku dvetisícdeväť — O finančnom sprostredkovaní a finančnom poradenstve.
+Tento zákon definuje typy finančných agentov: SFA je samostatný finančný agent, VFA je viazaný finančný agent, PFA je podriadený finančný agent, a VIA je výhradný investičný agent. Zákon stanovuje štyri stupne odbornosti, podmienky získania licencie od NBS, a sankcie za porušenie povinností. Výkon činnosti bez registrácie: pokuta až stotisíc eur.
+
+Zákon číslo tridsaťdeväť z roku dvetisícpätnásť — O poisťovníctve.
+Upravuje licencie poisťovní a podmienky predaja poistných produktov. Paragraf sedemdesiat a stanovuje minimálnu odkupnú hodnotu životného poistenia päťdesiat percent v prvom roku.
+
+Zákon číslo dvestodeväťdesiatsem z roku dvetisícosem — AML, ochrana pred legalizáciou príjmov z trestnej činnosti.
+Povinnosť identifikácie klienta pred každou transakciou, takzvaný KYC a CDD. Politicky exponované osoby, skratka PEP, vyžadujú rozšírenú starostlivosť. Neobvyklé obchodné operácie v hodnote pätnásťtisíc eur a viac je povinné hlásiť na finančnú spravodajskú jednotku. Archivácia dokumentácie päť rokov. Sankcia za neohlásenie: až jeden milión eur.
+
+Zákon číslo päťstodevätdesiatpäť z roku dvetisíctri — O dani z príjmov.
+Daňové sadzby devätnásť percent na príjmy do štyridsaťjednatisícštyristoštyridsiať eur, a dvadsaťpäť percent nad túto hranicu. Zdanenie provízií finančného agenta. Paušálne výdavky šesťdesiat percent, maximálne dvadsaťtisíc eur ročne.
+
+Zákon číslo stodvadsaťdeväť z roku dvetisícdesať — O spotrebiteľských úveroch.
+Definuje vzorec pre ročnú percentuálnu mieru nákladov, skratka RPMN. Stanovuje predmluvné informačné povinnosti voči klientovi a povinnosť posúdenia kreditoschopnosti pred poskytnutím úveru.
+
+Zákon číslo päťstošesťdesiatšesť z roku dvetisícjedna — O cenných papieroch a investičných službách, implementácia smernice MiFID II.
+Definuje kategórie klientov: retailový klient má najvyššiu ochranu, profesionálny klient strednú, a spôsobilá protistrana najnižšiu. Upravuje investičné služby a povinnosť posúdenia vhodnosti investície pre klienta.
+
+Zákon číslo štyristoosmdesaťtri z roku dvetisícjedna — O bankách.
+Bankové tajomstvo paragraf deväťdesiatjeden. Ochrana vkladov paragraf deväťdesiatri — vklady do stopäťtisíc eur na osobu sú chránené Fondom ochrany vkladov.
+
+NBS, Národná banka Slovenska — registrácia finančných agentov.
+Podmienky registrácie: odborná skúška pozostáva z tridsiatich otázok, čas štyridsať minút, minimálny počet správnych odpovedí je dvadsaťštyri z tridsiatich, čo je osemdesiat percent. Termíny skúšok a register agentov sú dostupné na portáli regfap.nbs.sk.
+
+Prehľad sankcií. Za výkon činnosti bez registrácie podľa zákona stoosemdesiatšesť lomeno dvetisícdeväť: pokuta až stotisíc eur. Za porušenie povinností agenta: do tritisíctristo dvadsať eur pre fyzickú osobu, do tridsaťtritisícdvestodvadsať eur pre právnickú osobu. Za neohlásenie neobvyklej obchodnej operácie podľa AML zákona: až jeden milión eur. Za daňový únik: pokuta plus penále tri až sedem percent ročne. Za neoprávnené poskytovanie investičných služieb: až desať percent ročného obratu spoločnosti.`
   };
 
   function loadQuickText(key) {
