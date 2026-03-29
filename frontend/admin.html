@@ -184,6 +184,40 @@
     .law-link:hover { text-decoration: underline; }
 
     /* ── RESPONSIVE ── */
+    /* CRM STATUS */
+    .status-select {
+      border: 1.5px solid #e5e7eb; border-radius: 6px; padding: 4px 8px;
+      font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit;
+      outline: none; background: #fff;
+    }
+    .status-new      { border-color: var(--blue);   color: var(--blue);   background: var(--blue-l); }
+    .status-working  { border-color: var(--orange);  color: var(--orange); background: var(--orange-l); }
+    .status-client   { border-color: var(--green);   color: var(--green);  background: var(--green-l); }
+    .status-closed   { border-color: #9ca3af;        color: #9ca3af;       background: #f9fafb; }
+
+    /* GUIDE */
+    .guide-section { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
+    .guide-section-header { padding: 16px 24px; background: linear-gradient(135deg,var(--blue),var(--blue-d)); color: #fff; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .guide-section-header h3 { font-size: 15px; font-weight: 700; }
+    .guide-body { padding: 24px; display: none; }
+    .guide-body.open { display: block; }
+    .guide-step { display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start; }
+    .guide-step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--blue-l); color: var(--blue); font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .guide-step-content h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .guide-step-content p { font-size: 13px; color: var(--gray); line-height: 1.6; }
+    .guide-tip { background: var(--blue-l); border-left: 3px solid var(--blue); border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 13px; margin: 12px 0; line-height: 1.6; }
+    .guide-warning { background: var(--orange-l); border-left: 3px solid var(--orange); border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 13px; margin: 12px 0; line-height: 1.6; }
+    .guide-success { background: var(--green-l); border-left: 3px solid var(--green); border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 13px; margin: 12px 0; line-height: 1.6; }
+    .law-ref { display: inline-block; background: #f3f4f6; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 700; color: var(--blue); margin: 2px; }
+    .checklist { list-style: none; }
+    .checklist li { padding: 6px 0; font-size: 13px; border-bottom: 1px solid #f3f4f6; display: flex; align-items: flex-start; gap: 8px; }
+    .checklist li::before { content: '☐'; font-size: 16px; color: var(--blue); flex-shrink: 0; }
+    table.guide-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    table.guide-table th { background: #f9fafb; padding: 8px 12px; text-align: left; font-weight: 600; color: var(--gray); border-bottom: 1px solid #e5e7eb; }
+    table.guide-table td { padding: 8px 12px; border-bottom: 1px solid #f9fafb; }
+    .btn-danger { background: var(--red-l); color: var(--red); }
+    .btn-danger:hover { background: var(--red); color: #fff; }
+
     .empty { text-align: center; padding: 48px; color: var(--gray); font-size: 14px; }
     .loading { text-align: center; padding: 40px; color: var(--gray-l); }
   </style>
@@ -231,7 +265,10 @@
           <span class="icon">⚙️</span> Systém / Info
         </div>
 
-        <div class="nav-section">Linky</div>
+        <div class="nav-section">Znalosti</div>
+        <div class="nav-item" onclick="goto('guide')">
+          <span class="icon">📚</span> Posibnik analytika
+        </div>
         <div class="nav-item" onclick="window.open('https://finadvisor.sk','_blank')">
           <span class="icon">🌐</span> Otvoriť web
         </div>
@@ -494,7 +531,263 @@
           </div>
         </div>
 
-      </div><!-- /content -->
+        <!-- GUIDE PAGE -->
+        <div class="page" id="page-guide">
+
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>🧠 Ako myslí profesionálny finančný analytik</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body open">
+              <div class="guide-tip"><b>Kľúčový princíp:</b> Nie si "predajca" — si <b>diagnostik finančného zdravia</b>. Tvoja práca = počúvaj → analyzuj → navrhni riešenie → sleduj výsledky.</div>
+              <div class="guide-step">
+                <div class="guide-step-num">1</div>
+                <div class="guide-step-content">
+                  <h4>Formuj hypotézy, nie predpovede</h4>
+                  <p>❌ "Myslím, že klientovi sa bude hodiť životné poistenie"<br>
+                     ✅ "Ak má klient rodinu a hypotéku → rizikové ŽP je nevyhnutné. Overím to v rozhovore."</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">2</div>
+                <div class="guide-step-content">
+                  <h4>Pracuj s pravdepodobnosťami</h4>
+                  <p>Klient s príjmom €1500, vek 35, 2 deti → s pravdepodobnosťou 80% potrebuje: hypotéku, ŽP, III. pilier. Poradie podľa priority.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">3</div>
+                <div class="guide-step-content">
+                  <h4>Edge = informácia + rýchlosť + disciplína</h4>
+                  <p>Keď klient zavolá alebo pošle formulár → odpoveď do 2 hodín. Každá hodina oneskorenia = -20% šanca na konverziu.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>📋 Denný pracovný postup (Daily Workflow)</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <div class="guide-step">
+                <div class="guide-step-num">1</div>
+                <div class="guide-step-content">
+                  <h4>Makro sken — 15 min</h4>
+                  <p>Skontroluj NBS správy, úrokové sadzby ECB, inflácia SR (ŠÚSR). Ako to ovplyvňuje hypotéky a investície tento mesiac?</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">2</div>
+                <div class="guide-step-content">
+                  <h4>CRM — nové leady — 10 min</h4>
+                  <p>Otvor <a href="#" onclick="goto('leads')" style="color:var(--blue)">zoznam leadov</a>. Všetkých "Nových" zavolaj alebo napíš email do poludnia.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">3</div>
+                <div class="guide-step-content">
+                  <h4>Príprava na konzultácie — 20 min</h4>
+                  <p>Pre každého klienta na dnes: zisti jeho finančný profil, priprav 2–3 konkrétne návrhy s číslami.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">4</div>
+                <div class="guide-step-content">
+                  <h4>Konzultácie + záznamy — hlavný blok</h4>
+                  <p>Po každej konzultácii okamžite zaznač: čo sme dohodli, aký je ďalší krok, kedy follow-up. Aktualizuj status v CRM.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">5</div>
+                <div class="guide-step-content">
+                  <h4>Follow-up a follow-through — 20 min</h4>
+                  <p>Klientom "V práci" pošli správu s aktualizáciou. Nezabudnúť = základ dôvery.</p>
+                </div>
+              </div>
+              <div class="guide-warning"><b>Najčastejšia chyba:</b> Poradiť bez toho, aby ste pochopili situáciu klienta. Vždy najprv počúvaj 70% → hovor 30%.</div>
+            </div>
+          </div>
+
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>🎯 Stratégia prvej konzultácie — skript</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <div class="guide-step">
+                <div class="guide-step-num">1</div>
+                <div class="guide-step-content">
+                  <h4>Úvod (2 min) — rapport building</h4>
+                  <p>"Dobrý deň, volám sa Petro z FinAdvisor. Ďakujem, že ste nás kontaktovali. Chcem vám povedať, že táto konzultácia je úplne bezplatná a bez záväzkov."</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">2</div>
+                <div class="guide-step-content">
+                  <h4>Diagnostika (10 min) — kľúčové otázky</h4>
+                  <p>• "Čo vás teraz finančne trápi najviac?"<br>
+                     • "Aký je váš mesačný príjem / výdavky?"<br>
+                     • "Máte nejaké úvery alebo hypotéku?"<br>
+                     • "Čo chcete dosiahnuť za 5 rokov?"</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">3</div>
+                <div class="guide-step-content">
+                  <h4>Analýza (5 min) — premýšľaj nahlas</h4>
+                  <p>"Na základe toho, čo ste mi povedali, vidím 3 oblasti, kde môžeme výrazne zlepšiť vašu situáciu..."</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">4</div>
+                <div class="guide-step-content">
+                  <h4>Návrh (10 min) — konkrétne s číslami</h4>
+                  <p>Nikdy neurčitý návrh. Vždy: "Ak si nastavíte III. pilier na €50/mes, za 20 rokov budete mať €25 000 viac a ušetríte €180/rok na daniach."</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">5</div>
+                <div class="guide-step-content">
+                  <h4>Záver + ďalší krok (3 min)</h4>
+                  <p>"Čo chceme urobiť ďalej? Môžeme sa stretnúť budúci týždeň a podpísať zmluvy — alebo ak máte otázky, napíšte mi." Vždy konkretnéy dátum.</p>
+                </div>
+              </div>
+              <div class="guide-success"><b>Konverzný tip:</b> Klienti nekupujú produkty — kupujú <b>výsledky a pocit bezpečia</b>. Hovorte vždy o výsledku, nie o produkte.</div>
+            </div>
+          </div>
+
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>📊 Finančná analýza klienta — kompletný postup</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <table class="guide-table">
+                <thead><tr><th>Oblasť</th><th>Čo zistiť</th><th>Nástroj / riešenie</th></tr></thead>
+                <tbody>
+                  <tr><td>💰 Príjmy</td><td>Hrubý/čistý príjem, zdroj (zamestnanec/SZČO)</td><td>Daňová optimalizácia, paušál 60%</td></tr>
+                  <tr><td>📉 Výdavky</td><td>Fixné vs variabilné, kde sa dá ušetriť</td><td>Budgeting, refinancovanie</td></tr>
+                  <tr><td>🏦 Majetok</td><td>Nehnuteľnosti, úspory, investície, II/III pilier</td><td>Portfólio audit, rebalancing</td></tr>
+                  <tr><td>💳 Záväzky</td><td>Hypotéka, spotrebné úvery, kreditné karty</td><td>Refinancovanie, debt snowball</td></tr>
+                  <tr><td>🛡️ Riziká</td><td>ŽP, PZP, poistenie nehnuteľnosti, zdravie</td><td>Audit poistného portfólia</td></tr>
+                  <tr><td>🎯 Ciele</td><td>Krátkodobé (1r), strednodobé (5r), dlhodobé (20r+)</td><td>Investičný plán, dôchodok</td></tr>
+                </tbody>
+              </table>
+              <div class="guide-tip"><b>Risk profil klienta:</b><br>
+                🟢 <b>Konzervatívny</b> — vek 55+, nízky príjem, rodina: dlhopisy, termínované vklady, ŽP<br>
+                🟡 <b>Vyvážený</b> — vek 35–55, stredný príjem: mix ETF + dlhopisy + III. pilier<br>
+                🔴 <b>Agresívny</b> — vek do 35, vyšší príjem, bez záväzkov: ETF akciové fondy, II. pilier indexový fond</div>
+            </div>
+          </div>
+
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>⚖️ Právne povinnosti finančného sprostredkovateľa</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <ul class="checklist">
+                <li>Registrácia v NBS registri pred začatím činnosti <span class="law-ref">186/2009 §7</span></li>
+                <li>Odborná skúška NBS (30 otázok / 40 min / min 80% = 24 správnych)</li>
+                <li>Identifikácia klienta (KYC) pred každou zmluvou <span class="law-ref">297/2008</span></li>
+                <li>Posúdenie vhodnosti produktu pre klienta (suitability test) <span class="law-ref">186/2009 §32</span></li>
+                <li>Informovanie klienta o odmene/provízii vopred <span class="law-ref">186/2009 §38</span></li>
+                <li>Archivovanie dokumentácie 5 rokov <span class="law-ref">297/2008 §20</span></li>
+                <li>Hlásenie neobvyklých obchodov (NOO ≥ €15 000) na FIU <span class="law-ref">297/2008 §14</span></li>
+                <li>Ročná správa o činnosti pre NBS</li>
+                <li>GDPR — súhlas so spracovaním osobných údajov od každého klienta</li>
+                <li>Povinné profesijné poistenie zodpovednosti za škodu</li>
+              </ul>
+              <div class="guide-warning"><b>Sankcia za činnosť bez registrácie: až €100 000!</b> Najprv registrácia, potom klienti.</div>
+            </div>
+          </div>
+
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>💡 Produktové znalosti — rýchly prehľad</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <table class="guide-table">
+                <thead><tr><th>Produkt</th><th>Kedy odporučiť</th><th>Kľúčové čísla 2025</th></tr></thead>
+                <tbody>
+                  <tr><td>🏠 Hypotéka</td><td>Kúpa nehnuteľnosti, refinancovanie</td><td>Sadzby 3.5–5%, fixácia 3–10r, LTV max 80%</td></tr>
+                  <tr><td>📈 ETF fond (II. pilier)</td><td>Vek do 55, chce vyšší výnos</td><td>Historicky 7–10%/rok, MSCI World</td></tr>
+                  <tr><td>🏦 III. pilier</td><td>Každý zamestnanec/SZČO</td><td>Štátny príspevok €180/rok, daňový odpočet €180/rok</td></tr>
+                  <tr><td>🛡️ Rizikové ŽP</td><td>Hypotéka, deti, živiteľ rodiny</td><td>Od €15/mes, poistná suma = výška hypotéky</td></tr>
+                  <tr><td>📊 Investičné ŽP</td><td>Opatrný investor, dlhodobý horizont</td><td>Pozor: poplatky 3–5%/rok = málo výnosné</td></tr>
+                  <tr><td>💳 Spotrebný úver</td><td>Nízka suma, krátky horizont</td><td>RPMN 8–18%, preplatok 20–50%</td></tr>
+                  <tr><td>🔄 Refinancovanie</td><td>Zmena banky = lepšia sadzba</td><td>Úspora €50–200/mes je bežná</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>🧾 Daňová optimalizácia pre klientov SZČO</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <div class="guide-step">
+                <div class="guide-step-num">1</div>
+                <div class="guide-step-content">
+                  <h4>Paušálne výdavky 60% (max €20 000)</h4>
+                  <p>Príjem €40 000 → základ dane = €16 000 → daň 19% = €3 040 (ušetrí vs reálne výdavky)</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">2</div>
+                <div class="guide-step-content">
+                  <h4>Nezdaniteľná časť základu dane</h4>
+                  <p>2025: €4 579.26/rok na daňovníka. Na manžela/ku: ak má príjem do €4 579 → odčíta si rozdiel.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">3</div>
+                <div class="guide-step-content">
+                  <h4>III. pilier — daňový odpočet</h4>
+                  <p>Príspevky na doplnkové dôchodkové sporenie do €180/rok = odpočítateľné od základu dane.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-step-num">4</div>
+                <div class="guide-step-content">
+                  <h4>Daňový bonus na dieťa</h4>
+                  <p>2025: €140/mes na dieťa do 15 rokov, €50/mes na dieťa 15–25 rokov (pri štúdiu).</p>
+                </div>
+              </div>
+              <div class="guide-success"><b>Príklad úspory:</b> SZČO s príjmom €36 000, 2 deti → legálna optimalizácia môže ušetriť €3 000–5 000/rok na daniach a odvodoch.</div>
+            </div>
+          </div>
+
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>🔑 Kľúčové kontakty a zdroje</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <table class="guide-table">
+                <thead><tr><th>Inštitúcia</th><th>Použitie</th><th>Odkaz</th></tr></thead>
+                <tbody>
+                  <tr><td>NBS Register</td><td>Registrácia, skúšky, termíny</td><td><a href="https://regfap.nbs.sk" target="_blank" style="color:var(--blue)">regfap.nbs.sk</a></td></tr>
+                  <tr><td>Sociálna poisťovňa</td><td>II. pilier, SZČO odvody</td><td><a href="https://www.socpoist.sk" target="_blank" style="color:var(--blue)">socpoist.sk</a></td></tr>
+                  <tr><td>Finančná správa SR</td><td>Daňové formuláre, priznania</td><td><a href="https://www.financnasprava.sk" target="_blank" style="color:var(--blue)">financnasprava.sk</a></td></tr>
+                  <tr><td>Zákonypreludi.sk</td><td>Plné znenie zákonov</td><td><a href="https://www.zakonypreludi.sk" target="_blank" style="color:var(--blue)">zakonypreludi.sk</a></td></tr>
+                  <tr><td>ŠÚSR</td><td>Inflácia, makro dáta SR</td><td><a href="https://www.statistics.sk" target="_blank" style="color:var(--blue)">statistics.sk</a></td></tr>
+                  <tr><td>ECB / NBS sadzby</td><td>Aktuálne úrokové sadzby</td><td><a href="https://nbs.sk/statistika/menova-statistika" target="_blank" style="color:var(--blue)">nbs.sk/statistika</a></td></tr>
+                  <tr><td>Finančný kompas</td><td>Porovnanie produktov</td><td><a href="https://www.financnykompas.sk" target="_blank" style="color:var(--blue)">financnykompas.sk</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div><!-- /page-guide -->
+
+
     </div><!-- /main -->
   </div><!-- /layout -->
 </div><!-- /app -->
@@ -535,7 +828,7 @@
   }
 
   // ── NAVIGATION ──
-  const PAGES = { dashboard:'Dashboard', leads:'Leady (klienti)', quiz:'NBS Quiz', legislation:'Legislatíva', system:'Systém / Info' };
+  const PAGES = { dashboard:'Dashboard', leads:'Leady (klienti)', quiz:'NBS Quiz', legislation:'Legislatíva', system:'Systém / Info', guide:'Posibnik analytika' };
   function goto(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -556,7 +849,7 @@
   }
 
   async function apiFetch(path) {
-    const r = await fetch(path);
+    const r = await fetch(path, { headers: { 'X-Admin-Key': PASSWORD } });
     if (!r.ok) throw new Error(r.status);
     return r.json();
   }
@@ -617,18 +910,31 @@
 
   function buildLeadsTable(leads) {
     if (!leads.length) return '<div class="empty">Žiadne leady</div>';
+    const statusLabels = { new:'Novy', working:'V practice', client:'Klient', closed:'Zatvority' };
+    const statusClass  = { new:'status-new', working:'status-working', client:'status-client', closed:'status-closed' };
     return `<table>
-      <thead><tr><th>#</th><th>Meno</th><th>Email</th><th>Telefón</th><th>Záujem</th><th>Správa</th><th>Zdroj</th><th>Dátum</th></tr></thead>
+      <thead><tr><th>#</th><th>Meno</th><th>Email</th><th>Telefón</th><th>Záujem</th><th>Správa</th><th>Zdroj</th><th>Status CRM</th><th>Dátum</th><th></th></tr></thead>
       <tbody>${leads.map((l,i) => `
         <tr>
           <td>${l.id||i+1}</td>
-          <td><b>${esc(l.name||'—')}</b></td>
+          <td><b>${esc(l.name||l.full_name||'—')}</b></td>
           <td><a href="mailto:${esc(l.email||'')}" style="color:var(--blue)">${esc(l.email||'—')}</a></td>
-          <td>${esc(l.phone||'—')}</td>
+          <td>${l.phone ? `<a href="tel:${esc(l.phone)}" style="color:var(--blue)">${esc(l.phone)}</a>` : '—'}</td>
           <td><span class="badge badge-blue">${esc(l.interest||l.service||'—')}</span></td>
-          <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(l.message||'—')}</td>
+          <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(l.message||'—')}</td>
           <td><span class="badge ${l.source==='telegram'?'badge-orange':'badge-green'}">${esc(l.source||'web')}</span></td>
+          <td>
+            <select class="status-select ${statusClass[l.status]||'status-new'}"
+              onchange="updateStatus(${l.id||i+1}, this.value, this)"
+              data-id="${l.id||i+1}">
+              <option value="new"     ${(l.status||'new')==='new'     ?'selected':''}>🔵 Novy</option>
+              <option value="working" ${(l.status||'')==='working'     ?'selected':''}>🟠 V practice</option>
+              <option value="client"  ${(l.status||'')==='client'      ?'selected':''}>🟢 Klient</option>
+              <option value="closed"  ${(l.status||'')==='closed'      ?'selected':''}>⚫ Zatvority</option>
+            </select>
+          </td>
           <td>${fmtDate(l.created_at||l.date)}</td>
+          <td><button class="btn btn-danger" style="padding:4px 10px;font-size:11px" onclick="deleteLead(${l.id||i+1})">✕</button></td>
         </tr>`).join('')}
       </tbody></table>`;
   }
@@ -711,6 +1017,38 @@
       document.getElementById('health-status').textContent = '❌ Offline';
       document.getElementById('health-status').style.color = 'var(--red)';
     }
+  }
+
+  // ── CRM ACTIONS ──
+  async function updateStatus(id, status, el) {
+    const cls = { new:'status-new', working:'status-working', client:'status-client', closed:'status-closed' };
+    el.className = 'status-select ' + (cls[status]||'status-new');
+    try {
+      await fetch(`/leads/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type':'application/json', 'X-Admin-Key': PASSWORD },
+        body: JSON.stringify({ status })
+      });
+    } catch(e) { console.warn('Status update failed', e); }
+  }
+
+  async function deleteLead(id) {
+    if (!confirm(`Vymazat lead #${id}?`)) return;
+    try {
+      await fetch(`/leads/${id}`, {
+        method: 'DELETE',
+        headers: { 'X-Admin-Key': PASSWORD }
+      });
+      allLeads = allLeads.filter(l => l.id !== id);
+      renderLeads(allLeads);
+    } catch(e) { alert('Chyba pri mazani'); }
+  }
+
+  // ── GUIDE ──
+  function toggleGuide(el) {
+    const body = el.nextElementSibling;
+    body.classList.toggle('open');
+    el.querySelector('.toggle-icon').textContent = body.classList.contains('open') ? '▲' : '▼';
   }
 
   // ── UTILS ──
