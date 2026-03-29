@@ -217,6 +217,15 @@
     table.guide-table td { padding: 8px 12px; border-bottom: 1px solid #f9fafb; }
     .btn-danger { background: var(--red-l); color: var(--red); }
     .btn-danger:hover { background: var(--red); color: #fff; }
+    /* ── CALCULATORS ── */
+    .calc-label { font-size:12px; color:#888; display:block; margin-bottom:4px; }
+    .calc-input { width:100%; padding:8px; border:1px solid #ddd; border-radius:6px; font-size:14px; box-sizing:border-box; }
+    .calc-box { background:#f0fdf4; border:1px solid #86efac; border-radius:10px; padding:16px; margin-top:12px; }
+    .calc-box h4 { margin:0 0 8px; color:#166534; }
+    .calc-row { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #dcfce7; font-size:13px; }
+    .calc-row:last-child { border:none; font-weight:700; font-size:15px; color:#15803d; }
+    .calc-warn { background:#fef9c3; border:1px solid #fde047; border-radius:8px; padding:12px; margin-top:10px; font-size:13px; color:#854d0e; }
+    .calc-tabs-active { background:var(--blue) !important; color:#fff !important; }
 
     .empty { text-align: center; padding: 48px; color: var(--gray); font-size: 14px; }
     .loading { text-align: center; padding: 40px; color: var(--gray-l); }
@@ -266,6 +275,9 @@
         </div>
 
         <div class="nav-section">Znalosti</div>
+        <div class="nav-item" onclick="goto('invest')">
+          <span class="icon">💹</span> Investície & kalk.
+        </div>
         <div class="nav-item" onclick="goto('guide')">
           <span class="icon">📚</span> Posibnik analytika
         </div>
@@ -787,6 +799,375 @@
 
         </div><!-- /page-guide -->
 
+        <!-- ══════════════════════════════════════════════════
+             INVEST PAGE
+        ══════════════════════════════════════════════════ -->
+        <div class="page" id="page-invest">
+
+          <!-- ── QUICK MATCH ── -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>🎯 Rýchly výber produktu pre klienta</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body open">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+                <div>
+                  <label style="font-size:12px;color:#888;display:block;margin-bottom:4px">Vek klienta</label>
+                  <input id="qm-age" type="number" placeholder="napr. 35" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:14px">
+                </div>
+                <div>
+                  <label style="font-size:12px;color:#888;display:block;margin-bottom:4px">Mesačný príjem (€)</label>
+                  <input id="qm-income" type="number" placeholder="napr. 1500" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:14px">
+                </div>
+                <div>
+                  <label style="font-size:12px;color:#888;display:block;margin-bottom:4px">Cieľ</label>
+                  <select id="qm-goal" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:14px">
+                    <option value="retire">Dôchodok</option>
+                    <option value="house">Bývanie / hypotéka</option>
+                    <option value="save">Sporenie (3–10r)</option>
+                    <option value="grow">Rast kapitálu</option>
+                    <option value="protect">Ochrana rodiny</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+                <div>
+                  <label style="font-size:12px;color:#888;display:block;margin-bottom:4px">Rizikový profil</label>
+                  <select id="qm-risk" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:14px">
+                    <option value="conservative">🟢 Konzervatívny</option>
+                    <option value="balanced" selected>🟡 Vyvážený</option>
+                    <option value="aggressive">🔴 Agresívny</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:12px;color:#888;display:block;margin-bottom:4px">Hypotéka / deti?</label>
+                  <select id="qm-family" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:14px">
+                    <option value="none">Nie</option>
+                    <option value="kids">Áno, deti</option>
+                    <option value="mortgage">Áno, hypotéka</option>
+                    <option value="both">Áno, oboje</option>
+                  </select>
+                </div>
+              </div>
+              <button class="btn" onclick="runQuickMatch()" style="margin-bottom:16px">🔍 Odporučiť produkty</button>
+              <div id="qm-result" style="display:none"></div>
+            </div>
+          </div>
+
+          <!-- ── PRODUCT CATALOG ── -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>📋 Katalóg investičných produktov — SR 2025</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body open">
+              <table class="guide-table" style="font-size:13px">
+                <thead>
+                  <tr>
+                    <th>Produkt</th>
+                    <th>Výnos / rok</th>
+                    <th>Riziko</th>
+                    <th>Horizont</th>
+                    <th>Likvidita</th>
+                    <th>Daňová výhoda</th>
+                    <th>Min. vstup</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="background:#f0fdf4">
+                    <td><b>📈 II. pilier — indexový fond</b><br><small>Allianz, NN, Uniqa — MSCI World</small></td>
+                    <td><span style="color:#16a34a;font-weight:700">7–10%</span></td>
+                    <td><span class="badge" style="background:#fef9c3;color:#854d0e">Stredné</span></td>
+                    <td>20–40 rokov</td>
+                    <td>❌ Iba dôchodok</td>
+                    <td>✅ Štátny príspevok<br>Zamestnanec platí menej odvodov</td>
+                    <td>Automaticky (4% zo mzdy)</td>
+                  </tr>
+                  <tr style="background:#f0fdf4">
+                    <td><b>🏦 III. pilier — DDS</b><br><small>NN Tatry-Sympatia, Doplnková DS</small></td>
+                    <td><span style="color:#16a34a;font-weight:700">3–5%</span></td>
+                    <td><span class="badge" style="background:#dcfce7;color:#166534">Nízke</span></td>
+                    <td>10+ rokov</td>
+                    <td>⚠️ Penalizácia do 55r</td>
+                    <td>✅ €180/rok odpočet<br>+ príspevok zamestnávateľa</td>
+                    <td>€20/mes</td>
+                  </tr>
+                  <tr>
+                    <td><b>📊 ETF akciové fondy</b><br><small>IBKR, Degiro, Finax — iShares, Vanguard</small></td>
+                    <td><span style="color:#16a34a;font-weight:700">7–10%</span></td>
+                    <td><span class="badge" style="background:#fef9c3;color:#854d0e">Stredné–Vysoké</span></td>
+                    <td>5–30 rokov</td>
+                    <td>✅ Denná (burza)</td>
+                    <td>⚠️ Daň 19% z výnosu<br>(po 1 roku: oslobodené SR?)</td>
+                    <td>€50</td>
+                  </tr>
+                  <tr>
+                    <td><b>🤖 Finax (robo-advisor)</b><br><small>Slovenský robo-advisor, ETF portfólio</small></td>
+                    <td><span style="color:#16a34a;font-weight:700">6–9%</span></td>
+                    <td><span class="badge" style="background:#fef9c3;color:#854d0e">Stredné</span></td>
+                    <td>5–20 rokov</td>
+                    <td>✅ Týždeň</td>
+                    <td>⚠️ Daň 19% z výnosu</td>
+                    <td>€1 000</td>
+                  </tr>
+                  <tr>
+                    <td><b>🏠 Nehnuteľnosť (prenájom)</b><br><small>Byt v BA/KE — prenájom</small></td>
+                    <td><span style="color:#16a34a;font-weight:700">4–6% + rast cien</span></td>
+                    <td><span class="badge" style="background:#fef9c3;color:#854d0e">Stredné</span></td>
+                    <td>10+ rokov</td>
+                    <td>❌ Mesiace</td>
+                    <td>⚠️ Paušál 60% výdavkov</td>
+                    <td>€50 000+</td>
+                  </tr>
+                  <tr>
+                    <td><b>📜 Dlhopisy SR (štátne)</b><br><small>MF SR — prémiové štátne dlhopisy</small></td>
+                    <td><span style="color:#15803d;font-weight:700">3.5–4.5%</span></td>
+                    <td><span class="badge" style="background:#dcfce7;color:#166534">Veľmi nízke</span></td>
+                    <td>1–10 rokov</td>
+                    <td>⚠️ Splatnosť alebo sekundárny trh</td>
+                    <td>✅ Oslobodené od dane</td>
+                    <td>€350</td>
+                  </tr>
+                  <tr>
+                    <td><b>🏦 Termínovaný vklad (banka)</b><br><small>Tatra, VUB, SLSP — TD na 12–24 mes</small></td>
+                    <td><span style="color:#ca8a04;font-weight:700">2.5–3.5%</span></td>
+                    <td><span class="badge" style="background:#dcfce7;color:#166534">Nízke</span></td>
+                    <td>1–3 roky</td>
+                    <td>⚠️ Iba po splatnosti</td>
+                    <td>❌ Daň 19% zráža banka</td>
+                    <td>€500</td>
+                  </tr>
+                  <tr>
+                    <td><b>💰 Sporiaci účet</b><br><small>Fio banka, mBank — 365bank</small></td>
+                    <td><span style="color:#ca8a04;font-weight:700">2–3%</span></td>
+                    <td><span class="badge" style="background:#dcfce7;color:#166534">Nízke</span></td>
+                    <td>Kedykoľvek</td>
+                    <td>✅ Okamžitá</td>
+                    <td>❌ Daň 19% zráža banka</td>
+                    <td>€1</td>
+                  </tr>
+                  <tr>
+                    <td><b>🛡️ Investičné ŽP</b><br><small>NN, Allianz, Kooperativa</small></td>
+                    <td><span style="color:#dc2626;font-weight:700">1–3% (po poplatkoch)</span></td>
+                    <td><span class="badge" style="background:#fef9c3;color:#854d0e">Stredné</span></td>
+                    <td>15–20 rokov</td>
+                    <td>❌ Penalizácia za predčasné</td>
+                    <td>⚠️ Odpočet len ak nie je výber do 55r</td>
+                    <td>€50/mes</td>
+                  </tr>
+                  <tr style="background:#fff7ed">
+                    <td><b>🥇 Zlato (fyzické / ETC)</b><br><small>Coingold, iShares Gold ETC</small></td>
+                    <td><span style="color:#ca8a04;font-weight:700">0–5% (volatilné)</span></td>
+                    <td><span class="badge" style="background:#fed7aa;color:#9a3412">Stredné–Vysoké</span></td>
+                    <td>5–20 rokov</td>
+                    <td>⚠️ ETC: týždeň, fyzické: dni</td>
+                    <td>⚠️ ETC: 19% daň; fyzické: oslobodené SR</td>
+                    <td>€100</td>
+                  </tr>
+                  <tr style="background:#fef2f2">
+                    <td><b>₿ Kryptomeny (BTC/ETH)</b><br><small>Bitstamp (SK), Coinbase</small></td>
+                    <td><span style="color:#dc2626;font-weight:700">-50% až +200%</span></td>
+                    <td><span class="badge" style="background:#fee2e2;color:#991b1b">Veľmi vysoké</span></td>
+                    <td>3–10 rokov</td>
+                    <td>✅ 24/7</td>
+                    <td>⚠️ Daň 19%/25% z výnosu</td>
+                    <td>€50</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="guide-tip" style="margin-top:12px"><b>Zlaté pravidlo alokácie (100 mínus vek):</b> Vek 35 → 65% akcie/ETF + 35% dlhopisy/vklady. Vek 55 → 45% akcie + 55% bezpečné produkty.</div>
+            </div>
+          </div>
+
+          <!-- ── CALCULATORS ── -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>🧮 Kalkulátory — zloženého úroku, hypotéky, dôchodku</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body open">
+
+              <!-- TABS -->
+              <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+                <button class="btn" id="calc-tab-compound" onclick="showCalc('compound')" style="background:var(--blue);color:#fff">📈 Zložený úrok</button>
+                <button class="btn btn-ghost" id="calc-tab-mortgage" onclick="showCalc('mortgage')">🏠 Hypotéka</button>
+                <button class="btn btn-ghost" id="calc-tab-retire" onclick="showCalc('retire')">🏦 Dôchodok</button>
+                <button class="btn btn-ghost" id="calc-tab-compare" onclick="showCalc('compare')">⚖️ Porovnanie</button>
+                <button class="btn btn-ghost" id="calc-tab-tax" onclick="showCalc('tax')">🧾 Daňová úspora</button>
+              </div>
+
+              <!-- COMPOUND INTEREST -->
+              <div id="calc-compound">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px">
+                  <div><label class="calc-label">Počiatočná suma (€)</label><input id="ci-principal" type="number" value="5000" class="calc-input"></div>
+                  <div><label class="calc-label">Mesačný príspevok (€)</label><input id="ci-monthly" type="number" value="100" class="calc-input"></div>
+                  <div><label class="calc-label">Ročný výnos (%)</label><input id="ci-rate" type="number" value="7" step="0.1" class="calc-input"></div>
+                  <div><label class="calc-label">Počet rokov</label><input id="ci-years" type="number" value="20" class="calc-input"></div>
+                </div>
+                <button class="btn" onclick="calcCompound()">Vypočítať</button>
+                <div id="ci-result" style="margin-top:16px"></div>
+              </div>
+
+              <!-- MORTGAGE -->
+              <div id="calc-mortgage" style="display:none">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px">
+                  <div><label class="calc-label">Hodnota nehnuteľnosti (€)</label><input id="mort-value" type="number" value="150000" class="calc-input"></div>
+                  <div><label class="calc-label">Vlastné zdroje (€)</label><input id="mort-own" type="number" value="30000" class="calc-input"></div>
+                  <div><label class="calc-label">Ročná sadzba (%)</label><input id="mort-rate" type="number" value="4.2" step="0.1" class="calc-input"></div>
+                  <div><label class="calc-label">Splatnosť (roky)</label><input id="mort-years" type="number" value="30" class="calc-input"></div>
+                </div>
+                <button class="btn" onclick="calcMortgage()">Vypočítať</button>
+                <div id="mort-result" style="margin-top:16px"></div>
+              </div>
+
+              <!-- RETIREMENT -->
+              <div id="calc-retire" style="display:none">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px">
+                  <div><label class="calc-label">Vek dnes</label><input id="ret-age" type="number" value="35" class="calc-input"></div>
+                  <div><label class="calc-label">Vek dôchodku</label><input id="ret-retire" type="number" value="62" class="calc-input"></div>
+                  <div><label class="calc-label">Mesačný príspevok (€)</label><input id="ret-monthly" type="number" value="150" class="calc-input"></div>
+                  <div><label class="calc-label">Ročný výnos II/III pilier (%)</label><input id="ret-rate" type="number" value="6" step="0.1" class="calc-input"></div>
+                  <div><label class="calc-label">Aktuálne úspory (€)</label><input id="ret-saved" type="number" value="2000" class="calc-input"></div>
+                </div>
+                <button class="btn" onclick="calcRetire()">Vypočítať</button>
+                <div id="ret-result" style="margin-top:16px"></div>
+              </div>
+
+              <!-- COMPARE 2 products -->
+              <div id="calc-compare" style="display:none">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:16px">
+                  <div style="background:#f8fafc;padding:16px;border-radius:8px">
+                    <h4 style="margin:0 0 12px;color:var(--blue)">Produkt A</h4>
+                    <div><label class="calc-label">Suma investície (€)</label><input id="cmp-a-sum" type="number" value="10000" class="calc-input"></div>
+                    <div style="margin-top:8px"><label class="calc-label">Ročný výnos (%)</label><input id="cmp-a-rate" type="number" value="7" step="0.1" class="calc-input"></div>
+                    <div style="margin-top:8px"><label class="calc-label">Ročné poplatky (%)</label><input id="cmp-a-fee" type="number" value="0.2" step="0.1" class="calc-input"></div>
+                    <div style="margin-top:8px"><label class="calc-label">Horizont (roky)</label><input id="cmp-a-years" type="number" value="20" class="calc-input"></div>
+                  </div>
+                  <div style="background:#f8fafc;padding:16px;border-radius:8px">
+                    <h4 style="margin:0 0 12px;color:#e85d04">Produkt B</h4>
+                    <div><label class="calc-label">Suma investície (€)</label><input id="cmp-b-sum" type="number" value="10000" class="calc-input"></div>
+                    <div style="margin-top:8px"><label class="calc-label">Ročný výnos (%)</label><input id="cmp-b-rate" type="number" value="3.5" step="0.1" class="calc-input"></div>
+                    <div style="margin-top:8px"><label class="calc-label">Ročné poplatky (%)</label><input id="cmp-b-fee" type="number" value="1.5" step="0.1" class="calc-input"></div>
+                    <div style="margin-top:8px"><label class="calc-label">Horizont (roky)</label><input id="cmp-b-years" type="number" value="20" class="calc-input"></div>
+                  </div>
+                </div>
+                <button class="btn" onclick="calcCompare()">Porovnať</button>
+                <div id="cmp-result" style="margin-top:16px"></div>
+              </div>
+
+              <!-- TAX SAVINGS -->
+              <div id="calc-tax" style="display:none">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px">
+                  <div><label class="calc-label">Typ klienta</label>
+                    <select id="tax-type" class="calc-input">
+                      <option value="employee">Zamestnanec</option>
+                      <option value="szco">SZČO (živnostník)</option>
+                    </select>
+                  </div>
+                  <div><label class="calc-label">Hrubý príjem / rok (€)</label><input id="tax-income" type="number" value="24000" class="calc-input"></div>
+                  <div><label class="calc-label">III. pilier mesačne (€)</label><input id="tax-iii" type="number" value="50" class="calc-input"></div>
+                  <div><label class="calc-label">Počet detí</label><input id="tax-kids" type="number" value="1" min="0" max="5" class="calc-input"></div>
+                </div>
+                <button class="btn" onclick="calcTax()">Vypočítať úsporu</button>
+                <div id="tax-result" style="margin-top:16px"></div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── RISK PROFILES ── -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>📊 Portfóliá podľa rizikového profilu</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+                <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:16px">
+                  <h4 style="margin:0 0 8px;color:#166534">🟢 Konzervatívny</h4>
+                  <div style="font-size:12px;color:#555;margin-bottom:10px">Vek 55+, nízky príjem, závisí od istoty</div>
+                  <div style="margin-bottom:6px">🏦 III. pilier (konzervat. fond) <b>40%</b></div>
+                  <div style="margin-bottom:6px">📜 Štátne dlhopisy SR <b>30%</b></div>
+                  <div style="margin-bottom:6px">💰 Sporiaci účet (pohotovosť) <b>20%</b></div>
+                  <div style="margin-bottom:6px">📊 ETF zmiešaný fond <b>10%</b></div>
+                  <div style="margin-top:10px;padding-top:10px;border-top:1px solid #86efac;font-size:12px">
+                    <b>Očakávaný výnos: 2.5–4%/rok</b><br>Maximálna strata: -5%
+                  </div>
+                </div>
+                <div style="background:#fefce8;border:1px solid #fde047;border-radius:10px;padding:16px">
+                  <h4 style="margin:0 0 8px;color:#854d0e">🟡 Vyvážený</h4>
+                  <div style="font-size:12px;color:#555;margin-bottom:10px">Vek 35–55, stredný príjem, chce rásť ale nie príliš riskovať</div>
+                  <div style="margin-bottom:6px">📈 II. pilier indexový fond <b>30%</b></div>
+                  <div style="margin-bottom:6px">🤖 Finax / ETF akciový <b>30%</b></div>
+                  <div style="margin-bottom:6px">🏦 III. pilier <b>20%</b></div>
+                  <div style="margin-bottom:6px">📜 Štátne dlhopisy <b>20%</b></div>
+                  <div style="margin-top:10px;padding-top:10px;border-top:1px solid #fde047;font-size:12px">
+                    <b>Očakávaný výnos: 5–7%/rok</b><br>Maximálna strata: -20%
+                  </div>
+                </div>
+                <div style="background:#fff1f2;border:1px solid #fda4af;border-radius:10px;padding:16px">
+                  <h4 style="margin:0 0 8px;color:#9f1239">🔴 Agresívny</h4>
+                  <div style="font-size:12px;color:#555;margin-bottom:10px">Vek do 35, vyšší príjem, dlhý horizont, chápe volatilitu</div>
+                  <div style="margin-bottom:6px">📊 ETF akcie (MSCI World, S&P500) <b>50%</b></div>
+                  <div style="margin-bottom:6px">📈 II. pilier indexový fond <b>25%</b></div>
+                  <div style="margin-bottom:6px">🥇 Zlato ETC <b>10%</b></div>
+                  <div style="margin-bottom:6px">🏦 III. pilier <b>15%</b></div>
+                  <div style="margin-top:10px;padding-top:10px;border-top:1px solid #fda4af;font-size:12px">
+                    <b>Očakávaný výnos: 7–10%/rok</b><br>Maximálna strata: -40%
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── TOP PROVIDERS ── -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>🏛️ Overoní poskytovatelia v SR — kde klienta poslať</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>Spoločnosť</th><th>Produkt</th><th>Výhoda</th><th>Nevýhoda</th><th>Odkaz</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Finax</b></td><td>ETF portfólio (robo-advisor)</td><td>Slovenský, regulovaný NBS, automatická diverzifikácia</td><td>Min. €1 000, poplatky 1.2%/rok</td><td><a href="https://finax.eu" target="_blank" style="color:var(--blue)">finax.eu</a></td></tr>
+                  <tr><td><b>NN Tatry-Sympatia</b></td><td>III. pilier DDS</td><td>Najväčší DDS v SR, stabilný</td><td>Nízky výnos konzervat. fondov</td><td><a href="https://www.nn.sk" target="_blank" style="color:var(--blue)">nn.sk</a></td></tr>
+                  <tr><td><b>Allianz — Slovenská DS</b></td><td>II. + III. pilier</td><td>Indexový fond II. pilier, dlhá história</td><td>Poplatky za správu</td><td><a href="https://www.allianz-sds.sk" target="_blank" style="color:var(--blue)">allianz-sds.sk</a></td></tr>
+                  <tr><td><b>MF SR — Štátne dlhopisy</b></td><td>Prémiové štátne dlhopisy</td><td>Bez dane, istota štátu, 3.5–4.5%</td><td>Iba počas emisie, fixná splatnosť</td><td><a href="https://www.mfsr.sk/sk/financie/statne-dlhopisy" target="_blank" style="color:var(--blue)">mfsr.sk</a></td></tr>
+                  <tr><td><b>Tatra banka</b></td><td>Termínované vklady, hypotéky</td><td>Najlepší TD spread v SR (2025)</td><td>Daň 19% z TD výnosu zráža banka</td><td><a href="https://www.tatrabanka.sk" target="_blank" style="color:var(--blue)">tatrabanka.sk</a></td></tr>
+                  <tr><td><b>365.bank</b></td><td>Sporiaci účet</td><td>Najvyššia sadzba SA v SR ~3%</td><td>Len online banka</td><td><a href="https://365.bank" target="_blank" style="color:var(--blue)">365.bank</a></td></tr>
+                  <tr><td><b>Interactive Brokers</b></td><td>ETF, akcie, dlhopisy (global)</td><td>Najnižšie poplatky globálne, €0 komisia na ETF</td><td>Angličtina, zložitejší onboarding</td><td><a href="https://www.interactivebrokers.co.uk" target="_blank" style="color:var(--blue)">ibkr.com</a></td></tr>
+                  <tr><td><b>Degiro</b></td><td>ETF, akcie</td><td>Jednoduchý UI, nízke poplatky</td><td>Menej produktov ako IBKR</td><td><a href="https://www.degiro.sk" target="_blank" style="color:var(--blue)">degiro.sk</a></td></tr>
+                  <tr><td><b>Bitstamp</b></td><td>Kryptomeny</td><td>Registrovaný v SR (EBA), licencovaný</td><td>Len crypto</td><td><a href="https://www.bitstamp.net" target="_blank" style="color:var(--blue)">bitstamp.net</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── RED FLAGS ── -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>🚨 Čomu sa vyhnúť — červené vlajky pre klientov</h3>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <ul class="checklist">
+                <li>❌ <b>Investičné ŽP</b> ako primárne investičné riešenie — poplatky 3–5%/rok zničia výnos</li>
+                <li>❌ <b>Zaručený výnos 10%+/rok</b> bez rizika — schéma Ponzi, podvod</li>
+                <li>❌ <b>Forex/CFD trading</b> pre bežných klientov — 80% retailových investorov stráca peniaze (povinné varovanie EÚ)</li>
+                <li>❌ <b>Neregulovaní sprostredkovatelia</b> — skontroluj vždy <a href="https://regfap.nbs.sk" target="_blank" style="color:var(--blue)">regfap.nbs.sk</a></li>
+                <li>❌ <b>Poplatok za "vstup"</b> viac ako 1–2% — fond s 5% vstupným poplatkom = -5% hneď</li>
+                <li>❌ <b>Komplexné produkty</b> (PRIIP s KID) bez vysvetlenia klientovi — porušenie MiFID II</li>
+                <li>⚠️ <b>Investičné ŽP</b> môže mať zmysel iba ak klient chce aj poistenie + sporenie v 1 zmluve a to len ak je vedomý poplatkov</li>
+              </ul>
+            </div>
+          </div>
+
+        </div><!-- /page-invest -->
+
+
+
 
     </div><!-- /main -->
   </div><!-- /layout -->
@@ -1058,6 +1439,200 @@
     try { return new Date(s).toLocaleString('sk-SK',{dateStyle:'short',timeStyle:'short'}); }
     catch(e) { return s; }
   }
+  function fmt(n) { return '€' + Math.round(n).toLocaleString('sk-SK'); }
+
+  // ── INVEST: CALC TABS ──
+  function showCalc(name) {
+    ['compound','mortgage','retire','compare','tax'].forEach(k => {
+      document.getElementById('calc-'+k).style.display = k===name ? '' : 'none';
+      const btn = document.getElementById('calc-tab-'+k);
+      if (btn) { btn.className = k===name ? 'btn calc-tabs-active' : 'btn btn-ghost'; }
+    });
+  }
+
+  // ── CALCULATOR 1: Compound Interest ──
+  function calcCompound() {
+    const P = +document.getElementById('ci-principal').value || 0;
+    const m = +document.getElementById('ci-monthly').value || 0;
+    const r = (+document.getElementById('ci-rate').value || 0) / 100 / 12;
+    const n = (+document.getElementById('ci-years').value || 0) * 12;
+    const FV = P * Math.pow(1+r,n) + (r>0 ? m * (Math.pow(1+r,n)-1)/r : m*n);
+    const invested = P + m*n;
+    const interest = FV - invested;
+    document.getElementById('ci-result').innerHTML = `
+      <div class="calc-box">
+        <h4>Výsledok — investícia na ${n/12} rokov</h4>
+        <div class="calc-row"><span>Celkovo vložené</span><span>${fmt(invested)}</span></div>
+        <div class="calc-row"><span>Zisk zo zloženého úroku</span><span style="color:#16a34a">+${fmt(interest)}</span></div>
+        <div class="calc-row"><span>Celková hodnota portfólia</span><span>${fmt(FV)}</span></div>
+      </div>
+      <div class="calc-warn">💡 Pri 7%/rok — každých 10 rokov sa kapitál zdvojnásobí. Začnite čím skôr.</div>`;
+  }
+
+  // ── CALCULATOR 2: Mortgage ──
+  function calcMortgage() {
+    const val = +document.getElementById('mort-value').value || 0;
+    const own = +document.getElementById('mort-own').value || 0;
+    const rAnn = (+document.getElementById('mort-rate').value || 0) / 100;
+    const yrs = +document.getElementById('mort-years').value || 0;
+    const principal = val - own;
+    const r = rAnn / 12;
+    const n = yrs * 12;
+    const payment = r > 0 ? principal * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1) : principal/n;
+    const total = payment * n;
+    const interest = total - principal;
+    const ltv = (principal/val*100).toFixed(1);
+    const ltvOk = ltv <= 80;
+    document.getElementById('mort-result').innerHTML = `
+      <div class="calc-box">
+        <h4>Hypotéka — ${fmt(principal)} na ${yrs} rokov @ ${rAnn*100}%</h4>
+        <div class="calc-row"><span>Mesačná splátka</span><span>${fmt(payment)}</span></div>
+        <div class="calc-row"><span>Celkovo zaplatené</span><span>${fmt(total)}</span></div>
+        <div class="calc-row"><span>Z toho úroky (preplatok)</span><span style="color:#dc2626">+${fmt(interest)}</span></div>
+        <div class="calc-row"><span>LTV (pomer úver/hodnota)</span><span style="color:${ltvOk?'#16a34a':'#dc2626'}">${ltv}% ${ltvOk?'✅':'❌ >80% — banka nepovolí!'}</span></div>
+        <div class="calc-row"><span>Čistý príjem potrebný (x3 splátka)</span><span>${fmt(payment*3)}/mes</span></div>
+      </div>
+      <div class="calc-warn">⚠️ Banky vyžadujú čistý príjem min. 3× mesačnú splátku. Optimum: splátka max 30% príjmu.</div>`;
+  }
+
+  // ── CALCULATOR 3: Retirement ──
+  function calcRetire() {
+    const ageNow = +document.getElementById('ret-age').value || 35;
+    const ageRet = +document.getElementById('ret-retire').value || 62;
+    const monthly = +document.getElementById('ret-monthly').value || 0;
+    const rAnn = (+document.getElementById('ret-rate').value || 0) / 100;
+    const saved = +document.getElementById('ret-saved').value || 0;
+    const years = ageRet - ageNow;
+    const r = rAnn / 12;
+    const n = years * 12;
+    const FV = saved * Math.pow(1+r,n) + (r>0 ? monthly*(Math.pow(1+r,n)-1)/r : monthly*n);
+    const stateBonus = Math.min(monthly*12, 180) * years;
+    const stateMonthly = 450; // avg SR dôchodok 2025
+    document.getElementById('ret-result').innerHTML = `
+      <div class="calc-box">
+        <h4>Dôchodok o ${years} rokov (vo veku ${ageRet})</h4>
+        <div class="calc-row"><span>Nasporiace portfólio (II+III pilier)</span><span>${fmt(FV)}</span></div>
+        <div class="calc-row"><span>Štátne bonusy za ${years}r (III. pilier)</span><span style="color:#16a34a">+${fmt(stateBonus)}</span></div>
+        <div class="calc-row"><span>Celkovo nasporiť</span><span>${fmt(FV+stateBonus)}</span></div>
+        <div class="calc-row"><span>Mesačný príjem z portfólia (4% rule)</span><span>${fmt((FV+stateBonus)*0.04/12)}/mes</span></div>
+        <div class="calc-row"><span>+ Priemerný štátny dôchodok SR</span><span>~${fmt(stateMonthly)}/mes</span></div>
+        <div class="calc-row"><span>Celkový mesačný príjem na dôchodku</span><span>${fmt((FV+stateBonus)*0.04/12+stateMonthly)}/mes</span></div>
+      </div>
+      <div class="calc-warn">📌 4% rule: ročne vyberať 4% z portfólia = portfólio vydrží 30+ rokov. Štátny dôchodok SR ~€450/mes (priemer 2025).</div>`;
+  }
+
+  // ── CALCULATOR 4: Compare 2 products ──
+  function calcCompare() {
+    function fvCalc(sum, rate, fee, years) {
+      const r = (rate - fee) / 100;
+      return sum * Math.pow(1+r, years);
+    }
+    const aS = +document.getElementById('cmp-a-sum').value||0;
+    const aR = +document.getElementById('cmp-a-rate').value||0;
+    const aF = +document.getElementById('cmp-a-fee').value||0;
+    const aY = +document.getElementById('cmp-a-years').value||0;
+    const bS = +document.getElementById('cmp-b-sum').value||0;
+    const bR = +document.getElementById('cmp-b-rate').value||0;
+    const bF = +document.getElementById('cmp-b-fee').value||0;
+    const bY = +document.getElementById('cmp-b-years').value||0;
+    const fvA = fvCalc(aS,aR,aF,aY);
+    const fvB = fvCalc(bS,bR,bF,bY);
+    const winner = fvA > fvB ? 'A' : 'B';
+    document.getElementById('cmp-result').innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px">
+        <div class="calc-box" style="border-color:${fvA>fvB?'#86efac':'#ddd'}">
+          <h4 style="color:var(--blue)">Produkt A — po ${aY} rokoch</h4>
+          <div class="calc-row"><span>Reálny čistý výnos</span><span>${(aR-aF).toFixed(2)}%/rok</span></div>
+          <div class="calc-row"><span>Vložená suma</span><span>${fmt(aS)}</span></div>
+          <div class="calc-row"><span>Finálna hodnota</span><span>${fmt(fvA)}</span></div>
+        </div>
+        <div class="calc-box" style="border-color:${fvB>fvA?'#86efac':'#ddd'}">
+          <h4 style="color:#e85d04">Produkt B — po ${bY} rokoch</h4>
+          <div class="calc-row"><span>Reálny čistý výnos</span><span>${(bR-bF).toFixed(2)}%/rok</span></div>
+          <div class="calc-row"><span>Vložená suma</span><span>${fmt(bS)}</span></div>
+          <div class="calc-row"><span>Finálna hodnota</span><span>${fmt(fvB)}</span></div>
+        </div>
+      </div>
+      <div class="calc-warn">🏆 <b>Produkt ${winner} je lepší</b> o ${fmt(Math.abs(fvA-fvB))} — rozdiel spôsobujú poplatky a výnos.</div>`;
+  }
+
+  // ── CALCULATOR 5: Tax savings ──
+  function calcTax() {
+    const type = document.getElementById('tax-type').value;
+    const income = +document.getElementById('tax-income').value || 0;
+    const iiiMon = +document.getElementById('tax-iii').value || 0;
+    const kids = +document.getElementById('tax-kids').value || 0;
+    const nezdanitelna = 4579.26;
+    const iiiDeduction = Math.min(iiiMon*12, 180);
+    const kidBonus = kids > 0 ? (kids * 140 * 12) : 0; // simplified
+    let base = income - nezdanitelna - iiiDeduction;
+    if (base < 0) base = 0;
+    const tax = base <= 41445.46 ? base*0.19 : 41445.46*0.19 + (base-41445.46)*0.25;
+    const taxWithoutOpt = Math.max(0, (income - nezdanitelna)) <= 41445.46
+      ? Math.max(0,(income-nezdanitelna))*0.19
+      : 41445.46*0.19 + (Math.max(0,(income-nezdanitelna))-41445.46)*0.25;
+    const savedTax = taxWithoutOpt - tax;
+    const totalSaving = savedTax + kidBonus;
+    document.getElementById('tax-result').innerHTML = `
+      <div class="calc-box">
+        <h4>Daňová optimalizácia — ${type==='szco'?'SZČO':'Zamestnanec'}, príjem €${income.toLocaleString()}/rok</h4>
+        <div class="calc-row"><span>Nezdaniteľná časť ZD</span><span>-${fmt(nezdanitelna)}</span></div>
+        <div class="calc-row"><span>Odpočet III. pilier (max €180)</span><span>-${fmt(iiiDeduction)}</span></div>
+        <div class="calc-row"><span>Daňový bonus na ${kids} deti</span><span style="color:#16a34a">+${fmt(kidBonus)} vrátené</span></div>
+        <div class="calc-row"><span>Úspora na dani</span><span style="color:#16a34a">+${fmt(savedTax)}</span></div>
+        <div class="calc-row"><span>Celková ročná úspora</span><span>${fmt(totalSaving)}/rok = ${fmt(totalSaving/12)}/mes</span></div>
+      </div>
+      <div class="calc-warn">💡 SZČO s príjmom €36 000 môže ušetriť €3 000–5 000/rok kombináciou paušálu 60%, III. piliera a daňového bonusu na deti.</div>`;
+  }
+
+  // ── QUICK MATCH ──
+  function runQuickMatch() {
+    const age = +document.getElementById('qm-age').value || 35;
+    const income = +document.getElementById('qm-income').value || 0;
+    const goal = document.getElementById('qm-goal').value;
+    const risk = document.getElementById('qm-risk').value;
+    const family = document.getElementById('qm-family').value;
+
+    const recs = [];
+
+    // Always recommend III. pilier
+    recs.push({p:'🏦 III. pilier DDS', why:'Daňový odpočet €180/rok + štátny príspevok. Minimálne €30/mes.', priority:'vysoká', action:'Kontaktovať NN Tatry-Sympatia alebo Allianz'});
+
+    // II. pilier indexový fond
+    if (age < 50) recs.push({p:'📈 II. pilier — indexový fond', why:'Prepnúť do indexového fondu (MSCI World). Automaticky 4% zo mzdy, dlhodobý výnos 7–10%.', priority:'vysoká', action:'Sociálna poisťovňa + výber DSS online'});
+
+    // Goal-based
+    if (goal === 'house') recs.push({p:'🏠 Hypotéka', why:'Ideálny čas: sadzby 3.5–5%, LTV max 80%. Potrebné vlastné zdroje min. 20%.', priority:'vysoká', action:'Porovnaj ponuky: Tatra, VUB, SLSP, Prima banka'});
+    if (goal === 'retire' && age < 45) recs.push({p:'📊 ETF akciový fond (Finax/IBKR)', why:`Horizont ${62-age}+ rokov → agresívne ETF (MSCI World). Dlhý čas vyhladí volatilitu.`, priority:'stredná', action:'Otvoriť účet na Finax.eu alebo Degiro.sk'});
+    if (goal === 'save') recs.push({p:'📜 Štátne dlhopisy SR', why:'Bez dane, 3.5–4.5%/rok, istota štátu. Pre sporenie 3–10 rokov ideálne.', priority:'stredná', action:'mfsr.sk → sekcia Štátne dlhopisy → Obchodník'});
+    if (goal === 'grow' && risk === 'aggressive') recs.push({p:'📊 ETF MSCI World / S&P500', why:'Maximálny rastový potenciál. IBKR alebo Degiro — €0 poplatky.', priority:'vysoká', action:'Otvoriť účet IBKR.com → ETF sekcia'});
+
+    // Family-based
+    if (family === 'mortgage' || family === 'both') recs.push({p:'🛡️ Rizikové životné poistenie', why:'Hypotéka = záväzok. ŽP kryje sumu hypotéky. Od €15/mes.', priority:'kritická', action:'Porovnaj: NN, Allianz, Kooperativa — nezačínaj ŽP bez hypotéky'});
+    if (family === 'kids' || family === 'both') recs.push({p:'🛡️ Rizikové ŽP + invalidita', why:'Deti = závislé osoby. Poistenie príjmu pri invalidite alebo smrti.', priority:'kritická', action:'NN LifeMaster alebo Allianz Flexi Life'});
+
+    // Risk-adjusted ETF
+    if (risk === 'conservative' && goal !== 'house') recs.push({p:'💰 Termínovaný vklad + Sporiaci účet', why:'Bezpečná likvidná rezerva 3–6 mesiacov výdavkov. Potom dlhopisy.', priority:'stredná', action:'365.bank (3%/rok) alebo Fio banka'});
+
+    // Crypto warning for young aggressive
+    if (risk === 'aggressive' && age < 40 && income > 2000) recs.push({p:'₿ Max 5% kryptomeny (BTC)', why:'Iba ako spekulatívna zložka. Max 5% portfólia. Len licencovaná burza.', priority:'nízka', action:'Bitstamp.net — registrovaný v SR (EBA)'});
+
+    const priorityColor = {kritická:'#dc2626', vysoká:'#16a34a', stredná:'#ca8a04', nízka:'#6b7280'};
+    const html = recs.map((r,i) => `
+      <div style="background:#f8fafc;border-left:4px solid ${priorityColor[r.priority]||'#ddd'};border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <b style="font-size:15px">${r.p}</b>
+          <span class="badge" style="background:${priorityColor[r.priority]}20;color:${priorityColor[r.priority]};font-size:11px">${r.priority}</span>
+        </div>
+        <div style="font-size:13px;color:#555;margin-bottom:6px">${r.why}</div>
+        <div style="font-size:12px;color:var(--blue)">👉 ${r.action}</div>
+      </div>`).join('');
+
+    const el = document.getElementById('qm-result');
+    el.style.display = '';
+    el.innerHTML = `<h4 style="margin:0 0 12px">Odporúčania pre klienta, vek ${age}, príjem €${income}/mes:</h4>${html}`;
+  }
+
 </script>
 </body>
 </html>
