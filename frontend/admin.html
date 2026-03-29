@@ -1164,6 +1164,338 @@
             </div>
           </div>
 
+          <!-- ══ АКЦІЇ ══ -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>📈 АКЦІЇ — повний курс рівня фонду</h3><span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <div class="guide-tip"><b>Акція</b> = частка власності в компанії. Власник акції = співвласник бізнесу. Дохід: дивіденди + зростання ціни.</div>
+
+              <h4 style="margin:16px 0 8px">🌍 Ключові індекси (benchmark)</h4>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>Індекс</th><th>Що включає</th><th>Істор. дохідність</th><th>ETF для входу</th></tr></thead>
+                <tbody>
+                  <tr><td><b>S&amp;P 500</b></td><td>500 найбільших компаній США</td><td>~10%/рік (1957–2025)</td><td>iShares CSPX, Vanguard VOO</td></tr>
+                  <tr><td><b>MSCI World</b></td><td>1 500 компаній з 23 країн</td><td>~8.5%/рік</td><td>iShares IWRD, Xtrackers XDWD</td></tr>
+                  <tr><td><b>NASDAQ 100</b></td><td>100 технол. компаній США</td><td>~13%/рік</td><td>Invesco QQQ, iShares CNDX</td></tr>
+                  <tr><td><b>MSCI Emerging</b></td><td>Китай, Індія, Бразилія...</td><td>~6%/рік (волатильн.)</td><td>iShares EEM, VFEM</td></tr>
+                  <tr><td><b>Euro Stoxx 600</b></td><td>600 компаній Єврозони</td><td>~7%/рік</td><td>iShares MEUD, Vanguard VEUR</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="margin:16px 0 8px">🏭 Сектори економіки — коли купувати</h4>
+              <table class="guide-table" style="font-size:12px">
+                <thead><tr><th>Сектор</th><th>Лідери</th><th>Коли росте</th><th>Коли падає</th></tr></thead>
+                <tbody>
+                  <tr><td>💻 Technology</td><td>Apple, Microsoft, NVIDIA</td><td>Низькі ставки, інновації</td><td>Підвищення ставок ФРС</td></tr>
+                  <tr><td>💊 Healthcare</td><td>J&amp;J, Pfizer, UnitedHealth</td><td>Завжди стабільний</td><td>Рідко</td></tr>
+                  <tr><td>🏦 Financials</td><td>JPMorgan, Visa, Berkshire</td><td>Зростання ставок</td><td>Банківська криза</td></tr>
+                  <tr><td>⚡ Energy</td><td>ExxonMobil, Shell, BP</td><td>Ціни нафти ↑</td><td>Ціни нафти ↓, зелена енергія</td></tr>
+                  <tr><td>🛒 Consumer Staples</td><td>P&amp;G, Coca-Cola, Nestle</td><td>Рецесія, невизначеність</td><td>Рідко</td></tr>
+                  <tr><td>🏗️ Real Estate (REIT)</td><td>Prologis, American Tower</td><td>Низькі ставки</td><td>Зростання ставок</td></tr>
+                  <tr><td>🔧 Industrials</td><td>Caterpillar, Boeing, Siemens</td><td>Економічний бум</td><td>Рецесія</td></tr>
+                  <tr><td>🌱 Utilities</td><td>NextEra, Enel</td><td>Невизначеність, рецесія</td><td>Зростання ставок</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="margin:16px 0 8px">📊 Фундаментальний аналіз акції — 5 ключових метрик</h4>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>Метрика</th><th>Що означає</th><th>Норма</th><th>Сигнал купівлі</th></tr></thead>
+                <tbody>
+                  <tr><td><b>P/E (Price/Earnings)</b></td><td>Ціна / прибуток на акцію</td><td>S&P500 середнє ~20</td><td>&lt;15 = дешева, &gt;30 = дорога</td></tr>
+                  <tr><td><b>P/B (Price/Book)</b></td><td>Ціна / балансова вартість</td><td>&lt;3 = нормально</td><td>&lt;1 = акція торгується нижче активів</td></tr>
+                  <tr><td><b>ROE (Return on Equity)</b></td><td>Прибуток / власний капітал</td><td>&gt;15% = добре</td><td>&gt;20% стабільно = якісний бізнес</td></tr>
+                  <tr><td><b>Дивідендна дохідність</b></td><td>Дивіденд / ціна акції</td><td>2–5% = норма</td><td>&gt;5% + стабільна = income акція</td></tr>
+                  <tr><td><b>Debt/EBITDA</b></td><td>Борг / операційний прибуток</td><td>&lt;3x = безпечно</td><td>&gt;5x = небезпечно, ризик банкрутства</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="margin:16px 0 8px">💰 Дивідендні акції — Dividend Aristocrats</h4>
+              <table class="guide-table" style="font-size:12px">
+                <thead><tr><th>Компанія</th><th>Дивіденд</th><th>Рок. підвищення</th><th>Сектор</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Johnson &amp; Johnson</b></td><td>~3%</td><td>60+ років поспіль</td><td>Healthcare</td></tr>
+                  <tr><td><b>Coca-Cola</b></td><td>~3.1%</td><td>62 роки поспіль</td><td>Consumer Staples</td></tr>
+                  <tr><td><b>Procter &amp; Gamble</b></td><td>~2.4%</td><td>67 років поспіль</td><td>Consumer Staples</td></tr>
+                  <tr><td><b>Realty Income (REIT)</b></td><td>~5.5%</td><td>Щомісячний дивіденд</td><td>Real Estate</td></tr>
+                  <tr><td><b>Microsoft</b></td><td>~0.8%</td><td>20+ років</td><td>Technology</td></tr>
+                </tbody>
+              </table>
+              <div class="guide-tip" style="margin-top:12px"><b>Стратегія для клієнта:</b> Молодий (до 40) → 80% індексні ETF + 20% окремі акції. Вік 40–60 → 60% ETF + 30% дивіденди + 10% облігації. Дохід &gt;€3000/міс → можна доданти 5% спекулятивних.</div>
+            </div>
+          </div>
+
+          <!-- ══ ОБЛІГАЦІЇ ══ -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>📜 ОБЛІГАЦІЇ — фіксований дохід, повна база</h3><span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <div class="guide-tip"><b>Облігація</b> = ви позичаєте гроші уряду або компанії. Вони платять фіксований відсоток (купон) + повертають суму в кінці строку.</div>
+
+              <h4 style="margin:16px 0 8px">🗂️ Типи облігацій</h4>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>Тип</th><th>Емітент</th><th>Дохідність</th><th>Ризик</th><th>Де купити (SR)</th></tr></thead>
+                <tbody>
+                  <tr style="background:#f0fdf4"><td><b>Державні SR</b></td><td>MF SR</td><td>3.5–4.5%</td><td>⭐ Мінімальний</td><td>mfsr.sk, банки</td></tr>
+                  <tr style="background:#f0fdf4"><td><b>Еврооблігації (EU)</b></td><td>Німеччина, Франція, ЄС</td><td>2.5–3.5%</td><td>⭐⭐ Дуже низький</td><td>IBKR, Degiro</td></tr>
+                  <tr><td><b>US Treasury</b></td><td>Уряд США</td><td>4.2–5% (2025)</td><td>⭐ Мінімальний</td><td>IBKR, ETF: TLT, SHY</td></tr>
+                  <tr><td><b>Корпоративні IG</b></td><td>Apple, Microsoft, VW</td><td>4–6%</td><td>⭐⭐⭐ Низький–середній</td><td>ETF: VCIT, LQD</td></tr>
+                  <tr><td><b>High Yield (junk)</b></td><td>Компанії рейтинг &lt;BBB</td><td>6–10%</td><td>⭐⭐⭐⭐ Середній–Вис.</td><td>ETF: HYG, JNK</td></tr>
+                  <tr><td><b>Emerging Markets</b></td><td>Бразилія, Туреччина...</td><td>7–12%</td><td>⭐⭐⭐⭐⭐ Високий</td><td>ETF: EMB, VWOB</td></tr>
+                  <tr style="background:#f0fdf4"><td><b>Інфляційні (TIPS)</b></td><td>Уряд США, захист від інфляції</td><td>CPI + 1–2%</td><td>⭐⭐ Дуже низький</td><td>ETF: TIP, STIP</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="margin:16px 0 8px">📐 Ключові концепції облігацій</h4>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>Поняття</th><th>Пояснення простою мовою</th></tr></thead>
+                <tbody>
+                  <tr><td><b>YTM (Yield to Maturity)</b></td><td>Загальна дохідність якщо тримати до кінця строку. Це найважливіша цифра!</td></tr>
+                  <tr><td><b>Дюрація</b></td><td>Чутливість до зміни ставок. Дюрація 10 = якщо ставки ↑1% → ціна ↓10%</td></tr>
+                  <tr><td><b>Кредитний рейтинг</b></td><td>AAA–BBB = Investment Grade (безпечно). BB–D = High Yield = ризик дефолту</td></tr>
+                  <tr><td><b>Зворотня залежність</b></td><td>Ставки ↑ → ціна облігацій ↓. Ставки ↓ → ціна ↑. Купуй облігації коли ставки падають!</td></tr>
+                  <tr><td><b>Yield Curve</b></td><td>Нормальна крива = довгострокові &gt; короткострокові. Інверсна = сигнал рецесії</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="margin:16px 0 8px">🎯 Стратегія Bond Ladder для клієнта</h4>
+              <div class="guide-step"><div class="guide-step-num">1</div><div class="guide-step-content"><h4>Сходи облігацій</h4><p>Купити облігації на 1, 2, 3, 4, 5 років. Кожен рік одна гасить → реінвестуєш за поточними ставками. Ніколи не блокуєш всі гроші.</p></div></div>
+              <div class="guide-tip"><b>Для SR клієнта 2025:</b> US 2-річні Treasury (4.8%) + Štátne dlhopisy SR (4.2%) + корпоративні ETF LQD (5%). Очікуваний портфель: 4.3–5%/рік без ризику дефолту.</div>
+            </div>
+          </div>
+
+          <!-- ══ МЕТАЛИ ══ -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>🥇 ДОРОГОЦІННІ МЕТАЛИ — золото, срібло, платина</h3><span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <div class="guide-tip"><b>Метали</b> = страховий поліс від інфляції, кризи, девальвації валюти. Не дають доходу самі по собі — ростуть коли все інше падає.</div>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>Метал</th><th>Ціна 2025</th><th>Річна волатильність</th><th>Навіщо</th><th>Як купити (SR)</th></tr></thead>
+                <tbody>
+                  <tr style="background:#fefce8"><td><b>🥇 Золото (XAU)</b></td><td>~$3 100/oz</td><td>15–20%</td><td>Захист від інфляції, криза, USD ↓</td><td>Fyzické: Coingold.sk, Zlatokupec.sk<br>ETF: iShares IGLN, SPDR GLD</td></tr>
+                  <tr><td><b>🥈 Срібло (XAG)</b></td><td>~$34/oz</td><td>30–40%</td><td>Промислове + монетарне. Більша волатильність ніж золото</td><td>ETF: iShares ISLN<br>Fyzické: менший мінімальний вхід</td></tr>
+                  <tr><td><b>⚪ Платина (XPT)</b></td><td>~$980/oz</td><td>25–30%</td><td>Автомобільна промисловість, каталізатори</td><td>ETF: iShares IPLT<br>Нижча кореляція з ринком</td></tr>
+                  <tr><td><b>🟤 Паладій (XPD)</b></td><td>~$960/oz</td><td>35–50%</td><td>Дуже волатильний, промислове використання</td><td>ETC: Wisdomtree PALL<br>Тільки для досвідчених</td></tr>
+                  <tr style="background:#f0fdf4"><td><b>🔴 Мідь (XCU)</b></td><td>~$9 500/т</td><td>25%</td><td>Барометр економіки. Попит = ріст, спад = падіння</td><td>ETF: iPath JJCB<br>Добре для диверсифікації</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="margin:16px 0 8px">🏆 Золото — детальний аналіз</h4>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div style="background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:14px">
+                  <b>Коли золото росте:</b><br>
+                  ✅ Інфляція висока<br>✅ Ставки ФРС падають<br>✅ Долар слабне<br>✅ Геополітична криза<br>✅ Рецесія / страх ринку<br>✅ Центральні банки купують
+                </div>
+                <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:14px">
+                  <b>Коли золото падає:</b><br>
+                  ❌ Ставки ФРС ростуть (опортун. вартість)<br>❌ Долар сильний<br>❌ Ринки акцій ростуть<br>❌ Низька інфляція<br>❌ Впевненість у економіці
+                </div>
+              </div>
+              <div class="guide-tip" style="margin-top:12px"><b>Рекомендована алокація:</b> 5–10% портфеля в золоті = захист без шкоди для дохідності. Фізичне золото в SR: без ПДВ, при продажу через рік — без податку на дохід!</div>
+            </div>
+          </div>
+
+          <!-- ══ ЦІННІ ПАПЕРИ / ETF / REIT ══ -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>🏛️ ЦІННІ ПАПЕРИ — ETF, REIT, опціони, варанти</h3><span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+
+              <h4 style="margin:0 0 12px">📦 ETF — найкращий інструмент для більшості клієнтів</h4>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>ETF</th><th>Що відстежує</th><th>TER (поплат.)</th><th>Середн. дохідн.</th><th>Для кого</th></tr></thead>
+                <tbody>
+                  <tr style="background:#f0fdf4"><td><b>iShares Core MSCI World (IWDA)</b></td><td>1500 компаній 23 країн</td><td>0.20%</td><td>~8.5%</td><td>Базовий для всіх</td></tr>
+                  <tr style="background:#f0fdf4"><td><b>Vanguard FTSE All-World (VWCE)</b></td><td>3700 компаній весь світ</td><td>0.22%</td><td>~8%</td><td>Максимальна диверсиф.</td></tr>
+                  <tr><td><b>iShares Core S&amp;P 500 (CSPX)</b></td><td>S&P500 США</td><td>0.07%</td><td>~10%</td><td>Агресивний, фокус США</td></tr>
+                  <tr><td><b>iShares MSCI Emerging (EIMI)</b></td><td>Emerging Markets</td><td>0.18%</td><td>~6%</td><td>Диверсифікація, ризик</td></tr>
+                  <tr><td><b>iShares Core EUR Corp Bond (IEAC)</b></td><td>Корп. облігації EUR</td><td>0.20%</td><td>~4–5%</td><td>Конзерватив. вікова частина</td></tr>
+                  <tr><td><b>iShares Global REIT (IREET)</b></td><td>Нерухомість весь світ</td><td>0.59%</td><td>~6%+дивіденди</td><td>Пасивний дохід з нерухом.</td></tr>
+                  <tr><td><b>iShares Physical Gold (IGLN)</b></td><td>Фізичне золото</td><td>0.12%</td><td>~5–8%</td><td>Захист портфеля</td></tr>
+                  <tr style="background:#fef2f2"><td><b>SPDR S&amp;P 500 High Dividend (SPYD)</b></td><td>80 найвисокодивіденд. в S&amp;P</td><td>0.07%</td><td>~4.5%+дивіденди</td><td>Пасивний дохід</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="margin:16px 0 8px">🏢 REIT — нерухомість на біржі</h4>
+              <div class="guide-tip"><b>REIT</b> = Real Estate Investment Trust. Купуєш акції компанії яка володіє сотнями офісів/складів/готелів. Зобов'язані виплачувати 90%+ прибутку як дивіденди.</div>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>REIT</th><th>Тип нерухомості</th><th>Дивіденд</th><th>Особливість</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Prologis (PLD)</b></td><td>Логістичні склади, Amazon</td><td>~3%</td><td>Найбільший REIT у світі</td></tr>
+                  <tr><td><b>American Tower (AMT)</b></td><td>Телекомунікаційні башти</td><td>~3.2%</td><td>Цифрова інфраструктура</td></tr>
+                  <tr><td><b>Realty Income (O)</b></td><td>Роздрібна торгівля</td><td>~5.5%</td><td>Щомісячний дивіденд, 30 років зростання</td></tr>
+                  <tr><td><b>VICI Properties</b></td><td>Казино, готелі (Vegas)</td><td>~5%</td><td>Uniq. портфель активів</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="margin:16px 0 8px">⚡ Опціони та деривативи — тільки для досвідчених</h4>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>Інструмент</th><th>Суть</th><th>Ризик</th><th>Рекомендація</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Call опціон</b></td><td>Право купити акцію за фіксованою ціною</td><td>Обмежений (премія)</td><td>Тільки Covered Call на наявні акції</td></tr>
+                  <tr><td><b>Put опціон</b></td><td>Право продати акцію (захист)</td><td>Обмежений (премія)</td><td>Страховка портфеля від падіння</td></tr>
+                  <tr><td><b>CFD (контракт на різницю)</b></td><td>Ставка на рух ціни, кредитне плече</td><td>❌ Необмежений</td><td>НЕ рекомендувати клієнтам (80% втрачають)</td></tr>
+                  <tr><td><b>Futures</b></td><td>Зобов'язання купити/продати в майбутньому</td><td>❌ Дуже високий</td><td>Тільки для хеджування великих позицій</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ══ КРИПТО ══ -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>₿ КРИПТОВАЛЮТА — повний аналіз рівня фонду</h3><span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+              <div class="guide-tip"><b>Крипто</b> = децентралізовані цифрові активи на блокчейні. Найбільша волатильність серед всіх класів активів. Max алокація: 5–10% агресивного портфеля.</div>
+
+              <h4 style="margin:16px 0 8px">🏆 Топ активи — аналіз</h4>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>Актив</th><th>Ринк. кап.</th><th>Суть</th><th>Катег. ризику</th><th>Для кого</th></tr></thead>
+                <tbody>
+                  <tr style="background:#fef9c3"><td><b>₿ Bitcoin (BTC)</b></td><td>~$1.8T (2025)</td><td>Цифрове золото, обмежена пропозиція 21M монет, Halving кожні 4 роки</td><td>🟡 Середній-Вис.</td><td>70%+ крипто-алокації</td></tr>
+                  <tr style="background:#eef2ff"><td><b>Ξ Ethereum (ETH)</b></td><td>~$300B</td><td>Смарт-контракти, DeFi, NFT, Proof of Stake, пасивний дохід ~3–5% staking</td><td>🟠 Середній-Вис.</td><td>20–25% крипто-алокації</td></tr>
+                  <tr><td><b>SOL Solana</b></td><td>~$80B</td><td>Швидкий блокчейн, DeFi, NFT. Конкурент ETH. Ризик централізації</td><td>🔴 Високий</td><td>Max 5% крипто</td></tr>
+                  <tr><td><b>USDC / USDT</b></td><td>Stablecoin</td><td>Прив'язка 1:1 до USD. Для зберігання крипто без волатильності</td><td>🟢 Низький</td><td>Ліквідна частина крипто-портфеля</td></tr>
+                  <tr style="background:#f0fdf4"><td><b>BTC ETF (spot)</b></td><td>—</td><td>iShares Bitcoin Trust (IBIT) — BTC через традиційний рахунок без гаманця</td><td>🟡 Середній-Вис.</td><td>Клієнти без крипто-знань</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="margin:16px 0 8px">📊 Bitcoin цикл — чому і як передбачити</h4>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>Подія</th><th>Дата</th><th>BTC до halvingu</th><th>ATH після</th></tr></thead>
+                <tbody>
+                  <tr><td>Halving #1</td><td>Нояб. 2012</td><td>$12</td><td>$1 150 (+2025%)</td></tr>
+                  <tr><td>Halving #2</td><td>Лип. 2016</td><td>$650</td><td>$19 800 (+2946%)</td></tr>
+                  <tr><td>Halving #3</td><td>Трав. 2020</td><td>$8 500</td><td>$69 000 (+711%)</td></tr>
+                  <tr style="background:#fefce8"><td><b>Halving #4</b></td><td><b>Квіт. 2024</b></td><td>$65 000</td><td><b>ATH 2025: ~$109K</b></td></tr>
+                  <tr style="background:#f0fdf4"><td>Halving #5 (прогноз)</td><td>2028</td><td>?</td><td>Цикл ~18–24 міс після halvingu</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="margin:16px 0 8px">🔗 DeFi — децентралізовані фінанси (пасивний дохід)</h4>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>Протокол</th><th>APY</th><th>Ризик</th><th>Суть</th></tr></thead>
+                <tbody>
+                  <tr><td><b>ETH Staking (Lido)</b></td><td>~3.5%</td><td>Низький</td><td>Стейкінг ETH, отримуєш stETH, ліквідний</td></tr>
+                  <tr><td><b>Aave (Lending)</b></td><td>3–8%</td><td>Середній</td><td>Позичати USDC, отримувати відсотки</td></tr>
+                  <tr><td><b>Uniswap (LP)</b></td><td>5–20%</td><td>Вис. (impermanent loss)</td><td>Надавати ліквідність = комісії від торгів</td></tr>
+                  <tr><td><b>USDC Saving (Coinbase)</b></td><td>~4.7%</td><td>Низький</td><td>Тримати USDC, отримувати %, регульований</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="margin:16px 0 8px">⚖️ Крипто і податки в SR</h4>
+              <ul class="checklist">
+                <li>Продаж крипто = дохід з капіталу → 19% до €41 445 / 25% вище</li>
+                <li>Обмін крипто на крипто (BTC→ETH) = оподатковуваний обмін!</li>
+                <li>Staking rewards = додатковий príjem, оподатковується в момент отримання</li>
+                <li>Збиток від крипто можна зарахувати на зменшення бази</li>
+                <li>Обов'язкова звітність у DP typ B (SZČO) або W-formulár</li>
+                <li>Зберігай всі записи: дата покупки, ціна, дата продажу, ціна</li>
+              </ul>
+              <div class="guide-warn" style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:12px;margin-top:10px;font-size:13px;color:#991b1b">🚨 <b>Ніколи не рекомендуй:</b> Luna/Terra, Dogecoin, meme coins, нові DeFi без аудиту, проєкти без whitepaper. Клієнт повинен розуміти що він може втратити 100% цієї частини.</div>
+
+              <h4 style="margin:16px 0 8px">🔐 Безпека криптовалюти</h4>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>Рівень</th><th>Рішення</th><th>Для кого</th></tr></thead>
+                <tbody>
+                  <tr style="background:#f0fdf4"><td>🟢 Початківець</td><td>Bitstamp, Coinbase (custodial) — просто як банк</td><td>До €5 000</td></tr>
+                  <tr><td>🟡 Середній</td><td>Ledger Nano X (hardware wallet) — твої ключі, твої монети</td><td>€5 000 – €50 000</td></tr>
+                  <tr><td>🔴 Просунутий</td><td>Multi-sig, cold storage, тільки seed phrase на металі</td><td>€50 000+</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ══ ПОРТФЕЛЬНИЙ МЕНЕДЖМЕНТ ══ -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>🎯 ПОРТФЕЛЬНИЙ МЕНЕДЖМЕНТ — як управляти на рівні фонду</h3><span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body">
+
+              <h4 style="margin:0 0 12px">⚖️ Asset Allocation — розподіл за класами активів</h4>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+                <div style="background:#f8fafc;border-radius:10px;padding:14px">
+                  <b style="color:#166534">🟢 Конзерватив. портфель (вік 55+)</b>
+                  <div style="margin-top:8px;font-size:13px">
+                    <div style="margin:3px 0">🏦 Облігації держ. / корп. IG <b>50%</b></div>
+                    <div style="margin:3px 0">📊 ETF (MSCI World, низьк.) <b>20%</b></div>
+                    <div style="margin:3px 0">💰 Вклади / гроші ринку <b>15%</b></div>
+                    <div style="margin:3px 0">🥇 Золото <b>10%</b></div>
+                    <div style="margin:3px 0">🏢 REIT <b>5%</b></div>
+                  </div>
+                </div>
+                <div style="background:#f8fafc;border-radius:10px;padding:14px">
+                  <b style="color:#854d0e">🟡 Збалансований (35–55 років)</b>
+                  <div style="margin-top:8px;font-size:13px">
+                    <div style="margin:3px 0">📊 ETF акції (MSCI World) <b>40%</b></div>
+                    <div style="margin:3px 0">📜 Облігації <b>25%</b></div>
+                    <div style="margin:3px 0">🏢 REIT <b>15%</b></div>
+                    <div style="margin:3px 0">🥇 Метали <b>10%</b></div>
+                    <div style="margin:3px 0">₿ BTC/ETH <b>5%</b></div>
+                    <div style="margin:3px 0">💰 Готівка (резерв 6 міс) <b>5%</b></div>
+                  </div>
+                </div>
+              </div>
+              <div style="background:#f8fafc;border-radius:10px;padding:14px;margin-bottom:16px">
+                <b style="color:#9f1239">🔴 Агресивний (до 35 років)</b>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;font-size:13px">
+                  <div><div style="margin:3px 0">📊 ETF акції (S&amp;P500/MSCI) <b>50%</b></div><div style="margin:3px 0">📈 Окремі акції (growth) <b>20%</b></div><div style="margin:3px 0">🏢 REIT <b>10%</b></div></div>
+                  <div><div style="margin:3px 0">🥇 Золото <b>5%</b></div><div style="margin:3px 0">₿ BTC (70%) + ETH (30%) <b>10%</b></div><div style="margin:3px 0">💰 Готівка <b>5%</b></div></div>
+                </div>
+              </div>
+
+              <h4 style="margin:16px 0 8px">🔄 Rebalancing — коли і як</h4>
+              <div class="guide-step"><div class="guide-step-num">1</div><div class="guide-step-content"><h4>Raz za rok (January Reset)</h4><p>Щорічно в січні: порівняй поточний розподіл з цільовим. Якщо актив відхилився &gt;5% → докупи той що «відстав», продай що «перевагнув».</p></div></div>
+              <div class="guide-step"><div class="guide-step-num">2</div><div class="guide-step-content"><h4>Threshold Rebalancing</h4><p>Якщо будь-який клас активів відхилився &gt;10% від цілі → rebalance негайно, незалежно від дати.</p></div></div>
+              <div class="guide-step"><div class="guide-step-num">3</div><div class="guide-step-content"><h4>Tax-Efficient Rebalancing</h4><p>В SR: спочатку перенаправляй нові внески (не продавай). Продавай лише якщо внески не вистачає → мінімізуєш оподаткований дохід.</p></div></div>
+
+              <h4 style="margin:16px 0 8px">📉 Управління ризиком</h4>
+              <table class="guide-table" style="font-size:13px">
+                <thead><tr><th>Ризик</th><th>Захист</th></tr></thead>
+                <tbody>
+                  <tr><td>Ринковий ризик (падіння ринку)</td><td>Диверсифікація між класами + довгий горизонт (час = найкращий захист)</td></tr>
+                  <tr><td>Валютний ризик (USD/EUR)</td><td>EUR-hedged ETF або природний баланс USD+EUR активів</td></tr>
+                  <tr><td>Інфляція</td><td>Золото + TIPS + нерухомість + акції (бізнес переносить інфляцію в ціни)</td></tr>
+                  <tr><td>Ліквідний ризик</td><td>Завжди 3–6 місяців витрат на ощадному рахунку до інвестицій</td></tr>
+                  <tr><td>Концентраційний ризик</td><td>Жодна акція &gt;5% портфеля. Жоден сектор &gt;25%.</td></tr>
+                  <tr><td>Поведінковий ризик (паніка)</td><td>Автоматичне DCA (щомісячне поповнення) → не думаєш «коли купити»</td></tr>
+                </tbody>
+              </table>
+
+              <div class="guide-success"><b>DCA — Dollar Cost Averaging (найпростіша стратегія):</b> Щомісяця фіксована сума незалежно від ціни. Купуєш більше коли дешево, менше коли дорого. За 20 років обганяє більшість активних менеджерів.</div>
+            </div>
+          </div>
+
+          <!-- ══ КАЛЬКУЛЯТОР ПОРТФЕЛЯ ══ -->
+          <div class="guide-section">
+            <div class="guide-section-header" onclick="toggleGuide(this)">
+              <h3>🧮 Калькулятор портфеля — Asset Allocation за профілем</h3><span class="toggle-icon">▼</span>
+            </div>
+            <div class="guide-body open">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px">
+                <div><label class="calc-label">Сума для інвестування (€)</label><input id="pa-sum" type="number" value="20000" class="calc-input"></div>
+                <div><label class="calc-label">Вік</label><input id="pa-age" type="number" value="35" class="calc-input"></div>
+                <div><label class="calc-label">Ризиковий профіль</label>
+                  <select id="pa-risk" class="calc-input">
+                    <option value="conservative">🟢 Конзервативний</option>
+                    <option value="balanced" selected>🟡 Збалансований</option>
+                    <option value="aggressive">🔴 Агресивний</option>
+                  </select>
+                </div>
+                <div><label class="calc-label">Горизонт (роки)</label><input id="pa-years" type="number" value="20" class="calc-input"></div>
+              </div>
+              <button class="btn" onclick="calcPortfolio()">Розрахувати портфель</button>
+              <div id="pa-result" style="margin-top:16px"></div>
+            </div>
+          </div>
+
         </div><!-- /page-invest -->
 
 
@@ -1585,7 +1917,79 @@
       <div class="calc-warn">💡 SZČO s príjmom €36 000 môže ušetriť €3 000–5 000/rok kombináciou paušálu 60%, III. piliera a daňového bonusu na deti.</div>`;
   }
 
-  // ── QUICK MATCH ──
+  // ── PORTFOLIO ALLOCATOR ──
+  function calcPortfolio() {
+    const sum = +document.getElementById('pa-sum').value || 0;
+    const age = +document.getElementById('pa-age').value || 35;
+    const risk = document.getElementById('pa-risk').value;
+    const years = +document.getElementById('pa-years').value || 20;
+
+    const profiles = {
+      conservative: {
+        label:'🟢 Конзервативний', expRet:3.5, maxLoss:5,
+        alloc:[
+          {n:'📜 Держ. облігації SR/EU/US',pct:40,etf:'IGLO, TLT, SHY'},
+          {n:'📊 ETF MSCI World',pct:20,etf:'IWDA, VWCE'},
+          {n:'💰 Термінований вклад / гроші ринку',pct:20,etf:'365.bank, Tatra TD'},
+          {n:'🥇 Золото (ETF)',pct:10,etf:'IGLN, GLD'},
+          {n:'🏢 REIT (дивіденди)',pct:10,etf:'IREET, VNQ'},
+        ]
+      },
+      balanced: {
+        label:'🟡 Збалансований', expRet:6.5, maxLoss:20,
+        alloc:[
+          {n:'📊 ETF акції MSCI World',pct:35,etf:'IWDA, VWCE'},
+          {n:'📜 Облігації (EUR корп. + держ.)',pct:25,etf:'IEAC, LQD, TLT'},
+          {n:'🏢 REIT',pct:15,etf:'IREET, Realty Income O'},
+          {n:'🥇 Метали (золото + срібло)',pct:10,etf:'IGLN, ISLN'},
+          {n:'₿ BTC (spot ETF)',pct:5,etf:'IBIT або Bitstamp'},
+          {n:'💰 Резерв (ощадний рахунок)',pct:10,etf:'365.bank 3%'},
+        ]
+      },
+      aggressive: {
+        label:'🔴 Агресивний', expRet:9, maxLoss:40,
+        alloc:[
+          {n:'📊 ETF S&P500 + NASDAQ',pct:45,etf:'CSPX, CNDX'},
+          {n:'📈 ETF MSCI World (решта країн)',pct:15,etf:'IWDA'},
+          {n:'📈 Окремі акції (growth)',pct:15,etf:'NVIDIA, MSFT, ASML'},
+          {n:'🏢 REIT',pct:10,etf:'Prologis, AMT, O'},
+          {n:'🥇 Золото',pct:5,etf:'IGLN'},
+          {n:'₿ BTC 70% + ETH 30%',pct:10,etf:'Bitstamp, IBIT'},
+        ]
+      }
+    };
+
+    const p = profiles[risk];
+    const r = p.expRet / 100;
+    const fv = sum * Math.pow(1+r, years);
+    const rows = p.alloc.map(a => {
+      const eur = sum * a.pct / 100;
+      const fvPart = eur * Math.pow(1+(a.pct<15?r*0.6:r), years);
+      return `<tr>
+        <td>${a.n}</td>
+        <td><b>${a.pct}%</b></td>
+        <td>${fmt(eur)}</td>
+        <td style="font-size:12px;color:#888">${a.etf}</td>
+        <td style="color:#16a34a">${fmt(fvPart)}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('pa-result').innerHTML = `
+      <div style="margin-bottom:12px">
+        <b>${p.label}</b> — очікувана дохідність <b>${p.expRet}%/рік</b>, макс. просідання <b>-${p.maxLoss}%</b>
+      </div>
+      <table class="guide-table" style="font-size:13px">
+        <thead><tr><th>Клас активів</th><th>%</th><th>Сума (€)</th><th>Інструмент</th><th>За ${years}р (~)</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="calc-box" style="margin-top:12px">
+        <div class="calc-row"><span>Вкладено сьогодні</span><span>${fmt(sum)}</span></div>
+        <div class="calc-row"><span>Очікувана вартість через ${years} р.</span><span>${fmt(fv)}</span></div>
+        <div class="calc-row"><span>Приріст капіталу</span><span style="color:#16a34a">+${fmt(fv-sum)} (+${Math.round((fv/sum-1)*100)}%)</span></div>
+      </div>
+      <div class="calc-warn">🔄 <b>DCA стратегія:</b> Не інвестуй всю суму одразу. Розбий на 6–12 частин по ${fmt(sum/12)}/міс. Знизить ризик погано вибраного часу входу.</div>`;
+  }
+
   function runQuickMatch() {
     const age = +document.getElementById('qm-age').value || 35;
     const income = +document.getElementById('qm-income').value || 0;
