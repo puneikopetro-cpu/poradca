@@ -226,6 +226,19 @@
     .calc-row:last-child { border:none; font-weight:700; font-size:15px; color:#15803d; }
     .calc-warn { background:#fef9c3; border:1px solid #fde047; border-radius:8px; padding:12px; margin-top:10px; font-size:13px; color:#854d0e; }
     .calc-tabs-active { background:var(--blue) !important; color:#fff !important; }
+    /* ── TTS ── */
+    .quick-text-btn {
+      background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px;
+      font-size:13px; cursor:pointer; text-align:left; transition:all .15s; color:#1e293b;
+    }
+    .quick-text-btn:hover { background:#eff6ff; border-color:#2563eb; color:#2563eb; }
+    .tts-read-btn {
+      display:inline-flex; align-items:center; gap:5px; background:#eff6ff;
+      border:1px solid #bfdbfe; border-radius:6px; padding:3px 10px; font-size:12px;
+      cursor:pointer; color:#1d4ed8; transition:all .15s; vertical-align:middle; margin-left:8px;
+    }
+    .tts-read-btn:hover { background:#2563eb; color:#fff; border-color:#2563eb; }
+    #page-reader { max-width:900px; }
 
     .empty { text-align: center; padding: 48px; color: var(--gray); font-size: 14px; }
     .loading { text-align: center; padding: 40px; color: var(--gray-l); }
@@ -275,6 +288,9 @@
         </div>
 
         <div class="nav-section">Znalosti</div>
+        <div class="nav-item" onclick="goto('reader')">
+          <span class="icon">🔊</span> AI Čítač hlasu
+        </div>
         <div class="nav-item" onclick="goto('invest')">
           <span class="icon">💹</span> Investície & kalk.
         </div>
@@ -1505,6 +1521,129 @@
   </div><!-- /layout -->
 </div><!-- /app -->
 
+<!-- ══ AI READER PAGE ══ -->
+<div class="page" id="page-reader" style="display:none;padding:24px;max-width:900px;margin:0 auto">
+
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+    <span style="font-size:36px">🔊</span>
+    <div>
+      <h2 style="margin:0;font-size:1.5rem">AI Čítač hlasu</h2>
+      <p style="margin:0;color:#888;font-size:14px">Vyberte text — počúvajte namiesto čítania</p>
+    </div>
+  </div>
+
+  <!-- VOICE SETTINGS -->
+  <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;margin-bottom:20px">
+    <h4 style="margin:0 0 16px;font-size:14px;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Nastavenia hlasu</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;align-items:end">
+      <div>
+        <label class="calc-label">Hlas</label>
+        <select id="tts-voice" class="calc-input" style="font-size:13px"></select>
+      </div>
+      <div>
+        <label class="calc-label">Rýchlosť: <b id="tts-rate-val">1.0×</b></label>
+        <input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1"
+          oninput="document.getElementById('tts-rate-val').textContent=parseFloat(this.value).toFixed(1)+'×'"
+          style="width:100%;accent-color:var(--blue)">
+      </div>
+      <div>
+        <label class="calc-label">Tón: <b id="tts-pitch-val">1.0</b></label>
+        <input type="range" id="tts-pitch" min="0.5" max="2" step="0.1" value="1"
+          oninput="document.getElementById('tts-pitch-val').textContent=parseFloat(this.value).toFixed(1)"
+          style="width:100%;accent-color:var(--blue)">
+      </div>
+      <div>
+        <label class="calc-label">Hlasitosť: <b id="tts-vol-val">100%</b></label>
+        <input type="range" id="tts-volume" min="0" max="1" step="0.05" value="1"
+          oninput="document.getElementById('tts-vol-val').textContent=Math.round(this.value*100)+'%'"
+          style="width:100%;accent-color:var(--blue)">
+      </div>
+    </div>
+  </div>
+
+  <!-- TEXT INPUT -->
+  <div style="background:#fff;border:2px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:20px">
+    <div style="background:#f8fafc;padding:12px 16px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:13px;font-weight:600;color:#475569">✏️ Text na prečítanie</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="clearTTSText()">🗑 Vymazať</button>
+        <button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="copyFromClipboard()">📋 Vložiť zo schránky</button>
+      </div>
+    </div>
+    <textarea id="tts-text" rows="8" placeholder="Sem vložte alebo napíšte ľubovoľný text... Môžete sem nakopírovať celú sekciu z Posibníka, produktový popis, skript konzultácie alebo čokoľvek iné." style="width:100%;padding:16px;border:none;font-size:14px;line-height:1.7;resize:vertical;font-family:inherit;outline:none;box-sizing:border-box;color:#1e293b"></textarea>
+    <div style="background:#f8fafc;padding:8px 16px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center">
+      <span id="tts-charcount" style="font-size:12px;color:#94a3b8">0 znakov</span>
+      <span style="font-size:12px;color:#94a3b8" id="tts-timeest">~0 min čítania</span>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+    <button id="tts-play-btn" class="btn" style="font-size:15px;padding:12px 28px;background:#16a34a;color:#fff;gap:8px" onclick="ttsPlay()">
+      ▶ Prečítať
+    </button>
+    <button class="btn btn-ghost" style="font-size:15px;padding:12px 20px" onclick="ttsPause()" id="tts-pause-btn" disabled>
+      ⏸ Pauza
+    </button>
+    <button class="btn btn-ghost" style="font-size:15px;padding:12px 20px" onclick="ttsStop()" id="tts-stop-btn" disabled>
+      ⏹ Stop
+    </button>
+    <button class="btn btn-ghost" style="font-size:14px;padding:12px 16px" onclick="ttsRewind(-30)">⏮ -30s</button>
+    <button class="btn btn-ghost" style="font-size:14px;padding:12px 16px" onclick="ttsRewind(+30)">+30s ⏭</button>
+  </div>
+
+  <!-- PROGRESS -->
+  <div id="tts-progress-wrap" style="display:none;margin-bottom:24px">
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:6px">
+      <span id="tts-current-word" style="color:var(--blue);font-weight:600"></span>
+      <span id="tts-progress-pct">0%</span>
+    </div>
+    <div style="background:#e2e8f0;border-radius:99px;height:6px;overflow:hidden">
+      <div id="tts-progress-bar" style="height:100%;background:linear-gradient(90deg,#2563eb,#16a34a);width:0%;transition:width .3s"></div>
+    </div>
+  </div>
+
+  <!-- QUICK TEXTS -->
+  <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px">
+    <h4 style="margin:0 0 14px;font-size:14px;color:#64748b;text-transform:uppercase;letter-spacing:.5px">⚡ Rýchle texty — kliknite pre načítanie</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="quick-texts">
+      <button class="quick-text-btn" onclick="loadQuickText('consult_script')">🎯 Skript prvej konzultácie</button>
+      <button class="quick-text-btn" onclick="loadQuickText('daily_workflow')">📋 Denný pracovný postup</button>
+      <button class="quick-text-btn" onclick="loadQuickText('legal_duties')">⚖️ Právne povinnosti</button>
+      <button class="quick-text-btn" onclick="loadQuickText('risk_profiles')">📊 Rizikové profily klientov</button>
+      <button class="quick-text-btn" onclick="loadQuickText('bitcoin_cycle')">₿ Bitcoin halving cykly</button>
+      <button class="quick-text-btn" onclick="loadQuickText('tax_optimization')">🧾 Daňová optimalizácia SZČO</button>
+      <button class="quick-text-btn" onclick="loadQuickText('product_catalog')">📋 Katalóg produktov SR 2025</button>
+      <button class="quick-text-btn" onclick="loadQuickText('portfolio_mgmt')">🎯 Portfóliový manažment</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FLOATING TTS PLAYER ══ -->
+<div id="tts-floater" style="display:none;position:fixed;bottom:24px;right:24px;z-index:9999;
+  background:#1e293b;color:#fff;border-radius:16px;padding:14px 18px;
+  box-shadow:0 8px 32px rgba(0,0,0,.35);min-width:300px;max-width:380px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span id="tts-fl-icon" style="font-size:20px">🔊</span>
+      <div>
+        <div style="font-size:12px;color:#94a3b8">AI Čítač</div>
+        <div id="tts-fl-word" style="font-size:13px;font-weight:600;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Načítavam...</div>
+      </div>
+    </div>
+    <button onclick="ttsStop()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:18px;line-height:1">✕</button>
+  </div>
+  <div style="background:#334155;border-radius:99px;height:4px;margin-bottom:10px;overflow:hidden">
+    <div id="tts-fl-bar" style="height:100%;background:#3b82f6;width:0%;transition:width .3s"></div>
+  </div>
+  <div style="display:flex;gap:8px;justify-content:center">
+    <button onclick="ttsRewind(-30)" style="background:#334155;border:none;color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px">⏮</button>
+    <button id="tts-fl-playpause" onclick="ttsTogglePause()" style="background:#2563eb;border:none;color:#fff;border-radius:8px;padding:6px 16px;cursor:pointer;font-size:13px;font-weight:600">⏸ Pauza</button>
+    <button onclick="ttsRewind(+30)" style="background:#334155;border:none;color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px">⏭</button>
+    <button onclick="goto('reader')" style="background:#334155;border:none;color:#94a3b8;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:12px">↗</button>
+  </div>
+</div>
+
 <script>
   const PASSWORD = 'finadvisor2024';
   const API = '';   // same origin
@@ -1541,11 +1680,20 @@
   }
 
   // ── NAVIGATION ──
-  const PAGES = { dashboard:'Dashboard', leads:'Leady (klienti)', quiz:'NBS Quiz', legislation:'Legislatíva', system:'Systém / Info', guide:'Posibnik analytika' };
+  const PAGES = { dashboard:'Dashboard', leads:'Leady (klienti)', quiz:'NBS Quiz', legislation:'Legislatíva', system:'Systém / Info', guide:'Posibnik analytika', invest:'Investície & kalkulátory', reader:'🔊 AI Čítač hlasu' };
   function goto(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const readerEl = document.getElementById('page-reader');
+    if (readerEl) readerEl.style.display = 'none';
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('page-' + page).classList.add('active');
+    if (page === 'reader') {
+      if (readerEl) readerEl.style.display = '';
+      setTimeout(addReadButtons, 400);
+    } else {
+      const el = document.getElementById('page-' + page);
+      if (el) el.classList.add('active');
+      if (page === 'invest' || page === 'guide') setTimeout(addReadButtons, 400);
+    }
     document.querySelectorAll('.nav-item').forEach(n => {
       if (n.getAttribute('onclick') === `goto('${page}')`) n.classList.add('active');
     });
@@ -2037,6 +2185,373 @@
     el.innerHTML = `<h4 style="margin:0 0 12px">Odporúčania pre klienta, vek ${age}, príjem €${income}/mes:</h4>${html}`;
   }
 
-</script>
+  // ══════════════════════════════════════════════════
+  //  TTS — AI READER (Web Speech API)
+  // ══════════════════════════════════════════════════
+  const TTS = {
+    synth: window.speechSynthesis,
+    utterance: null,
+    words: [],
+    wordIndex: 0,
+    charIndex: 0,
+    paused: false,
+    totalChars: 0,
+
+    getVoices() {
+      return TTS.synth.getVoices();
+    },
+
+    getBestVoice() {
+      const voices = TTS.getVoices();
+      const sel = document.getElementById('tts-voice');
+      if (sel && sel.value) {
+        return voices.find(v => v.name === sel.value) || null;
+      }
+      // Auto-pick: Slovak > Czech > English
+      return voices.find(v => v.lang.startsWith('sk')) ||
+             voices.find(v => v.lang.startsWith('cs')) ||
+             voices.find(v => v.lang.startsWith('en-GB')) ||
+             voices.find(v => v.lang.startsWith('en')) ||
+             voices[0] || null;
+    },
+
+    populateVoiceList() {
+      const sel = document.getElementById('tts-voice');
+      if (!sel) return;
+      const voices = TTS.getVoices();
+      sel.innerHTML = '';
+      // Group: preferred first
+      const pref = voices.filter(v => v.lang.startsWith('sk') || v.lang.startsWith('cs') || v.lang.startsWith('uk'));
+      const rest = voices.filter(v => !pref.includes(v));
+      const all = [...pref, ...rest];
+      all.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.name;
+        opt.textContent = `${v.name} (${v.lang})${v.localService ? ' ✓' : ''}`;
+        if (v.lang.startsWith('sk')) opt.style.fontWeight = '700';
+        sel.appendChild(opt);
+      });
+      // Select Slovak by default
+      const skVoice = pref[0];
+      if (skVoice) sel.value = skVoice.name;
+    }
+  };
+
+  // Init voices (async in Chrome)
+  if (window.speechSynthesis) {
+    TTS.synth.onvoiceschanged = TTS.populateVoiceList;
+    setTimeout(TTS.populateVoiceList, 300);
+  }
+
+  // Text area live stats
+  document.addEventListener('DOMContentLoaded', () => {
+    const ta = document.getElementById('tts-text');
+    if (ta) {
+      ta.addEventListener('input', updateTTSStats);
+    }
+  });
+
+  function updateTTSStats() {
+    const ta = document.getElementById('tts-text');
+    if (!ta) return;
+    const len = ta.value.length;
+    const words = ta.value.trim().split(/\s+/).filter(Boolean).length;
+    const mins = Math.round(words / 150) || 0;
+    document.getElementById('tts-charcount').textContent = `${len} znakov · ${words} slov`;
+    document.getElementById('tts-timeest').textContent = `~${mins} min počúvania`;
+  }
+
+  function ttsPlay() {
+    const text = document.getElementById('tts-text')?.value?.trim();
+    if (!text) { alert('Najprv zadajte text!'); return; }
+
+    TTS.synth.cancel();
+    TTS.paused = false;
+    TTS.words = text.split(/\s+/);
+    TTS.totalChars = text.length;
+    TTS.wordIndex = 0;
+    TTS.charIndex = 0;
+
+    const utter = new SpeechSynthesisUtterance(text);
+    TTS.utterance = utter;
+
+    const voice = TTS.getBestVoice();
+    if (voice) utter.voice = voice;
+    utter.lang = voice?.lang || 'sk-SK';
+    utter.rate = parseFloat(document.getElementById('tts-rate')?.value || 1);
+    utter.pitch = parseFloat(document.getElementById('tts-pitch')?.value || 1);
+    utter.volume = parseFloat(document.getElementById('tts-volume')?.value || 1);
+
+    utter.onboundary = (e) => {
+      if (e.name === 'word') {
+        TTS.charIndex = e.charIndex;
+        const pct = Math.round((e.charIndex / TTS.totalChars) * 100);
+        // Current word preview
+        const slice = text.slice(e.charIndex, e.charIndex + 30).split(' ')[0];
+        const el = document.getElementById('tts-current-word');
+        const pb = document.getElementById('tts-progress-bar');
+        const pct2 = document.getElementById('tts-progress-pct');
+        const flWord = document.getElementById('tts-fl-word');
+        const flBar = document.getElementById('tts-fl-bar');
+        if (el) el.textContent = '🔊 ' + slice;
+        if (pb) pb.style.width = pct + '%';
+        if (pct2) pct2.textContent = pct + '%';
+        if (flWord) flWord.textContent = slice;
+        if (flBar) flBar.style.width = pct + '%';
+      }
+    };
+
+    utter.onstart = () => {
+      document.getElementById('tts-progress-wrap').style.display = '';
+      document.getElementById('tts-pause-btn').disabled = false;
+      document.getElementById('tts-stop-btn').disabled = false;
+      document.getElementById('tts-play-btn').textContent = '▶ Číta sa...';
+      document.getElementById('tts-floater').style.display = '';
+      document.getElementById('tts-fl-playpause').textContent = '⏸ Pauza';
+    };
+
+    utter.onend = () => {
+      ttsReset();
+      document.getElementById('tts-progress-bar').style.width = '100%';
+      document.getElementById('tts-progress-pct').textContent = '100%';
+      document.getElementById('tts-current-word').textContent = '✅ Hotovo';
+      document.getElementById('tts-fl-word').textContent = '✅ Hotovo';
+      setTimeout(ttsReset, 2000);
+    };
+
+    utter.onerror = (e) => {
+      console.warn('TTS error:', e);
+      ttsReset();
+    };
+
+    TTS.synth.speak(utter);
+  }
+
+  function ttsPause() {
+    if (TTS.paused) {
+      TTS.synth.resume();
+      TTS.paused = false;
+      document.getElementById('tts-pause-btn').textContent = '⏸ Pauza';
+      document.getElementById('tts-fl-playpause').textContent = '⏸ Pauza';
+    } else {
+      TTS.synth.pause();
+      TTS.paused = true;
+      document.getElementById('tts-pause-btn').textContent = '▶ Pokračovať';
+      document.getElementById('tts-fl-playpause').textContent = '▶ Pokračovať';
+    }
+  }
+
+  function ttsTogglePause() { ttsPause(); }
+
+  function ttsStop() {
+    TTS.synth.cancel();
+    TTS.paused = false;
+    ttsReset();
+  }
+
+  function ttsReset() {
+    const pb = document.getElementById('tts-pause-btn');
+    const sb = document.getElementById('tts-stop-btn');
+    const playb = document.getElementById('tts-play-btn');
+    if (pb) { pb.disabled = true; pb.textContent = '⏸ Pauza'; }
+    if (sb) { sb.disabled = true; }
+    if (playb) playb.textContent = '▶ Prečítať';
+    document.getElementById('tts-floater').style.display = 'none';
+  }
+
+  function ttsRewind(seconds) {
+    // Web Speech API doesn't support seek — simulate by restarting from approximate position
+    if (!TTS.utterance) return;
+    const text = document.getElementById('tts-text')?.value?.trim();
+    if (!text) return;
+    const avgCharsPerSec = 12 * (parseFloat(document.getElementById('tts-rate')?.value || 1));
+    const offset = Math.max(0, TTS.charIndex + Math.round(seconds * avgCharsPerSec));
+    const newText = text.slice(Math.max(0, offset));
+    document.getElementById('tts-text').value = text; // keep original
+    // Restart from offset word
+    TTS.synth.cancel();
+    const utter2 = new SpeechSynthesisUtterance(newText);
+    const voice = TTS.getBestVoice();
+    if (voice) utter2.voice = voice;
+    utter2.lang = voice?.lang || 'sk-SK';
+    utter2.rate = parseFloat(document.getElementById('tts-rate')?.value || 1);
+    utter2.pitch = parseFloat(document.getElementById('tts-pitch')?.value || 1);
+    utter2.volume = parseFloat(document.getElementById('tts-volume')?.value || 1);
+    utter2.onboundary = TTS.utterance.onboundary;
+    utter2.onend = TTS.utterance.onend;
+    TTS.utterance = utter2;
+    TTS.charIndex = offset;
+    TTS.totalChars = text.length;
+    TTS.paused = false;
+    TTS.synth.speak(utter2);
+  }
+
+  function clearTTSText() {
+    document.getElementById('tts-text').value = '';
+    updateTTSStats();
+  }
+
+  async function copyFromClipboard() {
+    try {
+      const t = await navigator.clipboard.readText();
+      document.getElementById('tts-text').value = t;
+      updateTTSStats();
+    } catch { alert('Povolte prístup ku schránke v nastaveniach prehliadača'); }
+  }
+
+  // ── Read any section via 🔊 button ──
+  function readSection(text) {
+    document.getElementById('tts-text').value = text;
+    updateTTSStats();
+    goto('reader');
+    setTimeout(ttsPlay, 300);
+  }
+
+  // ── Quick text library ──
+  const QUICK_TEXTS = {
+    consult_script: `Skript prvej konzultácie s klientom.
+
+Úvod — rapport building, dve minúty.
+Dobrý deň, volám sa Petro z FinAdvisor. Ďakujem, že ste nás kontaktovali. Chcem vám povedať, že táto konzultácia je úplne bezplatná a bez záväzkov.
+
+Diagnostika — desať minút — kľúčové otázky.
+Čo vás teraz finančne trápi najviac? Aký je váš mesačný príjem a výdavky? Máte nejaké úvery alebo hypotéku? Čo chcete dosiahnuť za päť rokov?
+
+Analýza — päť minút — premýšľaj nahlas.
+Na základe toho, čo ste mi povedali, vidím tri oblasti, kde môžeme výrazne zlepšiť vašu situáciu.
+
+Návrh — desať minút — konkrétne s číslami.
+Ak si nastavíte tretí pilier na päťdesiat eur mesačne, za dvadsať rokov budete mať o dvadsaťpäťtisíc eur viac a ušetríte stopäťdesiat eur ročne na daniach.
+
+Záver a ďalší krok — tri minúty.
+Čo chceme urobiť ďalej? Môžeme sa stretnúť budúci týždeň a podpísať zmluvy. Vždy konkrétny dátum. Klienti nekupujú produkty — kupujú výsledky a pocit bezpečia.`,
+
+    daily_workflow: `Denný pracovný postup finančného poradcu.
+
+Makro sken — pätnásť minút. Skontroluj správy NBS, úrokové sadzby ECB, inflácia Slovenska. Ako to ovplyvňuje hypotéky a investície tento mesiac?
+
+CRM — nové leady — desať minút. Všetkých nových klientov zavolaj alebo napíš email do poludnia. Každá hodina oneskorenia znižuje šancu na konverziu o dvadsať percent.
+
+Príprava na konzultácie — dvadsať minút. Pre každého klienta na dnes: zisti jeho finančný profil, priprav dve až tri konkrétne návrhy s číslami.
+
+Konzultácie a záznamy — hlavný blok. Po každej konzultácii okamžite zaznač: čo sme dohodli, aký je ďalší krok, kedy follow-up. Aktualizuj status v CRM.
+
+Follow-up — dvadsať minút. Klientom v práci pošli správu s aktualizáciou. Nezabudnúť rovná sa základ dôvery. Vždy najprv počúvaj sedemdesiat percent, hovor tridsať percent.`,
+
+    legal_duties: `Právne povinnosti finančného sprostredkovateľa v Slovenskej republike.
+
+Registrácia v registri NBS pred začatím činnosti. Zákon sto osemdesiatšesť lomeno dvetisícdeväť, paragraf sedem. Sankcia za činnosť bez registrácie: až stotisíc eur.
+
+Odborná skúška NBS. Tridsať otázok, štyridsať minút, minimálne osemdesiat percent správnych odpovedí, to znamená dvadsaťštyri z tridsiatich.
+
+Identifikácia klienta, takzvaný KYC, pred každou zmluvou. Zákon dvestodeväťdesiatsem lomeno dvetisícosem.
+
+Posúdenie vhodnosti produktu pre klienta, suitability test. Zákon sto osemdesiatšesť lomeno dvetisícdeväť, paragraf tridsaťdva.
+
+Informovanie klienta o odmene a provízii vopred. Zákon sto osemdesiatšesť lomeno dvetisícdeväť, paragraf tridsaťosem.
+
+Archivovanie dokumentácie päť rokov. Zákon dvestodeväťdesiatsem lomeno dvetisícosem, paragraf dvadsať.
+
+Hlásenie neobvyklých obchodov na hodnotu pätnásťtisíc eur a viac na finančnú spravodajskú jednotku.
+
+GDPR — súhlas so spracovaním osobných údajov od každého klienta. Povinné profesijné poistenie zodpovednosti za škodu.`,
+
+    risk_profiles: `Rizikové profily klientov a odporúčané portfóliá.
+
+Konzervatívny profil. Vek päťdesiatpäť plus, nízky príjem, závisí od istoty. Odporúčané portfólio: štyridsiať percent tretiepilierové fondy, tridsať percent štátne dlhopisy, dvadsať percent sporiace účty, desať percent ETF zmiešaný fond. Očakávaný výnos: dve a pol až štyri percentá ročne. Maximálna strata: mínus päť percent.
+
+Vyvážený profil. Vek tridsaťpäť až päťdesiatpäť, stredný príjem, chce rásť ale nie príliš riskovať. Odporúčané portfólio: tridsaťpäť percent ETF akcie MSCI World, dvadsaťpäť percent obligácie, pätnásť percent REIT, desať percent metaly, päť percent bitcoin. Očakávaný výnos: päť až sedem percent ročne. Maximálna strata: mínus dvadsať percent.
+
+Agresívny profil. Vek do tridsaťpäť, vyšší príjem, dlhý horizont, chápe volatilitu. Odporúčané portfólio: päťdesiat percent ETF S&P päťsto a NASDAQ, pätnásť percent rast akcie, desať percent REIT, päť percent zlato, desať percent kryptomeny. Očakávaný výnos: sedem až desať percent ročne. Maximálna strata: mínus štyridsiať percent.`,
+
+    bitcoin_cycle: `Bitcoin halving cykly a analýza trhu.
+
+Prvý halving v novembri dvetisícdvanásť. Cena pred halvingom: dvanásť dolárov. Najvyššia cena po halvingu: tisíc stopäťdesiat dolárov. Nárast: dvetisíc dvadsaťpäť percent.
+
+Druhý halving v júli dvetisícšestnásť. Cena pred halvingom: šesťsto päťdesiat dolárov. Najvyššia cena po halvingu: deväťtisícosemsto dolárov. Nárast: takmer tritisíc percent.
+
+Tretí halving v máji dvetisícdvadsať. Cena pred halvingom: osemtisícpäťsto dolárov. Najvyššia cena po halvingu: šesťdesiatdeväťtisíc dolárov. Nárast: sedemsto jedenásť percent.
+
+Štvrtý halving v apríli dvetisícdvadsaťštyri. Cena pred halvingom: šesťdesiatpäťtisíc dolárov. Historické maximum v roku dvetisícpäťadvadsaťpäť: stodeväťtisíc dolárov.
+
+Piaty halving predikcia: rok dvetisícosem. Každý halving znižuje odmenu baníkov na polovicu, čím obmedzuje novú ponuku bitcoinu. Celkové maximum: dvadsaťjeden miliónov bitcoinov. Historicky cena dosahuje nové maximum osemnásť až dvadsaťštyri mesiacov po halvingu. Bitcoin sa považuje za digitálne zlato a ochranu pred infláciou.`,
+
+    tax_optimization: `Daňová optimalizácia pre klientov SZČO na Slovensku v roku dvetisícpäťadvadsaťpäť.
+
+Paušálne výdavky šesťdesiat percent, maximum dvadsaťtisíc eur. Príklad: príjem štyridsaťtisíc eur, základ dane šestnásťtisíc eur, daň devätnásť percent rovná sa tritisícštyridsať eur.
+
+Nezdaniteľná časť základu dane. V roku dvetisícpäťadvadsaťpäť: štyritisícpäťstoosemdesiatdeväť eur a dvadsaťšesť centov ročne na daňovníka.
+
+Tretí pilier, daňový odpočet. Príspevky na doplnkové dôchodkové sporenie do stoosemdesiat eur ročne sú odpočítateľné od základu dane.
+
+Daňový bonus na dieťa. V roku dvetisícpäťadvadsaťpäť: stočtyridsiať eur mesačne na dieťa do pätnásť rokov. Päťdesiat eur mesačne na dieťa od pätnásť do dvadsaťpäť rokov pri štúdiu.
+
+Príklad úspory: SZČO s príjmom tridsaťšesťtisíc eur, dve deti, legálna optimalizácia môže ušetriť tritisíc až päťtisíc eur ročne na daniach a odvodoch.`,
+
+    product_catalog: `Katalóg finančných produktov na Slovensku v roku dvetisícpäťadvadsaťpäť.
+
+Druhý pilier, indexový fond. Historická výnosnosť sedem až desať percent ročne. Riziko stredné. Horizont dvadsať až štyridsať rokov. Odporúčanie: prepnúť do indexového fondu MSCI World, automaticky štyri percentá zo mzdy.
+
+Tretí pilier, doplnkové dôchodkové sporenie. Výnosnosť tri až päť percent ročne. Riziko nízke. Štátny príspevok stoosemdesiat eur ročne. Daňový odpočet stoosemdesiat eur ročne. Minimálny vklad dvadsať eur mesačne.
+
+ETF akciové fondy cez IBKR alebo Degiro. Výnosnosť sedem až desať percent ročne. Riziko stredné až vysoké. Vstup od päťdesiat eur. Odporúčané: iShares MSCI World, Vanguard FTSE All-World.
+
+Štátne dlhopisy Slovenska. Výnosnosť tri a pol až štyri a pol percent ročne. Oslobodené od dane. Garantované štátom. Minimálny vstup tristo päťdesiat eur.
+
+Termínovaný vklad. Výnosnosť dve a pol až tri a pol percent ročne. Daň deväťnásť percent zráža banka automaticky. Najlepšie podmienky: Tatra banka, VUB.
+
+Sporiaci účet. Výnosnosť dve až tri percentá ročne. Okamžitá likvidita. Najvyššia sadzba: 365.bank, tri percentá ročne.
+
+Rizikové životné poistenie. Od pätnásť eur mesačne. Poistná suma rovná sa výška hypotéky. Povinné pri hypotéke s deťmi. Poskytovatelia: NN, Allianz, Kooperativa.`,
+
+    portfolio_mgmt: `Portfóliový manažment na úrovni fondu.
+
+Asset Allocation, rozdelenie podľa tried aktív. Zlaté pravidlo: sto mínus vek rovná sa percento akcií v portfóliu. Vek tridsaťpäť: šesťdesiatpäť percent akcie, tridsaťpäť percent dlhopisy a vklady. Vek päťdesiatpäť: štyridsiať percent akcie, šesťdesiat percent bezpečné produkty.
+
+Rebalancing, vyvažovanie portfólia. Raz ročne v januári: porovnaj aktuálne rozdelenie s cieľovým. Ak sa aktívum odchýlilo o viac ako päť percent, dokúp to čo zaostalo, predaj to čo prerastlo. Threshold rebalancing: ak sa akákoľvek trieda aktív odchýlila o viac ako desať percent, rebalance okamžite.
+
+DCA stratégia, Dollar Cost Averaging. Každý mesiac fixná suma bez ohľadu na cenu. Kupuješ viac keď je lacno, menej keď je draho. Za dvadsať rokov prekonáva väčšinu aktívnych manažérov.
+
+Riadenie rizika. Diverzifikácia medzi triedami aktív. Žiadna akcia viac ako päť percent portfólia. Žiadny sektor viac ako dvadsaťpäť percent. Vždy tri až šesť mesiacov výdavkov na sporiacom účte pred investovaním. Automatické DCA eliminuje behaviorálne riziko, teda paniku pri poklese trhu.`
+  };
+
+  function loadQuickText(key) {
+    const text = QUICK_TEXTS[key];
+    if (!text) return;
+    document.getElementById('tts-text').value = text;
+    updateTTSStats();
+    document.getElementById('tts-text').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // Add 🔊 buttons to guide sections on page load
+  function addReadButtons() {
+    document.querySelectorAll('.guide-section-header h3, .guide-section-header h4').forEach(h => {
+      if (h.querySelector('.tts-read-btn')) return; // already added
+      const section = h.closest('.guide-section');
+      if (!section) return;
+      const btn = document.createElement('button');
+      btn.className = 'tts-read-btn';
+      btn.innerHTML = '🔊 Počúvať';
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const body = section.querySelector('.guide-body');
+        const rawText = (body || section).innerText
+          .replace(/\n{3,}/g, '\n\n')
+          .replace(/\s{2,}/g, ' ')
+          .trim();
+        readSection(rawText);
+      };
+      h.appendChild(btn);
+    });
+  }
+
+  // Call after pages render
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(addReadButtons, 800);
+    const ta = document.getElementById('tts-text');
+    if (ta) ta.addEventListener('input', updateTTSStats);
+  });
+
+
 </body>
 </html>
