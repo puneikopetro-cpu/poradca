@@ -910,8 +910,8 @@
 
   function buildLeadsTable(leads) {
     if (!leads.length) return '<div class="empty">Žiadne leady</div>';
-    const statusLabels = { new:'Novy', working:'V practice', client:'Klient', closed:'Zatvority' };
-    const statusClass  = { new:'status-new', working:'status-working', client:'status-client', closed:'status-closed' };
+    const statusLabels = { new:'Nový', contacted:'Kontaktovaný', converted:'Klient', closed:'Zatvorený' };
+    const statusClass  = { new:'status-new', contacted:'status-working', converted:'status-client', closed:'status-closed' };
     return `<table>
       <thead><tr><th>#</th><th>Meno</th><th>Email</th><th>Telefón</th><th>Záujem</th><th>Správa</th><th>Zdroj</th><th>Status CRM</th><th>Dátum</th><th></th></tr></thead>
       <tbody>${leads.map((l,i) => `
@@ -927,10 +927,10 @@
             <select class="status-select ${statusClass[l.status]||'status-new'}"
               onchange="updateStatus(${l.id||i+1}, this.value, this)"
               data-id="${l.id||i+1}">
-              <option value="new"     ${(l.status||'new')==='new'     ?'selected':''}>🔵 Novy</option>
-              <option value="working" ${(l.status||'')==='working'     ?'selected':''}>🟠 V practice</option>
-              <option value="client"  ${(l.status||'')==='client'      ?'selected':''}>🟢 Klient</option>
-              <option value="closed"  ${(l.status||'')==='closed'      ?'selected':''}>⚫ Zatvority</option>
+              <option value="new"        ${(l.status||'new')==='new'        ?'selected':''}>🔵 Nový</option>
+              <option value="contacted"  ${(l.status||'')==='contacted'     ?'selected':''}>🟠 Kontaktovaný</option>
+              <option value="converted"  ${(l.status||'')==='converted'     ?'selected':''}>🟢 Klient</option>
+              <option value="closed"     ${(l.status||'')==='closed'        ?'selected':''}>⚫ Zatvorený</option>
             </select>
           </td>
           <td>${fmtDate(l.created_at||l.date)}</td>
