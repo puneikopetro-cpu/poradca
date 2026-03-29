@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
+from fastapi.responses import JSONResponse, FileResponse, HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import HTTPException as FastAPIHTTPException
 import os
@@ -43,6 +43,87 @@ app.add_middleware(
 )
 
 register_exception_handlers(app)
+
+# ── MAINTENANCE MODE ─────────────────────────────────────────────────────────
+# Set MAINTENANCE_MODE=true in Railway env to hide site from public.
+# Owner access: https://finadvisor.sk/?preview=fa_owner_2024
+# To unlock permanently: add cookie fa_preview=fa_owner_2024 (done automatically)
+
+_MAINTENANCE = os.environ.get("MAINTENANCE_MODE", "false").lower() == "true"
+_PREVIEW_TOKEN = "fa_owner_2024"
+_COOKIE_NAME = "fa_preview"
+
+# Paths that are ALWAYS accessible (API, webhook, health)
+_PUBLIC_PATHS = {"/health", "/telegram/webhook", "/robots.txt", "/sitemap.xml"}
+
+_COMING_SOON_HTML = """<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FinAdvisor SK — Čoskoro</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;
+       background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);font-family:'Segoe UI',sans-serif;color:#fff}
+  .card{text-align:center;padding:48px 40px;max-width:480px}
+  .logo{font-size:48px;margin-bottom:16px}
+  h1{font-size:2rem;font-weight:700;margin-bottom:8px}
+  .sub{color:#94a3b8;font-size:1.1rem;margin-bottom:32px}
+  .badge{display:inline-block;background:#1d4ed8;color:#fff;border-radius:20px;
+         padding:6px 18px;font-size:13px;font-weight:600;letter-spacing:.5px;margin-bottom:32px}
+  .info{background:rgba(255,255,255,.07);border-radius:12px;padding:20px;font-size:14px;color:#cbd5e1;line-height:1.8}
+  .info b{color:#fff}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">💹</div>
+  <h1>FinAdvisor SK</h1>
+  <p class="sub">Finančné poradenstvo na najvyššej úrovni</p>
+  <div class="badge">🚧 Čoskoro spustíme</div>
+  <div class="info">
+    <b>Pracujeme na niečom výnimočnom.</b><br><br>
+    Investície · Hypotéky · Poistenie<br>
+    II. a III. pilier · Daňová optimalizácia<br><br>
+    <b>Kontakt:</b> petropuneiko@gmail.com<br>
+    <b>Tel:</b> +421 908 118 957
+  </div>
+</div>
+</body>
+</html>"""
+
+
+@app.middleware("http")
+async def maintenance_gate(request: Request, call_next):
+    if not _MAINTENANCE:
+        return await call_next(request)
+
+    path = request.url.path
+
+    # Always allow API / internal paths
+    if path in _PUBLIC_PATHS or path.startswith(("/leads", "/auth", "/quiz", "/profile", "/rec")):
+        return await call_next(request)
+
+    # Allow if secret token passed in query → set cookie and redirect
+    token_param = request.query_params.get("preview", "")
+    if token_param == _PREVIEW_TOKEN:
+        redirect_path = path if path != "/" else "/"
+        resp = Response(
+            status_code=302,
+            headers={"Location": redirect_path.split("?")[0]},
+        )
+        resp.set_cookie(_COOKIE_NAME, _PREVIEW_TOKEN, max_age=60 * 60 * 24 * 30, httponly=True, samesite="lax")
+        return resp
+
+    # Allow if cookie present and valid
+    cookie_val = request.cookies.get(_COOKIE_NAME, "")
+    if cookie_val == _PREVIEW_TOKEN:
+        return await call_next(request)
+
+    # Otherwise → Coming Soon
+    return HTMLResponse(_COMING_SOON_HTML, status_code=200)
+# ─────────────────────────────────────────────────────────────────────────────
 
 # Auto-create all tables on startup (SQLite dev + PostgreSQL prod)
 Base.metadata.create_all(bind=engine)
