@@ -1,0 +1,17 @@
+{
+  "name": "FinAdvisor SK",
+  "short_name": "FinAdvisor",
+  "description": "Tvoj osobný finančný poradca v mobile",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/static/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/static/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["finance", "education"],
+  "lang": "sk",
+  "screenshots": []
+}

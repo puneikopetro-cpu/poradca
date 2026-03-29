@@ -10,3 +10,4 @@ python-dotenv==1.0.1
 pydantic-settings==2.2.1
 python-multipart==0.0.9
 python-telegram-bot==20.7
+stripe==8.11.0
