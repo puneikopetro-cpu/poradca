@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2563eb">
+<title>Stiahnuť aplikáciu — FinAdvisor SK</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f172a;color:#f1f5f9;font-family:-apple-system,'Segoe UI',sans-serif;min-height:100vh;padding:0 0 60px}
+.nav{background:#0f172a;border-bottom:1px solid #1e293b;padding:14px 20px;display:flex;align-items:center;gap:12px}
+.nav a{color:#94a3b8;text-decoration:none;font-size:13px}
+.nav-logo{font-weight:800;font-size:16px;color:#fff;text-decoration:none!important}
+.hero{text-align:center;padding:48px 20px 32px;background:linear-gradient(180deg,#1e293b 0%,#0f172a 100%)}
+.hero h1{font-size:clamp(24px,5vw,36px);font-weight:900;margin-bottom:12px}
+.hero p{color:#94a3b8;font-size:15px;max-width:400px;margin:0 auto 28px;line-height:1.6}
+.app-icon{width:90px;height:90px;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 24px;box-shadow:0 8px 32px rgba(37,99,235,.4)}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.badge{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 12px;font-size:12px;color:#94a3b8}
+.section{max-width:480px;margin:0 auto;padding:0 20px}
+.platform-tabs{display:flex;gap:0;margin:32px 0 0;border-radius:12px;overflow:hidden;border:1px solid #1e293b}
+.tab{flex:1;padding:12px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;background:#1e293b;color:#94a3b8;border:none;transition:.15s}
+.tab.active{background:#2563eb;color:#fff}
+.tab-content{display:none;margin-top:24px}
+.tab-content.active{display:block}
+.steps{display:flex;flex-direction:column;gap:16px;margin-bottom:28px}
+.step{display:flex;gap:14px;align-items:flex-start}
+.step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+.step-body{flex:1}
+.step-body b{display:block;font-size:14px;font-weight:700;margin-bottom:3px}
+.step-body span{font-size:13px;color:#94a3b8;line-height:1.5}
+.step-img{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:12px 16px;margin-top:8px;font-size:12px;color:#64748b;text-align:center}
+.note{background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:14px 16px;font-size:13px;color:#93c5fd;margin-bottom:24px;line-height:1.5}
+.cta-btn{display:block;width:100%;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:800;cursor:pointer;text-align:center;text-decoration:none;margin-bottom:12px}
+.cta-tg{display:block;width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none}
+.features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0}
+.feat{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px;text-align:center}
+.feat-icon{font-size:24px;margin-bottom:6px}
+.feat-text{font-size:12px;color:#94a3b8;line-height:1.4}
+.feat-text b{display:block;color:#f1f5f9;font-size:13px;margin-bottom:2px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">⚡ FinAdvisor SK</a>
+  <span style="flex:1"></span>
+  <a href="/app">Otvoriť web →</a>
+</nav>
+
+<div class="hero">
+  <div class="app-icon">📱</div>
+  <h1>Stiahni si aplikáciu</h1>
+  <p>Vzdelávaj sa kdekoľvek — offline, bez internetu. Inštalácia zadarmo, žiadny App Store.</p>
+  <div class="badges">
+    <span class="badge">✅ iOS iPhone & iPad</span>
+    <span class="badge">✅ Android</span>
+    <span class="badge">✅ Windows / Mac</span>
+    <span class="badge">✅ Offline režim</span>
+  </div>
+</div>
+
+<div class="section">
+  <div class="features">
+    <div class="feat"><div class="feat-icon">🎮</div><div class="feat-text"><b>XP & Levely</b>Gamifikácia — uč sa ako hráš</div></div>
+    <div class="feat"><div class="feat-icon">📴</div><div class="feat-text"><b>Offline</b>Funguje bez internetu</div></div>
+    <div class="feat"><div class="feat-icon">🔔</div><div class="feat-text"><b>Notifikácie</b>Denná výzva každý deň</div></div>
+    <div class="feat"><div class="feat-icon">🚀</div><div class="feat-text"><b>Rýchla</b>Ako natívna aplikácia</div></div>
+  </div>
+
+  <div class="platform-tabs">
+    <button class="tab active" id="tab-ios" onclick="switchTab('ios')">🍎 iPhone / iPad</button>
+    <button class="tab" id="tab-android" onclick="switchTab('android')">🤖 Android</button>
+    <button class="tab" id="tab-pc" onclick="switchTab('pc')">💻 PC / Mac</button>
+  </div>
+
+  <!-- iOS -->
+  <div class="tab-content active" id="content-ios">
+    <div class="note">📌 iPhone a iPad nepodporujú priame stiahnutie z App Store — použite Safari a "Pridať na domovskú obrazovku". Trvá 10 sekúnd.</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <b>Otvorte Safari</b>
+          <span>Skopírujte odkaz a otvorte ho v prehliadači Safari (nie Chrome!):<br><strong style="color:#60a5fa">https://finadvisor.sk/app</strong></span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <b>Klepnite na ikonu Zdieľať</b>
+          <span>Nájdite tlačidlo <strong>□↑</strong> (štvorec so šípkou nahor) v spodnej lište Safari.</span>
+          <div class="step-img">📲 Tlačidlo je v strednej časti spodnej lišty Safari</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <b>Vyberte "Pridať na domovskú obrazovku"</b>
+          <span>Scrollujte nadol v menu a klepnite na <strong>"Pridať na domovskú obrazovku"</strong> (Add to Home Screen).</span>
+          <div class="step-img">🏠 Ikona domu s pluskom (+)</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <b>Potvrďte "Pridať"</b>
+          <span>Klepnite na <strong>"Pridať"</strong> vpravo hore. Hotovo! Ikona sa objaví na ploche.</span>
+        </div>
+      </div>
+    </div>
+    <a href="https://finadvisor.sk/app" class="cta-btn">Otvoriť v Safari →</a>
+  </div>
+
+  <!-- Android -->
+  <div class="tab-content" id="content-android">
+    <div class="note">📌 Android automaticky ponúkne inštaláciu. Ak nie — použijte menu prehliadača.</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <b>Otvorte Chrome</b>
+          <span>Prejdite na <strong style="color:#60a5fa">https://finadvisor.sk/app</strong> v prehliadači Chrome.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <b>Banner "Inštalovať aplikáciu"</b>
+          <span>Chrome automaticky zobrazí banner v spodnej časti. Klepnite <strong>"Inštalovať"</strong>.</span>
+          <div class="step-img">📥 Ak banner nevidíte — pokračujte krokom 3</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <b>Menu prehliadača (⋮)</b>
+          <span>Klepnite na <strong>⋮</strong> (tri bodky) vpravo hore → <strong>"Pridať na domovskú obrazovku"</strong> alebo <strong>"Inštalovať aplikáciu"</strong>.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <b>Potvrďte inštaláciu</b>
+          <span>Klepnite <strong>"Inštalovať"</strong> v dialógu. Ikona sa pridá na plochu.</span>
+        </div>
+      </div>
+    </div>
+    <a href="https://finadvisor.sk/app" class="cta-btn">Otvoriť v Chrome →</a>
+  </div>
+
+  <!-- PC/Mac -->
+  <div class="tab-content" id="content-pc">
+    <div class="note">💻 Chrome a Edge podporujú inštaláciu ako desktopovú aplikáciu — bez App Store, funguje offline.</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <b>Otvorte Chrome alebo Edge</b>
+          <span>Prejdite na <strong style="color:#60a5fa">https://finadvisor.sk/app</strong></span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <b>Ikona inštalácie v adresnom riadku</b>
+          <span>Vpravo v adresnom riadku sa objaví ikona <strong>⊞</strong> (počítač so šípkou). Kliknite na ňu.</span>
+          <div class="step-img">🖥️ Chrome: ikona v pravej časti adresného riadka</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <b>Kliknite "Inštalovať"</b>
+          <span>Potvrďte dialóg. Aplikácia sa otvorí vo vlastnom okne ako natívna app.</span>
+        </div>
+      </div>
+    </div>
+    <a href="https://finadvisor.sk/app" class="cta-btn">Otvoriť v Chrome / Edge →</a>
+  </div>
+
+  <!-- Telegram -->
+  <div style="margin-top:28px;padding-top:24px;border-top:1px solid #1e293b">
+    <div style="font-size:13px;color:#94a3b8;text-align:center;margin-bottom:12px">Alebo používaj cez Telegram — bez inštalácie</div>
+    <a href="https://t.me/finadvisor_sk_bot" class="cta-tg">✈️ Otvoriť @finadvisor_sk_bot</a>
+  </div>
+</div>
+
+<script>
+function switchTab(tab) {
+  ['ios','android','pc'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+    document.getElementById('content-'+t).classList.toggle('active', t===tab);
+  });
+}
+// Auto-detect platform
+const ua = navigator.userAgent;
+if (/android/i.test(ua)) switchTab('android');
+else if (/iPad|iPhone|iPod/.test(ua)) switchTab('ios');
+</script>
+
+</body>
+</html>

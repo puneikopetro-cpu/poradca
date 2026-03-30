@@ -407,6 +407,11 @@ async def admin_email_broadcast(request: Request):
 
 
 
+@app.get("/install", include_in_schema=False)
+def install_page():
+    return _html("install.html")
+
+
 @app.get("/app", include_in_schema=False)
 def serve_app():
     return _html("app.html")
