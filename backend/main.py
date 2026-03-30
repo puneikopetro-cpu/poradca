@@ -452,12 +452,15 @@ async def _get_tg_app():
         _tg_app = await build_application(settings.TELEGRAM_BOT_TOKEN)
     return _tg_app
 
+def _reset_tg_app():
+    global _tg_app
+    _tg_app = None
+
 @app.post("/telegram/webhook", tags=["telegram"])
 async def telegram_webhook(request: Request):
     """Receives Telegram updates via webhook (used in production)."""
-    token = settings.TELEGRAM_BOT_TOKEN
-    if not token:
-        return JSONResponse({"ok": False}, status_code=503)
+    if not settings.TELEGRAM_BOT_TOKEN:
+        return JSONResponse({"ok": False, "reason": "no token"}, status_code=503)
     try:
         from telegram import Update
         update_data = await request.json()
@@ -467,8 +470,6 @@ async def telegram_webhook(request: Request):
         return {"ok": True}
     except Exception as e:
         import traceback
-        err = traceback.format_exc()
-        logger.error("Webhook error: %s\n%s", str(e), err)
-        global _tg_app
-        _tg_app = None
+        logger.error("Webhook error: %s\n%s", str(e), traceback.format_exc())
+        _reset_tg_app()
         return JSONResponse({"ok": False, "error": str(e)}, status_code=500)
