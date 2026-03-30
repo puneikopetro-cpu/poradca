@@ -478,7 +478,7 @@
       </div>
       <div class="nbs-badge">
         <div class="nbs-dot"></div>
-        Registrovany financny sprostredkovatel | NBS Slovakia
+        Vzdelávacia platforma | Registrovaná v SR
       </div>
     </div>
     <div class="hero-visual">
@@ -692,7 +692,7 @@
       <div class="why-card">
         <div class="why-icon">🎓</div>
         <h3>Certifikovany poradca</h3>
-        <p>Licencia NBS, pravidelne vzdelavanie a 12 rokov praxe na slovenskom trhu.</p>
+        <p>Vzdelávacia platforma pre finančnú gramotnosť. Obsah slúži výlučne na vzdelávacie účely.</p>
       </div>
       <div class="why-card">
         <div class="why-icon">📱</div>
@@ -1012,7 +1012,8 @@
     <div class="footer-top">
       <div class="footer-brand">
         <div class="logo" style="display:block;margin-bottom:10px">Fin<span style="color:#fff">Advisor</span> SK</div>
-        <p>Profesionalny financny poradca na Slovensku. Investicie, hypoteky, poistenie a danove poradenstvo.</p>
+        <p>Vzdelávacia platforma pre finančnú gramotnosť. Obsah slúži výlučne na vzdelávacie účely.<br>Nie sme finančný sprostredkovateľ podľa zákona 186/2009 Z.z.</p>
+        <p style="margin-top:8px;font-size:0.8rem;opacity:0.7">Prevádzkovateľ: Petro Puneiko · petropuneiko@gmail.com · +421 908 118 957</p>
       </div>
       <div class="footer-links">
         <h4>Sluzby</h4>
@@ -1028,7 +1029,8 @@
         <ul>
           <li><a href="#ceny">Cennik</a></li>
           <li><a href="#faq">Caste otazky</a></li>
-          <li><a href="/privacy">Ochrana osobnych udajov</a></li>
+          <li><a href="/privacy">Ochrana osobných údajov</a></li>
+          <li><a href="/terms">Obchodné podmienky</a></li>
         </ul>
       </div>
       <div class="footer-links">
@@ -1042,7 +1044,7 @@
     </div>
     <div class="footer-bottom">
       <span>&copy; 2026 FinAdvisor SK. Vsetky prava vyhradene.</span>
-      <span>Licencovany financny sprostredkovatel | NBS</span>
+      <span>Vzdelávacia platforma | Nie sme finančný sprostredkovateľ</span>
     </div>
   </div>
 </footer>
@@ -1166,6 +1168,20 @@
       document.querySelector(".nav-links").style.display = "";
     });
   });
+</script>
+
+<!-- COOKIE CONSENT BANNER (GDPR) -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:#fff;padding:16px 24px;z-index:99999;display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:0.9rem;border-top:2px solid #3b82f6;">
+  <span style="flex:1;min-width:200px">Táto stránka používa technické cookies nevyhnutné pre základnú funkčnosť. Analytické cookies nepoužívame. <a href="/privacy" style="color:#3b82f6">Viac info</a></span>
+  <button onclick="cookieChoice('accept')" style="background:#3b82f6;color:#fff;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Prijať</button>
+  <button onclick="cookieChoice('reject')" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.4);padding:8px 20px;border-radius:6px;cursor:pointer">Odmietnuť</button>
+</div>
+<script>
+(function(){
+  var b=document.getElementById('cookie-banner');
+  if(!localStorage.getItem('cookieConsent')){b.style.display='flex';}
+  window.cookieChoice=function(v){localStorage.setItem('cookieConsent',v);b.style.display='none';};
+})();
 </script>
 </body>
 </html>

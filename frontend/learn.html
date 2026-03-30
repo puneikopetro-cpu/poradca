@@ -192,6 +192,11 @@ section{padding:48px 24px;max-width:960px;margin:0 auto}
   </div>
 </nav>
 
+<!-- LEGAL DISCLAIMER BAR -->
+<div style="background:#fef3c7;border-bottom:1px solid #fcd34d;padding:8px 20px;text-align:center;font-size:0.82rem;color:#92400e;line-height:1.4">
+  Obsah tejto platformy slúži <strong>výlučne na vzdelávacie účely</strong>. Neposkytujeme finančné poradenstvo v zmysle zákona 186/2009 Z.z. Pred akýmkoľvek finančným rozhodnutím sa poraďte s licencovaným odborníkom.
+</div>
+
 <!-- HERO -->
 <div class="hero" id="hero-section">
   <!-- IQ RING -->
@@ -951,6 +956,20 @@ function setLearnLang(l){
 }
 const _bl=(navigator.language||'sk').substring(0,2).toLowerCase();
 setLearnLang({sk:'sk',cs:'sk',en:'en',uk:'uk',pl:'pl',de:'de',hu:'hu'}[_bl]||'sk');
+</script>
+
+<!-- COOKIE CONSENT BANNER (GDPR) -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:#fff;padding:16px 24px;z-index:99999;display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:0.9rem;border-top:2px solid #3b82f6;">
+  <span style="flex:1;min-width:200px">Táto stránka používa technické cookies nevyhnutné pre základnú funkčnosť. Analytické cookies nepoužívame. <a href="/privacy" style="color:#3b82f6">Viac info</a></span>
+  <button onclick="cookieChoice('accept')" style="background:#3b82f6;color:#fff;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Prijať</button>
+  <button onclick="cookieChoice('reject')" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.4);padding:8px 20px;border-radius:6px;cursor:pointer">Odmietnuť</button>
+</div>
+<script>
+(function(){
+  var b=document.getElementById('cookie-banner');
+  if(!localStorage.getItem('cookieConsent')){b.style.display='flex';}
+  window.cookieChoice=function(v){localStorage.setItem('cookieConsent',v);b.style.display='none';};
+})();
 </script>
 </body>
 </html>

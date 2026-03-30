@@ -191,6 +191,11 @@ def privacy():
     return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "privacy.html"))
 
 
+@app.get("/terms", include_in_schema=False)
+def terms():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "terms.html"))
+
+
 @app.get("/admin", include_in_schema=False)
 def admin_panel():
     return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "admin.html"))

@@ -78,27 +78,35 @@ async def subscription_success(session_id: str = ""):
     return HTMLResponse(content="""<!DOCTYPE html>
 <html lang="sk">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="refresh" content="4;url=/learn">
+<meta http-equiv="refresh" content="8;url=/learn">
 <title>Platba úspešná — FinAdvisor SK</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0f172a;color:#f1f5f9;font-family:-apple-system,sans-serif;
      display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:24px}
-.card{background:#1e293b;border:1px solid #334155;border-radius:24px;padding:48px 32px;max-width:420px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:24px;padding:48px 32px;max-width:460px}
 .icon{font-size:64px;margin-bottom:20px}
 h1{font-size:24px;font-weight:800;margin-bottom:10px}
-p{color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:24px}
+p{color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:16px}
 .btn{display:inline-block;background:#2563eb;color:#fff;border-radius:12px;
      padding:14px 28px;font-size:15px;font-weight:700;text-decoration:none}
 .progress{height:3px;background:#334155;border-radius:99px;overflow:hidden;margin-top:20px}
-.progress-fill{height:100%;background:#2563eb;border-radius:99px;animation:fill 4s linear forwards}
+.progress-fill{height:100%;background:#2563eb;border-radius:99px;animation:fill 8s linear forwards}
 @keyframes fill{from{width:0}to{width:100%}}
+.withdrawal-box{background:#0f2a1a;border:1px solid #166534;border-radius:12px;padding:16px;margin:20px 0;text-align:left;font-size:13px;color:#86efac;line-height:1.6}
+.withdrawal-box strong{color:#4ade80}
 </style></head>
 <body>
 <div class="card">
   <div class="icon">🎉</div>
   <h1>Platba úspešná!</h1>
-  <p>Vitaj v FinAdvisor SK Pro.<br>Presmerujeme ťa na Academy za 4 sekundy.</p>
+  <p>Vitaj v FinAdvisor SK. Presmerujeme ťa na Academy za 8 sekúnd.</p>
+  <div class="withdrawal-box">
+    <strong>Právo na odstúpenie od zmluvy (14 dní)</strong><br>
+    Máte právo odstúpiť od tejto zmluvy bez udania dôvodu do 14 dní od dňa uzavretia zmluvy podľa § 7 zákona č. 102/2014 Z.z.<br><br>
+    Ak ste za toto obdobie nevyčerpali žiadny obsah, máte nárok na plné vrátenie platby.<br><br>
+    Kontakt: <a href="mailto:petropuneiko@gmail.com" style="color:#60a5fa">petropuneiko@gmail.com</a>
+  </div>
   <a href="/learn" class="btn">Otvoriť Academy →</a>
   <div class="progress"><div class="progress-fill"></div></div>
 </div>
