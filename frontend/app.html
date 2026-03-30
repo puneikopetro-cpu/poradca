@@ -284,9 +284,9 @@ footer a{color:#60a5fa;text-decoration:none}
       <ul class="price-feats">
         <li data-i18n="pe1">Všetko z Pro</li>
         <li data-i18n="pe2">👨‍👩‍👧 Family sharing (4 osoby)</li>
-        <li data-i18n="pe3">📞 Mesačná konzultácia 30 min</li>
+        <li data-i18n="pe3">📧 Prioritná emailová podpora</li>
         <li data-i18n="pe4">📄 PDF reporty</li>
-        <li data-i18n="pe5">🏆 NBS certifikát</li>
+        <li data-i18n="pe5">🎓 Certifikát o absolvovaní kurzu</li>
       </ul>
       <button class="btn-plan btn-plan-ghost" onclick="openCheckout('expert')" data-i18n="btn_choose">Vybrať</button>
     </div>
@@ -369,7 +369,7 @@ footer a{color:#60a5fa;text-decoration:none}
     <div class="form-group"><label>Email</label><input class="form-input" type="email" id="reg-email" placeholder="email@example.com"></div>
     <div class="form-group"><label data-i18n="form_pwd">Heslo</label><input class="form-input" type="password" id="reg-pwd" data-i18n-ph="form_pwd_ph"></div>
     <button class="modal-btn" onclick="submitRegister()" data-i18n="modal_btn">Zaregistrovať sa zadarmo →</button>
-    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:10px" data-i18n="modal_terms">Registráciou súhlasíš s podmienkami</p>
+    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:10px">Registráciou súhlasíš s <a href="/terms" style="color:#60a5fa">podmienkami</a>. Platené plány: 14-dňové právo na odstúpenie (zák. 102/2014).</p>
   </div>
 </div>
 
@@ -529,8 +529,8 @@ const T = {
     modal_btn:'Зареєструватися безкоштовно →', modal_terms:'Реєструючись ти погоджуєшся з умовами'
   },
   pl:{
-    nav_cta:'Zacznij za darmo', hero_badge:'🇸🇰 #1 doradca finansowy na Słowacji',
-    hero_title:'Twój osobisty<br><span>doradca finansowy</span><br>w telefonie',
+    nav_cta:'Zacznij za darmo', hero_badge:'🇸🇰 #1 platforma edukacji finansowej na Słowacji',
+    hero_title:'Twój osobisty<br><span>przewodnik finansowy</span><br>w nauce',
     hero_sub:'Kalkulatory, inwestycje, optymalizacja podatkowa, doradca AI — wszystko po polsku za cenę 2 kaw miesięcznie.',
     hero_cta1:'Zacznij za darmo', hero_cta2:'Dowiedz się więcej',
     stat1:'pytań NBS', stat2:'kalkulatorów', stat3:'języków', stat4:'na start',
@@ -539,7 +539,7 @@ const T = {
     f1_title:'Optymalizator podatkowy', f1_desc:'Pracownik i samozatrudniony. Średnia oszczędność €2 400/rok.',
     f2_title:'Symulator hipoteczny', f2_desc:'Rata, nadpłata, LTV. Dowiedz się ile naprawdę zapłacisz.',
     f3_title:'Przewodnik inwestycyjny', f3_desc:'ETF, filary emerytalne, procent składany.',
-    f4_title:'Doradca AI', f4_desc:'Zapytaj o cokolwiek. Odpowiedź jak od prywatnego doradcy. 24/7.',
+    f4_title:'Doradca AI', f4_desc:'Odpowiedzi na pytania edukacyjne o finansach. 24/7.',
     f5_title:'Przygotowanie do egzaminu NBS', f5_desc:'1 334 pytań z wyjaśnieniami. Mock exam.',
     f6_title:'Nauka audio', f6_desc:'Słuchaj każdej lekcji. Ucz się podczas jazdy.',
     f7_title:'Prawo po ludzku', f7_desc:'8 słowackich ustaw bez prawniczego żargonu.',
@@ -558,7 +558,7 @@ const T = {
     pf1:'5 artykułów/miesiąc', pf2:'Podstawowe kalkulatory', pf3:'Test IQ finansowy', pf4:'Doradca AI', pf5:'Przygotowanie NBS',
     ps1:'Nieograniczona biblioteka', ps2:'Wszystkie kalkulatory (12)', ps3:'Nauka audio', ps4:'Śledzenie postępów', ps5:'Doradca AI',
     pp1:'Wszystko ze Starter', pp2:'🤖 Doradca AI 24/7', pp3:'🧾 Optymalizator podatkowy', pp4:'📈 Przygotowanie NBS', pp5:'📊 Financial IQ Score',
-    pe1:'Wszystko z Pro', pe2:'👨‍👩‍👧 Family sharing (4)', pe3:'📞 Konsultacja 30 min', pe4:'📄 Raporty PDF', pe5:'🏆 Certyfikat NBS',
+    pe1:'Wszystko z Pro', pe2:'👨‍👩‍👧 Family sharing (4)', pe3:'📧 Priorytetowe wsparcie email', pe4:'📄 Raporty PDF', pe5:'🎓 Certyfikat ukończenia kursu',
     most_popular:'⭐ Najpopularniejszy', btn_free:'Zacznij za darmo', btn_choose:'Wybierz', btn_pro:'Zacznij Pro ✨',
     stripe_note:'💳 Płatność kartą przez Stripe · 🔒 Bezpieczne · ❌ Anuluj kiedy chcesz',
     rev_label:'Opinie', rev_title:'Co mówią użytkownicy',
@@ -579,8 +579,8 @@ const T = {
     modal_btn:'Zarejestruj się za darmo →', modal_terms:'Rejestrując się akceptujesz warunki'
   },
   de:{
-    nav_cta:'Kostenlos starten', hero_badge:'🇸🇰 #1 Finanzberater-Plattform in der Slowakei',
-    hero_title:'Dein persönlicher<br><span>Finanzberater</span><br>im Handy',
+    nav_cta:'Kostenlos starten', hero_badge:'🇸🇰 #1 Finanzbildungs-Plattform in der Slowakei',
+    hero_title:'Deine persönliche<br><span>Finanzbildungs-Plattform</span>',
     hero_sub:'Rechner, Investitionen, Steueroptimierung, KI-Berater — alles auf Deutsch für den Preis von 2 Kaffee im Monat.',
     hero_cta1:'Kostenlos starten', hero_cta2:'Mehr erfahren',
     stat1:'NBS-Fragen', stat2:'Rechner', stat3:'Sprachen', stat4:'zum Start',
@@ -589,7 +589,7 @@ const T = {
     f1_title:'Steueroptimierung', f1_desc:'Angestellte & Selbstständige. Durchschnittliche Ersparnis €2.400/Jahr.',
     f2_title:'Hypotheken-Simulator', f2_desc:'Monatsrate, Aufpreis, LTV. Erfahre was du wirklich zahlst.',
     f3_title:'Investment-Guide', f3_desc:'ETF, Rentenprogramme, Zinseszins.',
-    f4_title:'KI-Finanzberater', f4_desc:'Frag alles. Antwort wie von einem Privatberater. 24/7.',
+    f4_title:'KI-Finanzberater', f4_desc:'Antworten auf Finanzbildungsfragen. 24/7.',
     f5_title:'NBS-Prüfungsvorbereitung', f5_desc:'1.334 echte Fragen mit Erklärungen.',
     f6_title:'Audio-Lernen', f6_desc:'Jede Lektion anhören. Lernen beim Fahren.',
     f7_title:'Gesetze einfach erklärt', f7_desc:'8 slowakische Gesetze ohne Fachjargon.',
@@ -608,7 +608,7 @@ const T = {
     pf1:'5 Artikel/Monat', pf2:'Grundrechner', pf3:'Finanz-IQ-Test', pf4:'KI-Berater', pf5:'NBS-Vorbereitung',
     ps1:'Unbegrenzte Bibliothek', ps2:'Alle Rechner (12)', ps3:'Audio-Lernen', ps4:'Fortschrittsverfolgung', ps5:'KI-Berater',
     pp1:'Alles aus Starter', pp2:'🤖 KI-Berater 24/7', pp3:'🧾 Steueroptimierung', pp4:'📈 NBS-Vorbereitung', pp5:'📊 Financial IQ Score',
-    pe1:'Alles aus Pro', pe2:'👨‍👩‍👧 Family Sharing (4)', pe3:'📞 Beratung 30 Min', pe4:'📄 PDF-Berichte', pe5:'🏆 NBS-Zertifikat',
+    pe1:'Alles aus Pro', pe2:'👨‍👩‍👧 Family Sharing (4)', pe3:'📧 Prioritäts-E-Mail-Support', pe4:'📄 PDF-Berichte', pe5:'🎓 Kursabschluss-Zertifikat',
     most_popular:'⭐ Beliebtester', btn_free:'Kostenlos starten', btn_choose:'Wählen', btn_pro:'Pro starten ✨',
     stripe_note:'💳 Kartenzahlung via Stripe · 🔒 Sicher · ❌ Jederzeit kündbar',
     rev_label:'Bewertungen', rev_title:'Was Nutzer sagen',
@@ -629,8 +629,8 @@ const T = {
     modal_btn:'Kostenlos registrieren →', modal_terms:'Mit der Registrierung stimmst du den Bedingungen zu'
   },
   hu:{
-    nav_cta:'Ingyenes indítás', hero_badge:'🇸🇰 #1 Pénzügyi tanácsadó platform Szlovákiában',
-    hero_title:'A személyes<br><span>pénzügyi tanácsadód</span><br>a telefonodban',
+    nav_cta:'Ingyenes indítás', hero_badge:'🇸🇰 #1 Pénzügyi oktatási platform Szlovákiában',
+    hero_title:'A személyes<br><span>pénzügyi oktatási platformod</span>',
     hero_sub:'Kalkulátorok, befektetések, adóoptimalizálás, AI tanácsadó — mindez magyarul, 2 kávé áráért havonta.',
     hero_cta1:'Ingyenes indítás', hero_cta2:'Tudj meg többet',
     stat1:'NBS kérdés', stat2:'kalkulátor', stat3:'nyelv', stat4:'az induláshoz',
@@ -658,7 +658,7 @@ const T = {
     pf1:'5 cikk/hónap', pf2:'Alap kalkulátorok', pf3:'Pénzügyi IQ teszt', pf4:'AI tanácsadó', pf5:'NBS felkészítő',
     ps1:'Korlátlan könyvtár', ps2:'Minden kalkulátor (12)', ps3:'Audio tanulás', ps4:'Haladás követése', ps5:'AI tanácsadó',
     pp1:'Minden a Starterből', pp2:'🤖 AI tanácsadó 24/7', pp3:'🧾 Adóoptimalizáló', pp4:'📈 NBS felkészítő', pp5:'📊 Financial IQ Score',
-    pe1:'Minden a Pro-ból', pe2:'👨‍👩‍👧 Családi megosztás (4)', pe3:'📞 Konzultáció 30 perc', pe4:'📄 PDF jelentések', pe5:'🏆 NBS tanúsítvány',
+    pe1:'Minden a Pro-ból', pe2:'👨‍👩‍👧 Családi megosztás (4)', pe3:'📧 Prioritás email támogatás', pe4:'📄 PDF jelentések', pe5:'🎓 Kurzus-elvégzési tanúsítvány',
     most_popular:'⭐ Legnépszerűbb', btn_free:'Ingyenes indítás', btn_choose:'Kiválaszt', btn_pro:'Pro indítása ✨',
     stripe_note:'💳 Kártyás fizetés Stripe-on · 🔒 Biztonságos · ❌ Bármikor lemondható',
     rev_label:'Vélemények', rev_title:'Mit mondanak a felhasználók',
@@ -734,7 +734,7 @@ function openCheckout(plan) {
   selectedPlan = plan;
   const names = {starter:'Starter €4.90', pro:'Pro €9.90', expert:'Expert €14.90'};
   document.getElementById('plan-info').style.display = 'block';
-  document.getElementById('plan-info').innerHTML = '✅ ' + names[plan] + '/mes<br><small style="color:var(--muted)">Stripe · Bezpečné · Zrušenie kedykoľvek</small>';
+  document.getElementById('plan-info').innerHTML = '✅ ' + names[plan] + '/mes<br><small style="color:var(--muted)">Stripe · Bezpečné · Zrušenie kedykoľvek</small>' + '<br><small style="color:#f59e0b;font-size:10px;display:block;margin-top:6px">⚠️ Máte právo odstúpiť od zmluvy do 14 dní bez udania dôvodu (§7 zák. 102/2014). <a href=\'/terms#withdrawal\' style=\'color:#60a5fa\'>Viac info</a></small>';
   openModal();
 }
 async function submitRegister() {

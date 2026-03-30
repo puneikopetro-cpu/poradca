@@ -1,7 +1,7 @@
 {
   "name": "FinAdvisor SK",
   "short_name": "FinAdvisor",
-  "description": "Tvoj osobný finančný poradca v mobile",
+  "description": "Tvoja vzdelávacia finančná platforma v mobile",
   "start_url": "/app",
   "display": "standalone",
   "background_color": "#0f172a",

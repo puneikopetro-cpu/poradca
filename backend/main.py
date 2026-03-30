@@ -28,8 +28,8 @@ configure_logging()
 logger = get_logger(__name__)
 
 app = FastAPI(
-    title="Financial Advisor API — Slovakia",
-    description="MVP платформа фінансового консультанта для Словаччини",
+    title="FinAdvisor SK — Educational Platform API",
+    description="Vzdelávacia platforma pre financnu gramotnost — Slovakia",
     version="1.0.0",
 )
 
@@ -81,7 +81,7 @@ _COMING_SOON_HTML = """<!DOCTYPE html>
 <div class="card">
   <div class="logo">💹</div>
   <h1>FinAdvisor SK</h1>
-  <p class="sub">Finančné poradenstvo na najvyššej úrovni</p>
+  <p class="sub">Vzdelávacia platforma pre finančnú gramotnosť</p>
   <div class="badge">🚧 Čoskoro spustíme</div>
   <div class="info">
     <b>Pracujeme na niečom výnimočnom.</b><br><br>
