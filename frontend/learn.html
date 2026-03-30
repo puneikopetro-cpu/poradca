@@ -969,11 +969,9 @@ setLearnLang({sk:'sk',cs:'sk',en:'en',uk:'uk',pl:'pl',de:'de',hu:'hu'}[_bl]||'sk
      ══════════════════════════════════════════════════════════ -->
 
 <!-- GAME HUD (fixed top bar under nav) -->
-<div id="game-hud" style="position:fixed;top:56px;left:0;right:0;z-index:90;background:rgba(15,23,42,.97);border-bottom:1px solid rgba(124,58,237,.3);padding:6px 16px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(10px)">
-  <!-- Level badge -->
+<div id="game-hud" style="position:fixed;top:56px;left:0;right:0;z-index:90;background:rgba(15,23,42,.97);border-bottom:1px solid rgba(124,58,237,.3);padding:6px 16px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(10px)">
   <div id="hud-level" style="background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;cursor:pointer" onclick="showBadges()">⚡ Úr. 1</div>
-  <!-- XP bar -->
-  <div style="flex:1;min-width:60px">
+  <div style="flex:1;min-width:40px">
     <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-bottom:2px">
       <span id="hud-xp-text">0 XP</span><span id="hud-xp-next">100 XP</span>
     </div>
@@ -981,13 +979,75 @@ setLearnLang({sk:'sk',cs:'sk',en:'en',uk:'uk',pl:'pl',de:'de',hu:'hu'}[_bl]||'sk
       <div id="hud-xp-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#7c3aed,#2563eb);border-radius:99px;transition:width .4s ease"></div>
     </div>
   </div>
+  <!-- Hearts -->
+  <div id="hud-hearts" style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:13px" onclick="showHeartsInfo()" title="Životy"></div>
   <!-- Streak -->
-  <div id="hud-streak" style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#f59e0b;cursor:pointer" onclick="showStreakInfo()" title="Denný streak">
-    🔥 <span id="streak-count">0</span>
-  </div>
+  <div id="hud-streak" style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#f59e0b;cursor:pointer" onclick="showStreakInfo()">🔥<span id="streak-count">0</span></div>
+  <!-- League -->
+  <div id="hud-league" style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;cursor:pointer;white-space:nowrap" onclick="showLeague()"></div>
   <!-- Daily challenge -->
   <div id="hud-daily" style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#fbbf24;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;cursor:pointer;white-space:nowrap" onclick="showDailyChallenge()">🎯 Výzva</div>
 </div>
+
+<!-- HEARTS PAYWALL -->
+<div id="hearts-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.9);align-items:center;justify-content:center">
+  <div style="background:#1e293b;border:2px solid #ef4444;border-radius:20px;width:90%;max-width:360px;padding:32px;text-align:center">
+    <div style="font-size:56px;margin-bottom:12px">💔</div>
+    <div style="font-size:22px;font-weight:900;margin-bottom:8px">Minuli si všetky životy!</div>
+    <div style="font-size:14px;color:#94a3b8;margin-bottom:24px;line-height:1.6">Obnovia sa automaticky za <span id="hearts-timer" style="color:#f59e0b;font-weight:700">60 min</span>.<br>Alebo prechod na <strong style="color:#fbbf24">Pro</strong> = neobmedzené životy.</div>
+    <a href="/app#subscription" style="display:block;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;text-decoration:none;margin-bottom:10px">🚀 Prejsť na Pro — neobmedzené životy</a>
+    <button onclick="closeHeartsModal()" style="width:100%;background:rgba(255,255,255,.06);border:none;color:#94a3b8;padding:10px;border-radius:10px;cursor:pointer;font-size:13px">Počkám (obnovia sa o 60 min)</button>
+  </div>
+</div>
+
+<!-- LEAGUE PANEL -->
+<div id="league-panel" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.85);align-items:flex-end;justify-content:center">
+  <div style="background:#1e293b;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:24px;max-height:80vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div style="font-size:18px;font-weight:900" id="league-title">🥉 Bronzová liga</div>
+      <button onclick="closeLeague()" style="background:rgba(255,255,255,.1);border:none;color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer">✕</button>
+    </div>
+    <div style="font-size:12px;color:#94a3b8;margin-bottom:16px" id="league-subtitle">Týždenná súťaž · Reset v nedeľu</div>
+    <div id="league-board" style="display:flex;flex-direction:column;gap:6px"></div>
+    <div style="margin-top:16px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:12px;font-size:12px;color:#a78bfa;text-align:center">
+      🏆 Top 3 postúpia do vyššej ligy · Posledných 5 zostupuje · Reset v nedeľu
+    </div>
+  </div>
+</div>
+
+<!-- WEEKLY REVIEW (Monday popup) -->
+<div id="weekly-review" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.88);align-items:center;justify-content:center">
+  <div style="background:#1e293b;border:1px solid rgba(124,58,237,.3);border-radius:20px;width:90%;max-width:380px;padding:28px;text-align:center">
+    <div style="font-size:40px;margin-bottom:8px">📊</div>
+    <div style="font-size:18px;font-weight:900;margin-bottom:16px">Týždenný prehľad</div>
+    <div id="weekly-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;text-align:center"></div>
+    <div id="weekly-roast" style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);border-radius:12px;padding:14px;font-size:13px;color:#c4b5fd;margin-bottom:20px;line-height:1.6;font-style:italic"></div>
+    <button onclick="closeWeeklyReview()" style="width:100%;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:800;cursor:pointer">Poďme na to! 💪</button>
+  </div>
+</div>
+
+<!-- SHARE ACHIEVEMENT CARD -->
+<div id="share-modal" style="display:none;position:fixed;inset:0;z-index:9997;background:rgba(0,0,0,.85);align-items:center;justify-content:center">
+  <div style="background:#1e293b;border-radius:20px;width:90%;max-width:360px;padding:24px;text-align:center">
+    <div id="share-card" style="background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid rgba(124,58,237,.4);border-radius:16px;padding:24px;margin-bottom:16px">
+      <div style="font-size:11px;color:#7c3aed;font-weight:700;letter-spacing:2px;margin-bottom:8px">FINADVISOR SK</div>
+      <div id="share-emoji" style="font-size:48px;margin-bottom:8px">🏆</div>
+      <div id="share-title" style="font-size:18px;font-weight:900;margin-bottom:4px"></div>
+      <div id="share-sub" style="font-size:12px;color:#94a3b8"></div>
+      <div style="margin-top:12px;font-size:10px;color:#475569">finadvisor.sk</div>
+    </div>
+    <button onclick="shareAchievement()" style="width:100%;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px">📤 Zdieľať na sociálnych sieťach</button>
+    <button onclick="closeShare()" style="width:100%;background:rgba(255,255,255,.06);border:none;color:#94a3b8;padding:10px;border-radius:10px;cursor:pointer;font-size:13px">Zavrieť</button>
+  </div>
+</div>
+
+<style>
+#hearts-modal.show,#league-panel.show,#weekly-review.show,#share-modal.show{display:flex!important}
+.league-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:13px}
+.league-row.me{background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.3)}
+.league-row.promote{background:rgba(22,163,74,.08);border-left:3px solid #16a34a}
+.league-row.demote{background:rgba(239,68,68,.06);border-left:3px solid rgba(239,68,68,.3)}
+</style>
 
 <!-- LEVEL UP CELEBRATION -->
 <div id="levelup-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;flex-direction:column">
@@ -1314,6 +1374,277 @@ console.log(`🎮 FinAdvisor Game Engine loaded | XP: ${GS.xp} | Level: ${GS.lev
   if(!localStorage.getItem('cookieConsent')){b.style.display='flex';}
   window.cookieChoice=function(v){localStorage.setItem('cookieConsent',v);b.style.display='none';};
 })();
+</script>
+
+<script>
+// ══════════════════════════════════════════════════
+// HEARTS SYSTEM (Duolingo mechanic)
+// ══════════════════════════════════════════════════
+const MAX_HEARTS = 5;
+const HEART_REGEN_MS = 60 * 60 * 1000; // 1 hour per heart
+
+function getHearts() {
+  const h = JSON.parse(localStorage.getItem('fa_hearts') || 'null');
+  if (!h) return { count: MAX_HEARTS, nextRegen: null };
+  // regenerate
+  let { count, nextRegen } = h;
+  while (count < MAX_HEARTS && nextRegen && Date.now() >= nextRegen) {
+    count++;
+    nextRegen = count < MAX_HEARTS ? nextRegen + HEART_REGEN_MS : null;
+  }
+  return { count, nextRegen };
+}
+function saveHearts(count, nextRegen) {
+  localStorage.setItem('fa_hearts', JSON.stringify({ count, nextRegen }));
+}
+function isPro() {
+  return !!(localStorage.getItem('fa_pro') || sessionStorage.getItem('fa_pro'));
+}
+function loseHeart() {
+  if (isPro()) return true; // unlimited
+  const h = getHearts();
+  if (h.count <= 0) { showHeartsModal(); return false; }
+  const newCount = h.count - 1;
+  const nextRegen = newCount < MAX_HEARTS ? (h.nextRegen || Date.now() + HEART_REGEN_MS) : null;
+  saveHearts(newCount, nextRegen);
+  renderHearts();
+  if (newCount === 0) { showHeartsModal(); return false; }
+  return true;
+}
+function renderHearts() {
+  const el = document.getElementById('hud-hearts');
+  if (!el) return;
+  if (isPro()) { el.innerHTML = '<span style="color:#fbbf24;font-size:10px;font-weight:700">∞❤️</span>'; return; }
+  const { count } = getHearts();
+  el.innerHTML = Array.from({length: MAX_HEARTS}, (_,i) =>
+    `<span style="opacity:${i < count ? 1 : .25}">❤️</span>`).join('');
+}
+function showHeartsInfo() {
+  const h = getHearts();
+  if (isPro()) { showXPPopup(0, '∞ životy — Pro plán'); return; }
+  const mins = h.nextRegen ? Math.ceil((h.nextRegen - Date.now()) / 60000) : 0;
+  showXPPopup(0, `❤️ ${h.count}/${MAX_HEARTS} · obnova za ${mins} min`);
+}
+function showHeartsModal() {
+  const h = getHearts();
+  const mins = h.nextRegen ? Math.ceil((h.nextRegen - Date.now()) / 60000) : 60;
+  document.getElementById('hearts-timer').textContent = mins + ' min';
+  document.getElementById('hearts-modal').classList.add('show');
+}
+function closeHeartsModal() { document.getElementById('hearts-modal').classList.remove('show'); }
+
+// Hook wrong answers to lose heart
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-correct]');
+  if (!t) return;
+  if (t.dataset.correct === 'false') loseHeart();
+}, true);
+
+// ══════════════════════════════════════════════════
+// LEAGUE SYSTEM (Duolingo weekly leagues)
+// ══════════════════════════════════════════════════
+const LEAGUES = [
+  { name:'Bronzová liga', emoji:'🥉', color:'#cd7f32', bg:'rgba(205,127,50,.15)', border:'rgba(205,127,50,.3)' },
+  { name:'Strieborná liga', emoji:'🥈', color:'#94a3b8', bg:'rgba(148,163,184,.1)', border:'rgba(148,163,184,.25)' },
+  { name:'Zlatá liga', emoji:'🥇', color:'#f59e0b', bg:'rgba(245,158,11,.12)', border:'rgba(245,158,11,.3)' },
+  { name:'Platinová liga', emoji:'💎', color:'#06b6d4', bg:'rgba(6,182,212,.12)', border:'rgba(6,182,212,.3)' },
+  { name:'Diamantová liga', emoji:'💠', color:'#7c3aed', bg:'rgba(124,58,237,.15)', border:'rgba(124,58,237,.35)' },
+];
+const FAKE_PLAYERS = [
+  'Martin K.','Jana H.','Tomáš B.','Zuzana P.','Miroslav D.',
+  'Katarína V.','Peter S.','Monika L.','Ján R.','Eva N.',
+  'Michal F.','Lucia O.','Rastislav M.','Barbora Č.','Andrej T.',
+];
+
+function getLeagueState() {
+  const ls = JSON.parse(localStorage.getItem('fa_league') || 'null');
+  const weekKey = getWeekKey();
+  if (!ls || ls.weekKey !== weekKey) {
+    // New week — generate fake leaderboard
+    const leagueIdx = Math.min(ls ? Math.min(ls.leagueIdx + (ls.rank <= 3 ? 1 : ls.rank >= 11 ? -1 : 0), 4) : 0, 4);
+    const players = FAKE_PLAYERS.slice(0, 14).map(name => ({
+      name, xp: Math.floor(Math.random() * 800 + 100)
+    }));
+    const state = { weekKey, leagueIdx, weekXP: 0, players, rank: 8 };
+    localStorage.setItem('fa_league', JSON.stringify(state));
+    return state;
+  }
+  return ls;
+}
+function getWeekKey() {
+  const d = new Date();
+  const jan1 = new Date(d.getFullYear(), 0, 1);
+  return d.getFullYear() + '-W' + Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+}
+function addLeagueXP(amount) {
+  const s = getLeagueState();
+  s.weekXP += amount;
+  // update rank
+  const myXP = s.weekXP;
+  const sorted = [...s.players, { name:'Ty', xp: myXP }].sort((a,b) => b.xp - a.xp);
+  s.rank = sorted.findIndex(p => p.name === 'Ty') + 1;
+  localStorage.setItem('fa_league', JSON.stringify(s));
+  renderLeagueHUD();
+}
+function renderLeagueHUD() {
+  const el = document.getElementById('hud-league');
+  if (!el) return;
+  const s = getLeagueState();
+  const l = LEAGUES[s.leagueIdx];
+  el.textContent = l.emoji + ' #' + s.rank;
+  el.style.background = l.bg;
+  el.style.border = '1px solid ' + l.border;
+  el.style.color = l.color;
+}
+function showLeague() {
+  const s = getLeagueState();
+  const l = LEAGUES[s.leagueIdx];
+  document.getElementById('league-title').textContent = l.emoji + ' ' + l.name;
+  document.getElementById('league-subtitle').textContent = 'Týždeň ' + s.weekKey + ' · Reset v nedeľu';
+  const myXP = s.weekXP;
+  const allPlayers = [...s.players, { name:'Ty ⭐', xp: myXP }].sort((a,b) => b.xp - a.xp);
+  const board = document.getElementById('league-board');
+  board.innerHTML = allPlayers.map((p, i) => {
+    const isMe = p.name.startsWith('Ty');
+    const isPromote = i < 3;
+    const isDemote = i >= allPlayers.length - 5;
+    return `<div class="league-row ${isMe?'me':''} ${isPromote&&!isMe?'promote':''} ${isDemote&&!isMe&&!isPromote?'demote':''}">
+      <div style="width:22px;text-align:center;font-weight:800;color:${i===0?'#f59e0b':i===1?'#94a3b8':i===2?'#cd7f32':'#475569'}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+      <div style="flex:1;font-weight:${isMe?800:400}">${p.name}</div>
+      <div style="font-weight:700;color:${isMe?'#a78bfa':'#f1f5f9'}">${p.xp} XP</div>
+      ${isPromote ? '<div style="font-size:10px;color:#4ade80">↑ postup</div>' : ''}
+      ${isDemote && !isPromote ? '<div style="font-size:10px;color:#f87171">↓ zostup</div>' : ''}
+    </div>`;
+  }).join('');
+  document.getElementById('league-panel').classList.add('show');
+}
+function closeLeague() { document.getElementById('league-panel').classList.remove('show'); }
+
+// ══════════════════════════════════════════════════
+// WEEKLY REVIEW + ROAST MODE (Cleo mechanic)
+// ══════════════════════════════════════════════════
+const SK_ROASTS = [
+  'Tento týždeň si bol aktívnejší ako väčšina. Ale stále nie diamant. Pracuj na tom! 💎',
+  'XP zrástlo! Tvoj finančný IQ sa blíži k úrovni "viem čo je ETF bez googlovania". 📈',
+  'Séria stále beží. Ak ju prerušíš, tvoj emergency fund bude plakať. 😅',
+  'Dokončil si lekciu! Duolingo by bol hrdý. Oveľa hrdejší ako tvoj bankový účet teraz. 🏦',
+  'Skvelý týždeň! Si v Bronze-1. Diamant ťa čaká... za 847 ďalších lekcií. 💪',
+  'Odpovedal si správne na 80%! To je lepšie ako priemer. Horší sú len tí čo preskočili modul. 🎯',
+  'Tvoj streak žije! Na rozdiel od tvojho III. piliera, ktorý si ešte nenastavil... 👀',
+];
+const SK_HYPES = [
+  'NESKUTOČNÉ! Dosiahol si nový level! Si v top 20% používateľov tejto platformy! 🚀',
+  'Wow, dokončil si sériu 7 dní! Väčšina ľudí to vzdá po 2. Ty nie. Respekt. 🔥',
+  'Level up! Finančná gramotnosť je tvoj nový superschopnosť. 💡',
+  '1000 XP! Toto sa počíta. Viac ako väčšina ľudí urobí za mesiac. ⚡',
+];
+
+function getWeeklyStats() {
+  const gs = JSON.parse(localStorage.getItem('finadvisor_game') || '{}');
+  const ls = getLeagueState();
+  return {
+    weekXP: ls.weekXP || 0,
+    rank: ls.rank || '—',
+    streak: gs.streak || 0,
+    lessonsCompleted: gs.lessonsCompleted || 0,
+    quizzesDone: gs.quizzesDone || 0,
+    league: LEAGUES[ls.leagueIdx].name,
+  };
+}
+function showWeeklyReview() {
+  const s = getWeeklyStats();
+  const stats = document.getElementById('weekly-stats');
+  stats.innerHTML = [
+    { v: s.weekXP + ' XP', l: 'Tento týždeň' },
+    { v: '#' + s.rank, l: 'Pozícia v lige' },
+    { v: s.streak + ' dní', l: 'Streak' },
+    { v: s.lessonsCompleted, l: 'Lekcie' },
+  ].map(x => `<div style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:14px">
+    <div style="font-size:22px;font-weight:900">${x.v}</div>
+    <div style="font-size:11px;color:#94a3b8;margin-top:2px">${x.l}</div>
+  </div>`).join('');
+  const roastEl = document.getElementById('weekly-roast');
+  const msg = s.weekXP >= 200
+    ? SK_HYPES[Math.floor(Math.random() * SK_HYPES.length)]
+    : SK_ROASTS[Math.floor(Math.random() * SK_ROASTS.length)];
+  roastEl.innerHTML = '🤖 ' + msg;
+  document.getElementById('weekly-review').classList.add('show');
+}
+function closeWeeklyReview() {
+  document.getElementById('weekly-review').classList.remove('show');
+  localStorage.setItem('fa_weekly_shown', getWeekKey());
+}
+
+// Show weekly review on Mondays (first visit)
+(function() {
+  const day = new Date().getDay(); // 1 = Monday
+  const shown = localStorage.getItem('fa_weekly_shown');
+  if (day === 1 && shown !== getWeekKey()) {
+    setTimeout(showWeeklyReview, 4000);
+  }
+})();
+
+// ══════════════════════════════════════════════════
+// SHAREABLE ACHIEVEMENT CARDS (Zogo mechanic)
+// ══════════════════════════════════════════════════
+function triggerShareCard(emoji, title, sub) {
+  document.getElementById('share-emoji').textContent = emoji;
+  document.getElementById('share-title').textContent = title;
+  document.getElementById('share-sub').textContent = sub;
+  document.getElementById('share-modal').classList.add('show');
+}
+function closeShare() { document.getElementById('share-modal').classList.remove('show'); }
+async function shareAchievement() {
+  const title = document.getElementById('share-title').textContent;
+  const emoji = document.getElementById('share-emoji').textContent;
+  const text = `${emoji} Práve som dosiahol: ${title} na FinAdvisor SK!\nBezplatná finančná vzdelávacia platforma: https://finadvisor.sk/learn`;
+  if (navigator.share) {
+    try { await navigator.share({ title: 'FinAdvisor SK', text }); return; } catch(e) {}
+  }
+  await navigator.clipboard.writeText(text);
+  showXPPopup(0, '📋 Skopírované!');
+  closeShare();
+}
+
+// ══════════════════════════════════════════════════
+// PATCH XP system to also update league XP
+// ══════════════════════════════════════════════════
+const _origAddXP = window.addXP;
+window.addXP = function(amount, reason) {
+  if (_origAddXP) _origAddXP(amount, reason);
+  addLeagueXP(amount);
+  // trigger share card on milestone badges
+  const gs = JSON.parse(localStorage.getItem('finadvisor_game') || '{}');
+  if (gs.xp >= 1000 && !localStorage.getItem('fa_shared_1000')) {
+    localStorage.setItem('fa_shared_1000', '1');
+    setTimeout(() => triggerShareCard('🚀', '1000 XP dosiahnutých!', 'FinAdvisor SK · Finančné vzdelávanie'), 700);
+  }
+  if ((gs.streak || 0) >= 7 && !localStorage.getItem('fa_shared_streak7')) {
+    localStorage.setItem('fa_shared_streak7', '1');
+    setTimeout(() => triggerShareCard('🔥', '7-dňový streak!', 'Učím sa financie každý deň · finadvisor.sk'), 700);
+  }
+};
+
+// ══════════════════════════════════════════════════
+// INIT NEW SYSTEMS
+// ══════════════════════════════════════════════════
+renderHearts();
+renderLeagueHUD();
+
+// Regenerate hearts every minute (check timer)
+setInterval(() => {
+  renderHearts();
+  const h = getHearts();
+  if (h.count < MAX_HEARTS && h.nextRegen) {
+    const modal = document.getElementById('hearts-modal');
+    if (modal.classList.contains('show')) {
+      const mins = Math.max(0, Math.ceil((h.nextRegen - Date.now()) / 60000));
+      const el = document.getElementById('hearts-timer');
+      if (el) el.textContent = mins + ' min';
+      if (mins === 0 && h.count > 0) closeHeartsModal();
+    }
+  }
+}, 60000);
 </script>
 </body>
 </html>
