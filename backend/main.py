@@ -167,7 +167,7 @@ app.include_router(subscriptions_router)
 
 @app.get("/health", tags=["health"])
 def health_check():
-    return {"status": "ok", "service": "Financial Advisor API"}
+    return {"status": "ok", "service": "Financial Advisor API", "version": "e29a652", "tg_token": bool(settings.TELEGRAM_BOT_TOKEN)}
 
 
 @app.get("/", include_in_schema=False)
