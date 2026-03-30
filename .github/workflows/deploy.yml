@@ -9,9 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-      - name: Deploy to Railway
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway up --service 16529c78-ce6b-4e59-84ed-d139fb4a9729 --detach
+
+      - name: Trigger Railway deploy via API
+        run: |
+          curl -s -X POST "https://backboard.railway.com/graphql/v2" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
+            -d '{
+              "query": "mutation { githubRepoDeploy(input: { projectId: \"564a41ac-75f7-4be8-9ce2-e2dc57cfd8d0\", repo: \"puneikopetro-cpu/poradca\", branch: \"main\" }) }"
+            }' | tee /tmp/deploy_result.json
+          cat /tmp/deploy_result.json | python3 -c "import sys,json; d=json.load(sys.stdin); print('Deploy ID:', d.get('data',{}).get('githubRepoDeploy','ERROR')); sys.exit(0 if 'data' in d else 1)"
