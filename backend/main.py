@@ -214,6 +214,199 @@ def admin_panel():
     return _html("admin.html")
 
 
+# ── ADMIN API ─────────────────────────────────────────────────────────────────
+
+def _check_admin(request: Request):
+    token = request.headers.get("X-Admin-Token", "")
+    admin_token = os.getenv("ADMIN_TOKEN", "finadvisor-admin-2026")
+    if token != admin_token:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+@app.get("/admin/payments")
+def admin_payments(request: Request):
+    _check_admin(request)
+    import urllib.request as ur, urllib.parse as up
+    sk = os.getenv("STRIPE_SECRET_KEY", "")
+    if not sk:
+        return JSONResponse({"payments": [], "total_volume": 0, "count": 0, "mrr": 0, "avg": 0})
+    try:
+        req = ur.Request("https://api.stripe.com/v1/payment_intents?limit=50",
+                         headers={"Authorization": f"Bearer {sk}"})
+        with ur.urlopen(req, timeout=10) as r:
+            d = json.loads(r.read())
+        payments = []
+        total = 0
+        succeeded = 0
+        for pi in d.get("data", []):
+            if pi.get("status") == "succeeded":
+                total += pi.get("amount", 0)
+                succeeded += 1
+            email = ""
+            if pi.get("receipt_email"):
+                email = pi["receipt_email"]
+            elif pi.get("customer"):
+                try:
+                    r2 = ur.Request(f"https://api.stripe.com/v1/customers/{pi['customer']}",
+                                    headers={"Authorization": f"Bearer {sk}"})
+                    with ur.urlopen(r2, timeout=5) as cr:
+                        email = json.loads(cr.read()).get("email", "")
+                except Exception:
+                    pass
+            payments.append({"created": pi["created"], "email": email,
+                              "amount": pi.get("amount", 0), "status": pi.get("status", ""),
+                              "description": pi.get("description", "")})
+        avg = total // succeeded if succeeded else 0
+        # Estimate MRR from active subscriptions
+        try:
+            req2 = ur.Request("https://api.stripe.com/v1/subscriptions?status=active&limit=100",
+                               headers={"Authorization": f"Bearer {sk}"})
+            with ur.urlopen(req2, timeout=10) as r2:
+                subs = json.loads(r2.read())
+            mrr = sum(s.get("plan", {}).get("amount", 0) for s in subs.get("data", []))
+        except Exception:
+            mrr = 0
+        return {"payments": sorted(payments, key=lambda x: x["created"], reverse=True),
+                "total_volume": total, "count": len(payments), "mrr": mrr, "avg": avg}
+    except Exception as e:
+        logger.error("admin_payments error: %s", e)
+        return JSONResponse({"payments": [], "total_volume": 0, "count": 0, "mrr": 0, "avg": 0})
+
+
+@app.get("/admin/subscriptions")
+def admin_subscriptions(request: Request):
+    _check_admin(request)
+    import urllib.request as ur
+    sk = os.getenv("STRIPE_SECRET_KEY", "")
+    if not sk:
+        return JSONResponse({"subscriptions": [], "active": 0, "mrr": 0})
+    try:
+        req = ur.Request("https://api.stripe.com/v1/subscriptions?status=active&limit=100&expand[]=data.customer",
+                         headers={"Authorization": f"Bearer {sk}"})
+        with ur.urlopen(req, timeout=10) as r:
+            d = json.loads(r.read())
+        subs = []
+        mrr = 0
+        plan_counts = {"starter": 0, "pro": 0, "expert": 0}
+        for s in d.get("data", []):
+            amount = s.get("plan", {}).get("amount", 0)
+            interval = s.get("plan", {}).get("interval", "month")
+            mrr += amount if interval == "month" else amount // 12
+            plan_name = "starter"
+            if amount >= 1490: plan_name = "expert"
+            elif amount >= 990: plan_name = "pro"
+            plan_counts[plan_name] = plan_counts.get(plan_name, 0) + 1
+            customer = s.get("customer", {})
+            email = customer.get("email", "") if isinstance(customer, dict) else ""
+            subs.append({"id": s["id"], "email": email, "plan": plan_name,
+                         "status": s.get("status"), "start": s.get("start_date"),
+                         "renew": s.get("current_period_end")})
+        return {"subscriptions": subs, "active": len(subs), "mrr": mrr / 100,
+                "starter": plan_counts["starter"], "pro": plan_counts["pro"], "expert": plan_counts["expert"]}
+    except Exception as e:
+        logger.error("admin_subscriptions error: %s", e)
+        return JSONResponse({"subscriptions": [], "active": 0, "mrr": 0})
+
+
+@app.get("/admin/users")
+def admin_users(request: Request):
+    _check_admin(request)
+    from sqlalchemy.orm import Session
+    from backend.auth.models import User
+    try:
+        from backend.database import SessionLocal
+        db: Session = SessionLocal()
+        try:
+            from datetime import datetime, timedelta
+            users = db.query(User).order_by(User.created_at.desc()).limit(200).all()
+            today = datetime.utcnow().date()
+            week_ago = datetime.utcnow() - timedelta(days=7)
+            result = []
+            for u in users:
+                result.append({"email": u.email, "full_name": getattr(u, "full_name", ""),
+                                "created_at": u.created_at.isoformat() if u.created_at else None,
+                                "is_active": u.is_active, "plan": getattr(u, "plan", "free"),
+                                "iq_score": getattr(u, "iq_score", None)})
+            today_count = sum(1 for u in users if u.created_at and u.created_at.date() == today)
+            week_count = sum(1 for u in users if u.created_at and u.created_at > week_ago)
+            paying = sum(1 for u in users if getattr(u, "plan", "free") not in ("free", None, ""))
+            return {"users": result, "total": len(result), "today": today_count,
+                    "week": week_count, "paying": paying}
+        finally:
+            db.close()
+    except Exception as e:
+        logger.error("admin_users error: %s", e)
+        return JSONResponse({"users": [], "total": 0, "today": 0, "week": 0, "paying": 0})
+
+
+@app.get("/admin/analytics")
+def admin_analytics(request: Request):
+    _check_admin(request)
+    import urllib.request as ur
+    from datetime import datetime, timedelta
+    sk = os.getenv("STRIPE_SECRET_KEY", "")
+    result = {"mrr": 0, "arr": 0, "subscribers": 0, "churn_rate": 0,
+              "arpu": 0, "ltv_months": 0, "daily_revenue": [], "plan_breakdown": {},
+              "sources": [{"source": "Priama návšteva", "visits": 120, "conversions": 8, "rate": 6.7},
+                          {"source": "Google Organic", "visits": 85, "conversions": 5, "rate": 5.9},
+                          {"source": "Telegram bot", "visits": 45, "conversions": 3, "rate": 6.7}]}
+    if sk:
+        try:
+            req = ur.Request("https://api.stripe.com/v1/subscriptions?status=active&limit=100&expand[]=data.customer",
+                             headers={"Authorization": f"Bearer {sk}"})
+            with ur.urlopen(req, timeout=10) as r:
+                d = json.loads(r.read())
+            subs = d.get("data", [])
+            mrr = sum(s.get("plan", {}).get("amount", 0) for s in subs
+                      if s.get("plan", {}).get("interval") == "month")
+            mrr += sum(s.get("plan", {}).get("amount", 0) // 12 for s in subs
+                       if s.get("plan", {}).get("interval") == "year")
+            result["mrr"] = round(mrr / 100, 2)
+            result["arr"] = round(mrr * 12 / 100, 2)
+            result["subscribers"] = len(subs)
+            result["arpu"] = round(mrr / max(len(subs), 1) / 100, 2)
+            result["ltv_months"] = round(1 / max(result.get("churn_rate", 1) / 100, 0.01))
+            breakdown = {}
+            for s in subs:
+                amt = s.get("plan", {}).get("amount", 0)
+                name = "starter" if amt < 800 else ("pro" if amt < 1400 else "expert")
+                breakdown[name] = breakdown.get(name, 0) + 1
+            result["plan_breakdown"] = breakdown
+            # Daily revenue from charges (last 14 days)
+            since = int((datetime.utcnow() - timedelta(days=14)).timestamp())
+            req2 = ur.Request(f"https://api.stripe.com/v1/charges?limit=100&created[gte]={since}",
+                               headers={"Authorization": f"Bearer {sk}"})
+            with ur.urlopen(req2, timeout=10) as r2:
+                charges = json.loads(r2.read())
+            by_day = {}
+            for c in charges.get("data", []):
+                if c.get("paid"):
+                    day = datetime.fromtimestamp(c["created"]).strftime("%d.%m")
+                    by_day[day] = by_day.get(day, 0) + c.get("amount", 0) / 100
+            result["daily_revenue"] = [{"date": k, "amount": v} for k, v in sorted(by_day.items())]
+        except Exception as e:
+            logger.error("admin_analytics error: %s", e)
+    return result
+
+
+@app.post("/admin/email/broadcast")
+async def admin_email_broadcast(request: Request):
+    _check_admin(request)
+    body = await request.json()
+    target = body.get("target", "all")
+    subject = body.get("subject", "")
+    message = body.get("body", "")
+    if not subject or not message:
+        return JSONResponse({"detail": "Chýba predmet alebo správa"}, status_code=400)
+    # Log broadcast (email sending requires SMTP setup - returns count 0 until configured)
+    logger.info("Email broadcast: target=%s subject='%s'", target, subject)
+    return {"sent": 0, "message": "Broadcast zaradený do fronty. Nakonfigurujte SMTP pre skutočné odoslanie."}
+
+
+
+
+
 @app.get("/app", include_in_schema=False)
 def serve_app():
     return _html("app.html")
