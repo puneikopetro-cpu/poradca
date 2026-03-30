@@ -466,7 +466,9 @@ async def telegram_webhook(request: Request):
         await app_instance.process_update(update)
         return {"ok": True}
     except Exception as e:
-        logger.exception("Webhook error: %s", e)
+        import traceback
+        err = traceback.format_exc()
+        logger.error("Webhook error: %s\n%s", str(e), err)
         global _tg_app
-        _tg_app = None  # reset on error, retry next request
-        return JSONResponse({"ok": False}, status_code=500)
+        _tg_app = None
+        return JSONResponse({"ok": False, "error": str(e)}, status_code=500)
