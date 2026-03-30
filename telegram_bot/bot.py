@@ -720,6 +720,8 @@ async def cmd_leaderboard(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 
 
+
+def _register_handlers(app):
     conv = ConversationHandler(
         entry_points=[
             CommandHandler("analyze", analyze_start),
