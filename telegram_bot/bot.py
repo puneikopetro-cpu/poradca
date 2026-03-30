@@ -1,20 +1,21 @@
 """
-FinAdvisor SK — Telegram Bot
+FinAdvisor SK — Telegram Bot (vzdelávacia platforma)
+
+PRÁVNA POZNÁMKA: Tento bot poskytuje výlučne vzdelávacie informácie
+v zmysle §1 ods. 2 zákona č. 186/2009 Z.z. Nie je finančným
+sprostredkovateľom ani poradcom. Neposkytuje personalizované
+finančné odporúčania.
 
 Prikazy:
   /start       — vitanie + menu
   /help        — zoznam prikazov
-  /investovat  — info o investicnych sluzbách
-  /hypoteka    — info o hypotekach
-  /kontakt     — kontaktne informacie
-  /analyze     — spustenie financnej analyzy (krok za krokom)
-  /recommend   — odporucania (ak je anketa vyplnena)
-  /tip         — financny tip dna
-
-Spustenie:
-  export TELEGRAM_BOT_TOKEN=your_token_here
-  export API_BASE=http://localhost:8000
-  python telegram_bot/bot.py
+  /vzdelavanie — vzdelávacie témy
+  /kalkulacky  — prehľad kalkulačiek
+  /nbs         — príprava na skúšku NBS
+  /kontakt     — kontaktné informácie
+  /analyze     — finančný IQ dotazník
+  /tip         — vzdelávací tip dňa
+  /test        — cvičná otázka NBS
 """
 from __future__ import annotations
 import os
@@ -34,19 +35,27 @@ logger = logging.getLogger(__name__)
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 API_BASE  = os.getenv("API_BASE", "http://localhost:8000")
 
-SITE_CTA = "\n\n💬 *Chcete bezplatnu konzultaciu?* Napiste na https://finadvisor.sk"
+# Právny disclaimer — povinný pri každej finančnej téme
+DISCLAIMER = (
+    "\n\n⚠️ _Informácie slúžia výlučne na vzdelávacie účely. "
+    "Nie sú finančným poradenstvom v zmysle zákona 186/2009 Z.z. "
+    "Pred akýmkoľvek rozhodnutím sa poraďte s licencovaným odborníkom._"
+)
+
+SITE_CTA = "\n\n🎓 *Viac vzdelávacích materiálov:* https://finadvisor.sk/learn"
 
 # Conversation states
 (ASK_NAME, ASK_EMAIL, ASK_PHONE, ASK_INCOME, ASK_EXPENSES,
  ASK_SAVINGS, ASK_DEBT, ASK_AGE, ASK_EXPERIENCE, ASK_HORIZON, ASK_GOAL) = range(11)
 
 TIPS = [
-    "💡 III. pilier: vkladajte €25/mes → stat prida €180/rok zadarmo.",
-    "📈 ETF MSCI World historicky rastie ~8%/rok. Lepsie ako vacsina fondov.",
-    "🏠 Pred hypotekou porovnajte aspon 5 bank. Rozdiel moze byt €100/mes.",
-    "🧾 Danova sadzba 19% plati do €41 445 rocne. Nad to je 25%.",
-    "🏦 II. pilier: ak mate pod 40 rokov, presunite sa do indexoveho fondu.",
-    "💳 Splafte najskor uver s najvyssim urokom — usetryte na poplatkoch.",
+    "💡 *III. pilier:* Každý, kto vkladá aspoň €1/mes, môže získať príspevok od štátu až €180/rok. Viac: finadvisor.sk/learn",
+    "📈 *ETF fondy:* Historický rast MSCI World je ~8%/rok za posledných 30 rokov. Naučte sa ako fungujú: finadvisor.sk/learn",
+    "🏠 *Hypotéka:* Vedeli ste, že rozdiel medzi najlepšou a priemernou ponukou banky môže byť €50-150/mes? Naučte sa porovnávať.",
+    "🧾 *Dane:* Sadzba 19% platí do €41 445 ročne. Nad túto hranicu je 25%. Vzdelávacia kalkulačka: finadvisor.sk/app",
+    "🏦 *II. pilier:* Ak máte pod 40 rokov, zistite ako fungujú indexové fondy v II. pilieri — môže to výrazne ovplyvniť vašu penziu.",
+    "💳 *Dlhy:* Princíp lavíny: splácajte najskôr úver s najvyšším úrokom. Ušetríte na poplatkoch. Kalkulačka: finadvisor.sk/app",
+    "📊 *Financial IQ:* Otestujte svoje finančné znalosti na finadvisor.sk — bezplatný IQ Score 0-850.",
 ]
 
 _tip_index = 0
@@ -78,8 +87,8 @@ def api_post(path: str, data: dict):
 
 def get_main_keyboard():
     keyboard = [
-        [KeyboardButton("📊 Financna analyza"), KeyboardButton("💡 Tip dna")],
-        [KeyboardButton("📈 Investovanie"), KeyboardButton("🏠 Hypoteka")],
+        [KeyboardButton("🎓 Vzdelávanie"), KeyboardButton("💡 Tip dňa")],
+        [KeyboardButton("📊 Finančný IQ test"), KeyboardButton("🏦 NBS príprava")],
         [KeyboardButton("📞 Kontakt"), KeyboardButton("❓ Pomoc")],
     ]
     return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
@@ -89,14 +98,14 @@ async def start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     markup = get_main_keyboard()
     await update.message.reply_text(
         "👋 Vitajte v *FinAdvisor SK*!\n\n"
-        "Som vas digitalny financny asistent pre Slovensko.\n\n"
-        "Pomozem vam s:\n"
-        "📈 *Investiciami a ETF fondmi*\n"
-        "🏠 *Hypotekami a uvermi*\n"
-        "🛡️ *Poistenim*\n"
-        "💰 *Danovymi optimalizaciami*\n"
-        "🎯 *Financnym plánovanim*\n\n"
-        "Vyberte temu alebo pouzite /help pre zoznam vsetkych prikazov."
+        "Som váš vzdelávací sprievodca svetom financií pre Slovensko.\n\n"
+        "Pomôžem vám *porozumieť*:\n"
+        "📈 Investíciám a ETF fondom\n"
+        "🏠 Hypotékam a úverom\n"
+        "🛡️ Poisteniu\n"
+        "💰 Daniam a II./III. pilier\n"
+        "🎯 Finančnému plánovaní\n\n"
+        "⚠️ _Tento bot poskytuje vzdelávacie informácie, nie finančné poradenstvo._"
         + SITE_CTA,
         parse_mode="Markdown",
         reply_markup=markup,
@@ -105,14 +114,70 @@ async def start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 async def help_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "*Dostupne prikazy:*\n\n"
-        "/start — hlavne menu\n"
-        "/investovat — info o investovani a ETF\n"
-        "/hypoteka — info o hypotekach\n"
-        "/kontakt — kontakty konzultanta\n"
-        "/analyze — financna analyza (krok za krokom)\n"
-        "/tip — financny tip dna\n"
-        "/help — tato sprava"
+        "*Dostupné príkazy:*\n\n"
+        "/start — hlavné menu\n"
+        "/vzdelavanie — vzdelávacie témy\n"
+        "/kalkulacky — prehľad kalkulačiek\n"
+        "/nbs — príprava na skúšku NBS\n"
+        "/kontakt — kontaktné informácie\n"
+        "/analyze — finančný IQ dotazník\n"
+        "/tip — vzdelávací tip dňa\n"
+        "/test — cvičná NBS otázka\n"
+        "/help — táto správa\n\n"
+        "⚠️ _Všetok obsah slúži výlučne na vzdelávacie účely (zákon 186/2009 Z.z.)._"
+        + SITE_CTA,
+        parse_mode="Markdown",
+    )
+
+
+async def cmd_vzdelavanie(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🎓 *Vzdelávacie témy na FinAdvisor SK*\n\n"
+        "*📈 Investície a ETF fondy*\n"
+        "Zistite ako fungujú ETF, akcie, dlhopisy. Čo je diverzifikácia, rizikový profil a dlhodobé investovanie.\n\n"
+        "*🏠 Hypotéky a úvery*\n"
+        "Naučte sa čítať ponuku banky, pochopiť RPMN, fixáciu úroku a refinancovanie.\n\n"
+        "*🛡️ Poistenie*\n"
+        "Pochopte rozdiel medzi životným, majetkovým a zodpovednostným poistením.\n\n"
+        "*💰 Dane a II./III. pilier*\n"
+        "Naučte sa ako funguje daňový systém SR, II. a III. pilier dôchodkového sporenia.\n\n"
+        "*🎯 Finančné plánovanie*\n"
+        "Pravidlo 50/30/20, núdzový fond, finančné ciele krok za krokom."
+        + DISCLAIMER
+        + SITE_CTA,
+        parse_mode="Markdown",
+    )
+
+
+async def cmd_kalkulacky(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🔢 *Vzdelávacie kalkulačky na finadvisor.sk/app*\n\n"
+        "• 📈 ETF kalkulačka — ako rastie investícia v čase\n"
+        "• 🏠 Hypotekárna kalkulačka — mesačná splátka\n"
+        "• 💰 Daňová vzdelávacia kalkulačka — odhad dane\n"
+        "• 🏦 II. pilier kalkulačka — vplyv fondov\n"
+        "• 🎯 III. pilier — príspevok štátu\n"
+        "• 📊 Zložené úroky — sila času\n\n"
+        "Výsledky kalkulačiek sú *orientačné* a neslúžia ako finančné odporúčanie."
+        + DISCLAIMER
+        + SITE_CTA,
+        parse_mode="Markdown",
+    )
+
+
+async def cmd_nbs(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "📚 *Príprava na skúšku NBS*\n\n"
+        "Naša platforma obsahuje *1 334 cvičných otázok* zo zverejnených materiálov NBS "
+        "pre finančných sprostredkovateľov (zákon 186/2009 Z.z.).\n\n"
+        "*Oblasti prípravy:*\n"
+        "• Zákon 186/2009 Z.z. — finančné sprostredkovanie\n"
+        "• Zákon 39/2015 Z.z. — poistenie\n"
+        "• Zákon 566/2001 Z.z. — cenné papiere\n"
+        "• Zákon 90/2016 Z.z. — hypotekárny úver\n"
+        "• GDPR a ochrana spotrebiteľa\n\n"
+        "📝 Cvičný test teraz: /test\n\n"
+        "_Obsah je prípravou na skúšku, nie náhradou licencie NBS._"
         + SITE_CTA,
         parse_mode="Markdown",
     )
@@ -120,16 +185,19 @@ async def help_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 async def cmd_investovat(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "📈 *Investovanie & ETF fondy*\n\n"
-        "Pomozeme vam nastavit investicnu strategiu presne podla vasich cielov a rizikoveho profilu.\n\n"
-        "*Co ponukame:*\n"
-        "• Diverzifikovane ETF portfoio (MSCI World, S&P 500)\n"
-        "• II. pilier — optimalizacia fondu\n"
-        "• III. pilier — danove uroky az €180/rok od statu\n"
-        "• Nezavisle poradenstvo — nepredavame konkretne produkty\n\n"
-        "*Preco ETF?*\n"
-        "Historicky rast ~8%/rok, nizke poplatky (0.07-0.2%/rok), plna transparentnost.\n\n"
-        "_Prvy krok je vzdy bezplatny._"
+        "📈 *Vzdelávanie — Investície & ETF fondy*\n\n"
+        "*Čo sú ETF fondy?*\n"
+        "ETF (Exchange Traded Fund) je fond obchodovaný na burze, ktorý sleduje index "
+        "(napr. S&P 500, MSCI World). Historický rast ~8%/rok za 30 rokov.\n\n"
+        "*Prečo dlhodobé investovanie?*\n"
+        "Sila zloženého úroku: €100/mes po 30 rokoch pri 8% = ~€136 000.\n\n"
+        "*II. pilier — čo treba vedieť:*\n"
+        "Môžete si vybrať fond — indexový vs. dlhopisový. Rozhodnutie závisí od veku a "
+        "časového horizontu.\n\n"
+        "*III. pilier — bonus od štátu:*\n"
+        "Pri vklade €25+/mes štát pridá príspevok. Daňový odpočet až €180/rok.\n\n"
+        "_Vyskúšajte ETF kalkulačku na finadvisor.sk/app_"
+        + DISCLAIMER
         + SITE_CTA,
         parse_mode="Markdown",
     )
@@ -137,15 +205,19 @@ async def cmd_investovat(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 async def cmd_hypoteka(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "🏠 *Hypoteky & Uvery*\n\n"
-        "Porovnanie hypotek od vsetkych hlavnych slovenskych bank — SLSP, VUB, Tatra, mBank a dalsich.\n\n"
-        "*Nase sluzby:*\n"
-        "• Bezplatne porovnanie ponuk vsetkych bank\n"
-        "• Vypocet optimálnej vysky splátky\n"
-        "• Pomoc s dokumentáciou a zariadenim\n"
-        "• Refinancovanie existujucej hypoteky\n\n"
-        "*Tip:* Rozdiel medzi najlepsou a najhorsou ponukou moze byt az €100/mes = €12 000 za 10 rokov!\n\n"
-        "_Poziadajte o bezplatnu analyzu hypoteky._"
+        "🏠 *Vzdelávanie — Hypotéky & Úvery*\n\n"
+        "*Ako čítať ponuku banky:*\n"
+        "• Úroková sadzba — ročné % z dlžnej sumy\n"
+        "• RPMN — celkové náklady úveru (dôležitejšie ako úrok!)\n"
+        "• Fixácia — 1, 3, 5, 10 rokov — stabilita splátky\n\n"
+        "*Na čo si dávať pozor:*\n"
+        "• Poplatky za poskytnutie, správu, predčasné splatenie\n"
+        "• Povinné poistenie — niekedy skryté náklady\n"
+        "• LTV (Loan to Value) — max 80-90% ceny nehnuteľnosti\n\n"
+        "*Refinancovanie — kedy sa oplatí?*\n"
+        "Keď rozdiel v sadzbe > 0.5% a zostatok dlhu > €30 000.\n\n"
+        "_Hypotekárna kalkulačka: finadvisor.sk/app_"
+        + DISCLAIMER
         + SITE_CTA,
         parse_mode="Markdown",
     )
@@ -153,12 +225,14 @@ async def cmd_hypoteka(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 async def contact(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "📞 *Kontakt na konzultanta:*\n\n"
+        "📞 *Kontakt — FinAdvisor SK*\n\n"
         "✉️ petropuneiko@gmail.com\n"
         "📱 +421 908 118 957\n"
-        "🌐 finadvisor.sk\n"
-        "🤖 Telegram: @finadvisor\\_sk\\_bot\n\n"
-        "_Prvá konzultacia je zadarmo. Odpovieme do 24 hodin._",
+        "🌐 finadvisor.sk\n\n"
+        "⏰ Odpovieme do 24 hodín.\n\n"
+        "_Kontaktujte nás s otázkami o vzdelávacej platforme, "
+        "technickými problémami alebo predplatným._\n\n"
+        "⚠️ _Neposkytujeme personalizované finančné poradenstvo._",
         parse_mode="Markdown",
     )
 
@@ -168,8 +242,8 @@ async def tip(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     t = TIPS[_tip_index % len(TIPS)]
     _tip_index += 1
     await update.message.reply_text(
-        f"*Tip dna:*\n\n{t}"
-        + SITE_CTA,
+        f"💡 *Vzdelávací tip dňa:*\n\n{t}"
+        + DISCLAIMER,
         parse_mode="Markdown",
     )
 
@@ -177,18 +251,13 @@ async def tip(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 # ── Keyword-based smart responses ─────────────────────────────────────────────
 
 KEYWORD_RESPONSES = {
-    # Investment keywords
     ("investici", "investovat", "etf", "akcie", "portfoio", "portfólio", "fond", "sporeni", "sporit"): "invest",
-    # Mortgage keywords
     ("hypoteka", "hypotéka", "uver", "úver", "banka", "splátka", "nehnutelnost", "nehnuteľnosť", "byt", "dom", "kupim"): "mortgage",
-    # Insurance keywords
-    ("poistenie", "poisťovnia", "poistit", "poistiť", "zivotne", "životné", "majetkove", "majetkové", "uraz", "úraz"): "insurance",
-    # Tax keywords
-    ("dan", "daň", "danove", "daňové", "odpocet", "odpočet", "ii. pilier", "iii. pilier", "pilier", "danovník"): "tax",
-    # Greeting keywords
-    ("ahoj", "zdravim", "dobrý", "dobry", "cau", "ciao", "hello", "hi"): "greeting",
-    # Help keywords
-    ("pomoc", "pomoct", "pomôct", "co robite", "čo robíte", "sluzby", "služby", "ponuka"): "help_info",
+    ("poistenie", "poisťovnia", "poistit", "poistiť", "zivotne", "životné", "majetkove", "úraz"): "insurance",
+    ("dan", "daň", "danove", "daňové", "odpocet", "ii. pilier", "iii. pilier", "pilier"): "tax",
+    ("nbs", "skúška", "skuska", "licencia", "186/2009", "sprostredkovatel"): "nbs",
+    ("ahoj", "zdravim", "dobrý", "dobry", "cau", "hello", "hi"): "greeting",
+    ("pomoc", "pomoct", "co robite", "čo robíte", "sluzby", "služby", "ponuka"): "help_info",
 }
 
 
@@ -207,56 +276,66 @@ async def smart_response(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await cmd_hypoteka(update, ctx)
     elif matched_type == "insurance":
         await update.message.reply_text(
-            "🛡️ *Poistenie*\n\n"
-            "Spravne poistenie vam usetri financne straty v neocakavanych situaciach.\n\n"
+            "🛡️ *Vzdelávanie — Poistenie*\n\n"
             "*Druhy poistenia:*\n"
-            "• Zivotne poistenie — ochrana rodiny\n"
-            "• Majetkove poistenie — byt, dom, auto\n"
-            "• Zodpovednostne poistenie\n"
-            "• PZP a havarijne poistenie\n\n"
-            "Porovname ponuky vsetkych poisticovni a najdeme najlepsiu cenu pre vas."
+            "• Životné — ochrana rodiny pri úmrtí alebo invalidite\n"
+            "• Majetkové — byt, dom, auto (havarijné, PZP)\n"
+            "• Zodpovednostné — škody spôsobené tretím osobám\n\n"
+            "*Na čo sa zamerať pri výbere:*\n"
+            "• Poistná suma — musí pokryť reálne riziko\n"
+            "• Výluky z poistenia — čítajte dôkladne\n"
+            "• Poistné plnenie — ako rýchlo a za akých podmienok\n\n"
+            "_Naučte sa viac o typoch poistenia na finadvisor.sk/learn_"
+            + DISCLAIMER
             + SITE_CTA,
             parse_mode="Markdown",
         )
     elif matched_type == "tax":
         await update.message.reply_text(
-            "💰 *Danove optimalizacie*\n\n"
-            "Legalne znizenie vasho danoveno zatazenia — zakonite a bezpecne.\n\n"
-            "*Co mozeme optimalizovat:*\n"
-            "• II. pilier — vhodny indexovy fond\n"
-            "• III. pilier — stat prida az €180/rok\n"
-            "• Odratatelne polozky zo zakladu dane\n"
-            "• Danove priznanie — pomoc s vyplnanim\n"
-            "• Optimalizacia pre zivnostnikov a SRO\n\n"
-            "_Priemerny klient usetrí €300-800/rok na daniach._"
+            "💰 *Vzdelávanie — Dane & Penzie*\n\n"
+            "*Daňový systém SR — základy:*\n"
+            "• Sadzba 19% — príjmy do €41 445/rok\n"
+            "• Sadzba 25% — príjmy nad túto hranicu\n"
+            "• Nezdaniteľná časť základu dane: ~€4 716/rok (2025)\n\n"
+            "*II. pilier — čo vedieť:*\n"
+            "Povinné od roku 2005. Výber fondu závisí od veku. "
+            "Indexové fondy majú historicky lepší výnos.\n\n"
+            "*III. pilier — bonus od štátu:*\n"
+            "Príspevok štátu + daňový odpočet až €180/rok pri vklade €25+/mes.\n\n"
+            "_Daňová vzdelávacia kalkulačka: finadvisor.sk/app_"
+            + DISCLAIMER
             + SITE_CTA,
             parse_mode="Markdown",
         )
+    elif matched_type == "nbs":
+        await cmd_nbs(update, ctx)
     elif matched_type == "greeting":
         await start(update, ctx)
     elif matched_type == "help_info":
         await help_cmd(update, ctx)
     else:
-        # Generic fallback
         await update.message.reply_text(
-            "Dakujem za spravu! 🙏\n\n"
-            "Mam odpovede na otazky tykajuce sa:\n"
-            "📈 /investovat — Investovanie a ETF\n"
-            "🏠 /hypoteka — Hypoteky a uvery\n"
-            "📊 /analyze — Osobna financna analyza\n"
+            "Ďakujem za správu! 🙏\n\n"
+            "Mám vzdelávacie materiály na tieto témy:\n"
+            "📈 /vzdelavanie — Investície, hypotéky, dane\n"
+            "🔢 /kalkulacky — Orientačné kalkulačky\n"
+            "📚 /nbs — Príprava na skúšku NBS\n"
+            "💡 /tip — Vzdelávací tip dňa\n"
             "📞 /kontakt — Kontakt\n\n"
-            "Pre odbornu konzultaciu navstivte nas:"
+            "⚠️ _Všetok obsah je vzdelávací, nie finančné poradenstvo._"
             + SITE_CTA,
             parse_mode="Markdown",
         )
 
 
-# ── Conversation: Financial Analysis ──────────────────────────────────────────
+# ── Conversation: Financial IQ Dotazník ───────────────────────────────────────
 
 async def analyze_start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ctx.user_data.clear()
     await update.message.reply_text(
-        "📊 *Financna analyza*\n\nZaciname! Odpovedzte na niekolko otazok.\n\n"
+        "📊 *Finančný IQ Dotazník*\n\n"
+        "Odpovedzte na niekoľko otázok a zistíte svoj orientačný finančný profil.\n\n"
+        "⚠️ _Výsledok je informatívny a neslúži ako finančné odporúčanie._\n\n"
         "Ako sa voláte? _(Meno Priezvisko)_",
         parse_mode="Markdown",
     )
@@ -265,20 +344,26 @@ async def analyze_start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 async def got_name(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ctx.user_data["full_name"] = update.message.text.strip()
-    await update.message.reply_text("📧 Vas email?")
+    await update.message.reply_text("📧 Váš email?")
     return ASK_EMAIL
 
 
 async def got_email(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ctx.user_data["email"] = update.message.text.strip()
-    await update.message.reply_text("📱 Telefon? _(napr. +421 900 000 000)_ alebo napiste _preskocit_", parse_mode="Markdown")
+    await update.message.reply_text(
+        "📱 Telefón? _(napr. +421 900 000 000)_ alebo napíšte _preskocit_",
+        parse_mode="Markdown",
+    )
     return ASK_PHONE
 
 
 async def got_phone(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     val = update.message.text.strip()
     ctx.user_data["phone"] = "" if val.lower() == "preskocit" else val
-    await update.message.reply_text("💰 Mesacny prijem (€)? Napiste cislo, napr. _2500_", parse_mode="Markdown")
+    await update.message.reply_text(
+        "💰 Mesačný príjem (€)? Napíšte číslo, napr. _2500_",
+        parse_mode="Markdown",
+    )
     return ASK_INCOME
 
 
@@ -286,9 +371,9 @@ async def got_income(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     try:
         ctx.user_data["monthly_income"] = float(update.message.text.replace(",", "."))
     except ValueError:
-        await update.message.reply_text("Zadajte cislo, napr. 2500")
+        await update.message.reply_text("Zadajte číslo, napr. 2500")
         return ASK_INCOME
-    await update.message.reply_text("💳 Mesacne vydavky (€)?")
+    await update.message.reply_text("💳 Mesačné výdavky (€)?")
     return ASK_EXPENSES
 
 
@@ -296,9 +381,12 @@ async def got_expenses(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     try:
         ctx.user_data["monthly_expenses"] = float(update.message.text.replace(",", "."))
     except ValueError:
-        await update.message.reply_text("Zadajte cislo, napr. 1500")
+        await update.message.reply_text("Zadajte číslo, napr. 1500")
         return ASK_EXPENSES
-    await update.message.reply_text("🏦 Celkove uspory (€)? _(napiste 0 ak nemate)_", parse_mode="Markdown")
+    await update.message.reply_text(
+        "🏦 Celkové úspory (€)? _(napíšte 0 ak nemáte)_",
+        parse_mode="Markdown",
+    )
     return ASK_SAVINGS
 
 
@@ -306,9 +394,12 @@ async def got_savings(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     try:
         ctx.user_data["total_savings"] = float(update.message.text.replace(",", "."))
     except ValueError:
-        await update.message.reply_text("Zadajte cislo, napr. 5000")
+        await update.message.reply_text("Zadajte číslo, napr. 5000")
         return ASK_SAVINGS
-    await update.message.reply_text("💳 Celkovy dlh (€)? _(uvery, hypoteka atd. — napiste 0 ak nemate)_", parse_mode="Markdown")
+    await update.message.reply_text(
+        "💳 Celkový dlh (€)? _(úvery, hypotéka atď. — napíšte 0 ak nemáte)_",
+        parse_mode="Markdown",
+    )
     return ASK_DEBT
 
 
@@ -316,9 +407,9 @@ async def got_debt(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     try:
         ctx.user_data["total_debt"] = float(update.message.text.replace(",", "."))
     except ValueError:
-        await update.message.reply_text("Zadajte cislo")
+        await update.message.reply_text("Zadajte číslo")
         return ASK_DEBT
-    await update.message.reply_text("Kolko mate rokov?")
+    await update.message.reply_text("Koľko máte rokov?")
     return ASK_AGE
 
 
@@ -326,45 +417,53 @@ async def got_age(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     try:
         ctx.user_data["age"] = int(update.message.text.strip())
     except ValueError:
-        await update.message.reply_text("Zadajte cele cislo, napr. 32")
+        await update.message.reply_text("Zadajte celé číslo, napr. 32")
         return ASK_AGE
     keyboard = [["0 rokov", "1-3 roky"], ["4+ rokov"]]
     markup = ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True)
-    await update.message.reply_text("📈 Skusenosti s investovanim?", reply_markup=markup)
+    await update.message.reply_text(
+        "📈 Skúsenosti s investovaním?",
+        reply_markup=markup,
+    )
     return ASK_EXPERIENCE
 
 
 async def got_experience(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     mapping = {"0 rokov": 0, "1-3 roky": 2, "4+ rokov": 5}
     ctx.user_data["investment_experience"] = mapping.get(update.message.text, 0)
-    keyboard = [["Kratkodoby (< 2r)", "Strednodoby (2-5r)"], ["Dlhodoby (5r+)"]]
+    keyboard = [["Krátkodobý (< 2r)", "Strednodobý (2-5r)"], ["Dlhodobý (5r+)"]]
     markup = ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True)
-    await update.message.reply_text("Investicny horizont?", reply_markup=markup)
+    await update.message.reply_text("Investičný horizont?", reply_markup=markup)
     return ASK_HORIZON
 
 
 async def got_horizon(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-    mapping = {"Kratkodoby (< 2r)": "short", "Strednodoby (2-5r)": "medium", "Dlhodoby (5r+)": "long"}
+    mapping = {
+        "Krátkodobý (< 2r)": "short",
+        "Strednodobý (2-5r)": "medium",
+        "Dlhodobý (5r+)": "long",
+    }
     ctx.user_data["investment_horizon"] = mapping.get(update.message.text, "medium")
-    keyboard = [["Sporenie", "Dochodok"], ["Nehnutelnost", "Vzdelanie"], ["Rast"]]
+    keyboard = [["Sporenie", "Dôchodok"], ["Nehnuteľnosť", "Vzdelanie"], ["Rast"]]
     markup = ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True)
-    await update.message.reply_text("Vas hlavny financny ciel?", reply_markup=markup)
+    await update.message.reply_text("Váš hlavný finančný cieľ?", reply_markup=markup)
     return ASK_GOAL
 
 
 async def got_goal(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     mapping = {
-        "Sporenie": "savings", "Dochodok": "retirement",
-        "Nehnutelnost": "property", "Vzdelanie": "education", "Rast": "growth",
+        "Sporenie": "savings", "Dôchodok": "retirement",
+        "Nehnuteľnosť": "property", "Vzdelanie": "education", "Rast": "growth",
     }
     ctx.user_data["goal_type"] = mapping.get(update.message.text, "savings")
 
+    # Uloženie záujemcu do systému (bez finančných údajov)
     lead_data = {
         "full_name": ctx.user_data.get("full_name", ""),
         "email": ctx.user_data.get("email", ""),
         "phone": ctx.user_data.get("phone", ""),
-        "interest": ctx.user_data.get("goal_type", "investment"),
-        "message": f"Telegram lead — prijem: €{ctx.user_data.get('monthly_income', 0)}/mes",
+        "interest": ctx.user_data.get("goal_type", "education"),
+        "message": "Telegram IQ dotazník — záujemca o vzdelávanie",
         "source": "telegram",
     }
     api_post("/leads", lead_data)
@@ -374,6 +473,7 @@ async def got_goal(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     exp = ctx.user_data.get("investment_experience", 0)
     horizon = ctx.user_data.get("investment_horizon", "medium")
 
+    # IQ skóre — informatívne, nie odporúčanie
     score = 0
     score += 25 if age < 35 else (15 if age <= 50 else 5)
     score += 25 if cashflow > 1000 else (15 if cashflow >= 500 else 5)
@@ -381,22 +481,32 @@ async def got_goal(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     score += 25 if horizon == "long" else (15 if horizon == "medium" else 5)
 
     if score >= 70:
-        profile = "Agresivny"
-        advice = "Odporucame ETF small cap, individualne akcie, vyssie riziko/vynos."
+        profile = "Dynamický"
+        edu_hint = (
+            "Na platforme nájdete vzdelávacie materiály o ETF fondoch, "
+            "akciových trhoch a dlhodobom investovaní."
+        )
     elif score >= 40:
-        profile = "Vyvazeny"
-        advice = "Odporucame MSCI World ETF, optimalizaciu II. piliera."
+        profile = "Vyvážený"
+        edu_hint = (
+            "Na platforme nájdete materiály o kombinácii rastových a konzervatívnych "
+            "nástrojov, II. pilieri a pravidelnom sporení."
+        )
     else:
-        profile = "Konzervativny"
-        advice = "Odporucame III. pilier (DDS), statne dlhopisy, terminovany vklad."
+        profile = "Konzervatívny"
+        edu_hint = (
+            "Na platforme nájdete materiály o III. pilieri, "
+            "termínovaných vkladoch a bezpečnom sporení."
+        )
 
     await update.message.reply_text(
-        f"Analyza dokoncena!\n\n"
-        f"Vas rizikovy profil: *{profile}* (skore: {score}/100)\n\n"
-        f"{advice}\n\n"
-        f"Kontaktujeme vas na *{ctx.user_data.get('email')}* do 24 hodin s podrobnym planom.\n\n"
-        f"Alebo nas kontaktujte priamo: /kontakt"
-        + SITE_CTA,
+        f"✅ *Finančný IQ dotazník dokončený!*\n\n"
+        f"Váš orientačný profil: *{profile}* (skóre: {score}/100)\n\n"
+        f"📚 *Vzdelávacie zdroje pre váš profil:*\n{edu_hint}\n\n"
+        f"🎓 Preskúmajte naše vzdelávacie materiály na *finadvisor.sk/learn*\n\n"
+        f"⚠️ _Toto je orientačný výsledok na vzdelávacie účely. "
+        f"Pre personalizované finančné plánovanie kontaktujte licencovaného "
+        f"finančného poradcu registrovaného v NBS._",
         parse_mode="Markdown",
         reply_markup=get_main_keyboard(),
     )
@@ -404,7 +514,10 @@ async def got_goal(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 
 async def cancel(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Analyza zrusena. Mozete zacat znova cez /analyze", reply_markup=get_main_keyboard())
+    await update.message.reply_text(
+        "Dotazník zrušený. Môžete začať znova cez /analyze",
+        reply_markup=get_main_keyboard(),
+    )
     return ConversationHandler.END
 
 
@@ -412,24 +525,24 @@ async def menu_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     text = update.message.text or ""
     text_lower = text.lower()
 
-    if "financna analyza" in text_lower or "analyza" in text_lower:
+    if "finančný iq" in text_lower or "analyza" in text_lower or "iq test" in text_lower:
         return await analyze_start(update, ctx)
-    elif "tip dna" in text_lower or "tip" in text_lower:
+    elif "tip" in text_lower:
         await tip(update, ctx)
     elif "kontakt" in text_lower:
         await contact(update, ctx)
     elif "pomoc" in text_lower or "help" in text_lower:
         await help_cmd(update, ctx)
-    elif "investovanie" in text_lower:
-        await cmd_investovat(update, ctx)
-    elif "hypoteka" in text_lower:
-        await cmd_hypoteka(update, ctx)
+    elif "vzdelávanie" in text_lower or "vzdelavanie" in text_lower:
+        await cmd_vzdelavanie(update, ctx)
+    elif "nbs" in text_lower or "príprava" in text_lower:
+        await cmd_nbs(update, ctx)
     else:
         await smart_response(update, ctx)
 
 
 async def cmd_test(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-    """Send a random NBS exam question."""
+    """Cvičná NBS otázka zo zverejnených materiálov."""
     sector = None
     if ctx.args:
         sector = " ".join(ctx.args)
@@ -440,28 +553,31 @@ async def cmd_test(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     data = api_get(path)
     if not data:
-        await update.message.reply_text("Nepodarilo sa nacitat otazku. Skuste neskor.")
+        await update.message.reply_text(
+            "Nepodarilo sa načítať otázku. Skúste neskôr alebo navštívte finadvisor.sk/learn"
+        )
         return
 
     opts = data.get("options", {})
     opts_lines = "\n".join(f"  {k}. {v}" for k, v in sorted(opts.items()))
     correct = data.get("correct", "?").upper()
     msg = (
-        f"Otazka c. {data['number']}\n"
+        f"📝 *Cvičná otázka č. {data['number']}*\n"
         f"Sekcia: {data['section']}\n\n"
         f"{data['text']}\n\n"
         f"{opts_lines}\n\n"
-        f"Spravna odpoved: [ {correct} ]\n\n"
-        f"Dalsia otazka: /test"
+        f"✅ Správna odpoveď: [ {correct} ]\n\n"
+        f"_Otázky sú zo zverejnených materiálov NBS pre vzdelávacie účely._\n"
+        f"Ďalšia otázka: /test"
     )
-    await update.message.reply_text(msg)
+    await update.message.reply_text(msg, parse_mode="Markdown")
 
 
 def _register_handlers(app: Application):
     conv = ConversationHandler(
         entry_points=[
             CommandHandler("analyze", analyze_start),
-            MessageHandler(filters.Regex("📊 Financna analyza"), analyze_start),
+            MessageHandler(filters.Regex("📊 Finančný IQ test"), analyze_start),
         ],
         states={
             ASK_NAME:       [MessageHandler(filters.TEXT & ~filters.COMMAND, got_name)],
@@ -480,6 +596,9 @@ def _register_handlers(app: Application):
     )
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_cmd))
+    app.add_handler(CommandHandler("vzdelavanie", cmd_vzdelavanie))
+    app.add_handler(CommandHandler("kalkulacky", cmd_kalkulacky))
+    app.add_handler(CommandHandler("nbs", cmd_nbs))
     app.add_handler(CommandHandler("investovat", cmd_investovat))
     app.add_handler(CommandHandler("hypoteka", cmd_hypoteka))
     app.add_handler(CommandHandler("kontakt", contact))
