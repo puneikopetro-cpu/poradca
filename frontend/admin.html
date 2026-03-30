@@ -314,14 +314,20 @@
         <div class="nav-item" onclick="goto('guide')">
           <span class="icon">📚</span> Posibnik analytika
         </div>
-        <div class="nav-item" onclick="window.open('https://finadvisor.sk','_blank')">
+        <div class="nav-item" onclick="goto('telegram')">
+          <span class="icon">🤖</span> Telegram Bot
+        </div>
+        <div class="nav-item" onclick="goto('gamification')">
+          <span class="icon">🏆</span> Gamifikácia
+        </div>
+        <div class="nav-item" onclick="window.open('https://intuitive-illumination-production-5103.up.railway.app','_blank')">
           <span class="icon">🌐</span> Otvoriť web
         </div>
-        <div class="nav-item" onclick="window.open('https://finadvisor.sk/docs','_blank')">
+        <div class="nav-item" onclick="window.open('https://intuitive-illumination-production-5103.up.railway.app/docs','_blank')">
           <span class="icon">📄</span> API Docs
         </div>
         <div class="nav-item" onclick="window.open('https://t.me/finadvisor_sk_bot','_blank')">
-          <span class="icon">🤖</span> Telegram Bot
+          <span class="icon">💬</span> Otvoriť bota
         </div>
         <div class="nav-item" onclick="window.open('https://railway.com/project/564a41ac-75f7-4be8-9ce2-e2dc57cfd8d0','_blank')">
           <span class="icon">🚂</span> Railway
@@ -369,9 +375,9 @@
           <div class="card">
             <div class="card-header"><h3>🔗 Rýchle akcie</h3></div>
             <div class="card-body" style="padding:20px;display:flex;flex-wrap:wrap;gap:10px">
-              <button class="btn btn-primary" onclick="window.open('https://finadvisor.sk','_blank')">🌐 Otvoriť web</button>
-              <button class="btn btn-ghost" onclick="window.open('https://finadvisor.sk/docs','_blank')">📄 API Docs</button>
-              <button class="btn btn-ghost" onclick="window.open('https://t.me/finadvisor_sk_bot','_blank')">🤖 Telegram Bot</button>
+              <button class="btn btn-primary" onclick="window.open('https://intuitive-illumination-production-5103.up.railway.app','_blank')">🌐 Otvoriť web</button>
+              <button class="btn btn-ghost" onclick="window.open('https://intuitive-illumination-production-5103.up.railway.app/docs','_blank')">📄 API Docs</button>
+              <button class="btn btn-ghost" onclick="goto('telegram')">🤖 Telegram Bot</button>
               <button class="btn btn-ghost" onclick="testQuiz()">🎲 Náhodná otázka</button>
               <button class="btn btn-ghost" onclick="goto('system')">⚙️ Systém info</button>
             </div>
@@ -536,13 +542,13 @@
             <div class="card">
               <div class="card-header"><h3>🌐 Produkcia</h3></div>
               <div class="card-body" style="padding:0 24px">
-                <div class="info-row"><span class="info-key">Doména</span><span class="info-val blue">finadvisor.sk</span></div>
+                <div class="info-row"><span class="info-key">Doména (live)</span><span class="info-val blue">intuitive-illumination-production-5103.up.railway.app</span></div>
                 <div class="info-row"><span class="info-key">Backend</span><span class="info-val">FastAPI (Python)</span></div>
                 <div class="info-row"><span class="info-key">Databáza</span><span class="info-val">PostgreSQL (Railway)</span></div>
                 <div class="info-row"><span class="info-key">Hosting</span><span class="info-val">Railway.app</span></div>
                 <div class="info-row"><span class="info-key">DNS</span><span class="info-val">websupport.sk</span></div>
                 <div class="info-row"><span class="info-key">GitHub</span><span class="info-val blue"><a href="https://github.com/puneikopetro-cpu/poradca" target="_blank">puneikopetro-cpu/poradca</a></span></div>
-                <div class="info-row"><span class="info-key">API Docs</span><span class="info-val blue"><a href="https://finadvisor.sk/docs" target="_blank">finadvisor.sk/docs</a></span></div>
+                <div class="info-row"><span class="info-key">API Docs</span><span class="info-val blue"><a href="https://intuitive-illumination-production-5103.up.railway.app/docs" target="_blank" style="color:var(--blue)">API Docs ↗</a></span></div>
                 <div class="info-row"><span class="info-key">Health</span><span class="info-val green" id="health-status">Kontrolujem…</span></div>
               </div>
             </div>
@@ -550,7 +556,7 @@
               <div class="card-header"><h3>🤖 Telegram Bot</h3></div>
               <div class="card-body" style="padding:0 24px">
                 <div class="info-row"><span class="info-key">Bot</span><span class="info-val blue">@finadvisor_sk_bot</span></div>
-                <div class="info-row"><span class="info-key">Webhook</span><span class="info-val">finadvisor.sk/telegram/webhook</span></div>
+                <div class="info-row"><span class="info-key">Webhook</span><span class="info-val" style="font-size:11px;word-break:break-all">intuitive-illumination-production-5103.up.railway.app/telegram/webhook</span></div>
                 <div class="info-row"><span class="info-key">Príkazy</span><span class="info-val">/start /test /tip /analyze</span></div>
                 <div class="info-row"><span class="info-key">Otvoriť</span><span class="info-val blue"><a href="https://t.me/finadvisor_sk_bot" target="_blank">t.me/finadvisor_sk_bot</a></span></div>
               </div>
@@ -1689,6 +1695,128 @@
 
 
 
+        <!-- ══ TELEGRAM PAGE ══ -->
+        <div class="page" id="page-telegram">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+            <h2 style="margin:0">🤖 Telegram Bot Management</h2>
+            <button class="btn btn-primary" onclick="loadTelegramStatus()">Obnoviť stav</button>
+          </div>
+
+          <!-- Status cards -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:24px">
+            <div class="stat-card">
+              <div class="stat-icon green">📡</div>
+              <div><div class="stat-val" id="tg-status-val">—</div><div class="stat-label">Webhook stav</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon blue">📨</div>
+              <div><div class="stat-val" id="tg-pending-val">—</div><div class="stat-label">Čakajúce správy</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon orange">⚡</div>
+              <div><div class="stat-val" id="tg-last-error-val" style="font-size:13px">—</div><div class="stat-label">Posledná chyba</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon blue">🌐</div>
+              <div><div class="stat-val" id="tg-health-val">—</div><div class="stat-label">API health</div></div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <!-- Bot info -->
+            <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px">
+              <h3 style="margin:0 0 16px;font-size:1rem">📋 Info</h3>
+              <table style="width:100%;font-size:13px;border-collapse:collapse">
+                <tr><td style="padding:7px 0;color:var(--gray)">Bot username</td><td style="font-weight:600">@finadvisor_sk_bot</td></tr>
+                <tr><td style="padding:7px 0;color:var(--gray)">Webhook URL</td><td style="font-size:11px;word-break:break-all" id="tg-webhook-url">načítavam…</td></tr>
+                <tr><td style="padding:7px 0;color:var(--gray)">Príkazy</td><td>/start /help /tip /vyzva /skore /analyze /nbs /hypoteka /investovat</td></tr>
+                <tr><td style="padding:7px 0;color:var(--gray)">Otvoriť bota</td><td><a href="https://t.me/finadvisor_sk_bot" target="_blank" style="color:var(--blue)">t.me/finadvisor_sk_bot ↗</a></td></tr>
+              </table>
+              <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+                <button class="btn btn-primary" onclick="testTelegramBot()">🧪 Test /start</button>
+                <button class="btn btn-ghost" onclick="resetWebhook()">🔄 Reset webhook</button>
+              </div>
+            </div>
+
+            <!-- Broadcast -->
+            <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px">
+              <h3 style="margin:0 0 16px;font-size:1rem">📣 Broadcast správa</h3>
+              <div style="margin-bottom:12px">
+                <label style="font-size:12px;color:var(--gray);display:block;margin-bottom:6px">Chat ID (prázdne = všetci v leadoch)</label>
+                <input id="tg-chat-id" placeholder="napr. 123456789 alebo prázdne" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px">
+              </div>
+              <div style="margin-bottom:12px">
+                <label style="font-size:12px;color:var(--gray);display:block;margin-bottom:6px">Správa (Markdown)</label>
+                <textarea id="tg-broadcast-msg" rows="5" placeholder="Napíšte správu…" style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;resize:vertical"></textarea>
+              </div>
+              <div style="display:flex;gap:10px">
+                <button class="btn btn-primary" style="flex:1" onclick="sendTelegramBroadcast()">📤 Odoslať</button>
+                <button class="btn btn-ghost" onclick="loadTgTemplate('daily')">💡 Denná výzva</button>
+                <button class="btn btn-ghost" onclick="loadTgTemplate('promo')">🎯 Promo</button>
+              </div>
+              <div id="tg-broadcast-result" style="margin-top:10px;font-size:13px;color:var(--green)"></div>
+            </div>
+          </div>
+
+          <!-- Test log -->
+          <div style="margin-top:20px;background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px">
+            <h3 style="margin:0 0 12px;font-size:1rem">🧪 Test log</h3>
+            <div id="tg-test-log" style="font-family:monospace;font-size:12px;background:#f8f9fa;padding:12px;border-radius:8px;min-height:60px;max-height:200px;overflow-y:auto;white-space:pre-wrap;color:#374151">Kliknite "Test /start" pre otestovanie bota…</div>
+          </div>
+        </div>
+
+        <!-- ══ GAMIFICATION PAGE ══ -->
+        <div class="page" id="page-gamification">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+            <h2 style="margin:0">🏆 Gamifikácia — XP & Leaderboard</h2>
+            <button class="btn btn-primary" onclick="loadGamification()">Obnoviť</button>
+          </div>
+
+          <!-- XP Info -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px">
+            <div class="stat-card"><div class="stat-icon orange">⭐</div><div><div class="stat-val" id="gam-total-xp">—</div><div class="stat-label">Celkom XP (všetci)</div></div></div>
+            <div class="stat-card"><div class="stat-icon green">👥</div><div><div class="stat-val" id="gam-active-players">—</div><div class="stat-label">Aktívni hráči</div></div></div>
+            <div class="stat-card"><div class="stat-icon blue">🔥</div><div><div class="stat-val" id="gam-top-xp">—</div><div class="stat-label">Najlepší hráč XP</div></div></div>
+            <div class="stat-card"><div class="stat-icon blue">📅</div><div><div class="stat-val" id="gam-challenges-today">—</div><div class="stat-label">Výzvy dnes</div></div></div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px">
+            <!-- Leaderboard -->
+            <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px">
+              <h3 style="margin:0 0 16px;font-size:1rem">🥇 Leaderboard (Telegram)</h3>
+              <div id="gam-leaderboard" style="font-size:13px">
+                <div style="color:var(--gray);text-align:center;padding:20px">Načítavam leaderboard z Telegram bota…</div>
+              </div>
+            </div>
+
+            <!-- XP System info -->
+            <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px">
+              <h3 style="margin:0 0 16px;font-size:1rem">📊 XP Systém</h3>
+              <table style="width:100%;font-size:13px;border-collapse:collapse">
+                <tr style="background:#f8f9fa"><td style="padding:8px">Akcia</td><td style="padding:8px;font-weight:600">XP</td></tr>
+                <tr><td style="padding:7px;border-bottom:1px solid #f3f4f6">/start (prvý raz)</td><td style="font-weight:600;color:var(--green)">+10</td></tr>
+                <tr><td style="padding:7px;border-bottom:1px solid #f3f4f6">Denná výzva</td><td style="font-weight:600;color:var(--green)">+15</td></tr>
+                <tr><td style="padding:7px;border-bottom:1px solid #f3f4f6">Správna odpoveď</td><td style="font-weight:600;color:var(--green)">+5</td></tr>
+                <tr><td style="padding:7px;border-bottom:1px solid #f3f4f6">Streak 7 dní</td><td style="font-weight:600;color:var(--orange)">+50 bonus</td></tr>
+                <tr><td style="padding:7px">Finančný IQ test</td><td style="font-weight:600;color:var(--green)">+25</td></tr>
+              </table>
+
+              <h3 style="margin:20px 0 12px;font-size:1rem">🎖️ Úrovne</h3>
+              <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+                <div style="display:flex;justify-content:space-between;padding:5px 8px;background:#fff3cd;border-radius:6px"><span>🌱 Začiatočník</span><span>0–99 XP</span></div>
+                <div style="display:flex;justify-content:space-between;padding:5px 8px;background:#d1fae5;border-radius:6px"><span>📈 Učiaci sa</span><span>100–499 XP</span></div>
+                <div style="display:flex;justify-content:space-between;padding:5px 8px;background:#dbeafe;border-radius:6px"><span>💡 Finančne gramotný</span><span>500–999 XP</span></div>
+                <div style="display:flex;justify-content:space-between;padding:5px 8px;background:#ede9fe;border-radius:6px"><span>🧠 Analytik</span><span>1000–1999 XP</span></div>
+                <div style="display:flex;justify-content:space-between;padding:5px 8px;background:#fce7f3;border-radius:6px"><span>🏆 Majster financií</span><span>2000+ XP</span></div>
+              </div>
+
+              <div style="margin-top:16px">
+                <button class="btn btn-primary" style="width:100%" onclick="sendDailyChallenge()">📤 Poslať dennú výzvu všetkým</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
     </div><!-- /main -->
   </div><!-- /layout -->
 </div><!-- /app -->
@@ -1857,7 +1985,8 @@
     payments:'💳 Platby — Stripe', subscriptions:'🔄 Predplatné',
     users:'👥 Používatelia', analytics:'📈 Analytika & príjmy', email:'📧 Email broadcast',
     quiz:'NBS Quiz', legislation:'Legislatíva', system:'Systém / Info',
-    guide:'Posibnik analytika', invest:'Investície & kalkulátory', reader:'🔊 AI Čítač hlasu'
+    guide:'Posibnik analytika', invest:'Investície & kalkulátory', reader:'🔊 AI Čítač hlasu',
+    telegram:'🤖 Telegram Bot Management', gamification:'🏆 Gamifikácia — XP & Leaderboard'
   };
   function goto(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1913,7 +2042,7 @@
         <div class="stat-card"><div class="stat-icon blue">👥</div><div><div class="stat-val">${total}</div><div class="stat-label">Celkom leadov</div></div></div>
         <div class="stat-card"><div class="stat-icon green">📅</div><div><div class="stat-val">${today}</div><div class="stat-label">Dnes nových</div></div></div>
         <div class="stat-card"><div class="stat-icon orange">🎓</div><div><div class="stat-val">${quiz ? quiz.total : '?'}</div><div class="stat-label">NBS otázok v DB</div></div></div>
-        <div class="stat-card"><div class="stat-icon blue">🌐</div><div><div class="stat-val" style="font-size:18px">LIVE</div><div class="stat-label">finadvisor.sk</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue">🌐</div><div><div class="stat-val" style="font-size:18px">LIVE</div><div class="stat-label">Railway (aktívny)</div></div></div>
       `;
     } catch(e) {
       grid.innerHTML = '<div class="stat-card"><div class="stat-label">Chyba pri načítaní štatistík</div></div>';
@@ -2957,12 +3086,194 @@ Prehľad sankcií. Za výkon činnosti bez registrácie podľa zákona stoosemde
     else if (page === 'subscriptions') loadSubscriptions();
     else if (page === 'users') loadUsers();
     else if (page === 'analytics') loadAnalytics();
+    else if (page === 'telegram') loadTelegramStatus();
+    else if (page === 'gamification') loadGamification();
   }
   function getAdminToken() {
     return sessionStorage.getItem('adminToken') || localStorage.getItem('adminToken') || '';
   }
 
+  // ── TELEGRAM BOT MANAGEMENT ────────────────────────────────────────────────
+  const TG_API = 'https://api.telegram.org/bot8428211519:AAHkiiy7iZdkvc-CMQY97zT5ERGbKoa3eh4';
+  const BACKEND = 'https://intuitive-illumination-production-5103.up.railway.app';
+  const WEBHOOK_URL = BACKEND + '/telegram/webhook';
 
+  async function loadTelegramStatus() {
+    // Health check
+    try {
+      const h = await fetch(BACKEND + '/health');
+      const hd = await h.json();
+      document.getElementById('tg-health-val').textContent = hd.status === 'ok' ? '✅ OK' : '❌ ' + hd.status;
+    } catch(e) { document.getElementById('tg-health-val').textContent = '❌ Offline'; }
+
+    // Webhook info from Telegram
+    try {
+      const r = await fetch(TG_API + '/getWebhookInfo');
+      const d = await r.json();
+      if (d.ok) {
+        const wi = d.result;
+        document.getElementById('tg-status-val').textContent = wi.url ? '✅ Aktívny' : '❌ Neaktívny';
+        document.getElementById('tg-status-val').style.color = wi.url ? 'var(--green)' : 'var(--red)';
+        document.getElementById('tg-pending-val').textContent = wi.pending_update_count || 0;
+        document.getElementById('tg-last-error-val').textContent = wi.last_error_message || '—';
+        document.getElementById('tg-webhook-url').textContent = wi.url || '(nie je nastavený)';
+      }
+    } catch(e) {
+      document.getElementById('tg-status-val').textContent = '❌ Chyba';
+    }
+  }
+
+  async function testTelegramBot() {
+    const log = document.getElementById('tg-test-log');
+    log.textContent = 'Posielam test /start na webhook…\n';
+    try {
+      const testPayload = {
+        update_id: Math.floor(Math.random() * 99999),
+        message: {
+          message_id: Math.floor(Math.random() * 9999),
+          from: { id: 999999, is_bot: false, first_name: 'Admin Test' },
+          chat: { id: 999999, type: 'private' },
+          date: Math.floor(Date.now() / 1000),
+          text: '/start'
+        }
+      };
+      const r = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(testPayload)
+      });
+      const d = await r.json();
+      log.textContent += `HTTP ${r.status}: ${JSON.stringify(d, null, 2)}\n`;
+      if (d.ok) {
+        log.textContent += '\n✅ Bot úspešne spracoval správu!';
+        log.style.color = '#16a34a';
+      } else {
+        log.textContent += '\n❌ Chyba: ' + (d.error || d.detail || 'neznáma');
+        log.style.color = '#dc2626';
+      }
+    } catch(e) {
+      log.textContent += '❌ Sieťová chyba: ' + e.message;
+      log.style.color = '#dc2626';
+    }
+  }
+
+  async function resetWebhook() {
+    if (!confirm('Znovu nastaviť Telegram webhook na ' + WEBHOOK_URL + '?')) return;
+    try {
+      const r = await fetch(`${TG_API}/setWebhook?url=${encodeURIComponent(WEBHOOK_URL)}&drop_pending_updates=true`);
+      const d = await r.json();
+      if (d.ok) {
+        alert('✅ Webhook nastavený: ' + WEBHOOK_URL);
+        loadTelegramStatus();
+      } else {
+        alert('❌ Chyba: ' + d.description);
+      }
+    } catch(e) { alert('Chyba siete'); }
+  }
+
+  const TG_TEMPLATES = {
+    daily: `📚 *Denná finančná výzva!*\n\nOdpovedzte na otázku a zarobiť XP:\n\nAký je hlavný rozdiel medzi sporením a investovaním?\n\nPrídte dnes do FinAdvisor SK: /vyzva`,
+    promo: `🎯 *Odomknite Pro plán*\n\nZískaite prístup ku:\n✅ 1 334 NBS cvičných otázok\n✅ AI poradca 24/7\n✅ Všetky kalkulačky\n\nLen €9.90/mesiac → https://${BACKEND.replace('https://','')}`,
+  };
+
+  function loadTgTemplate(type) {
+    const tpl = TG_TEMPLATES[type] || '';
+    document.getElementById('tg-broadcast-msg').value = tpl;
+  }
+
+  async function sendTelegramBroadcast() {
+    const chatId = document.getElementById('tg-chat-id').value.trim();
+    const msg = document.getElementById('tg-broadcast-msg').value.trim();
+    const result = document.getElementById('tg-broadcast-result');
+    if (!msg) { alert('Napíšte správu'); return; }
+    if (!chatId) { alert('Zadajte Chat ID. (Broadcast na viacerých vyžaduje uložené chat_id v DB — táto funkcia odosiela 1 správu.)'); return; }
+    result.textContent = 'Odosielam…';
+    try {
+      const r = await fetch(`${TG_API}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: chatId, text: msg, parse_mode: 'Markdown' })
+      });
+      const d = await r.json();
+      if (d.ok) {
+        result.textContent = '✅ Správa odoslaná!';
+        result.style.color = 'var(--green)';
+      } else {
+        result.textContent = '❌ ' + d.description;
+        result.style.color = 'var(--red)';
+      }
+    } catch(e) {
+      result.textContent = '❌ Chyba: ' + e.message;
+      result.style.color = 'var(--red)';
+    }
+  }
+
+  // ── GAMIFICATION ────────────────────────────────────────────────────────────
+  async function loadGamification() {
+    // Try to get leaderboard from bot via API endpoint
+    try {
+      const r = await fetch(BACKEND + '/gamification/leaderboard', {
+        headers: { 'X-Admin-Key': PASSWORD }
+      });
+      if (r.ok) {
+        const data = await r.json();
+        renderLeaderboard(data);
+        return;
+      }
+    } catch(e) {}
+
+    // Fallback: show info that data is in bot's memory
+    const lb = document.getElementById('gam-leaderboard');
+    lb.innerHTML = `
+      <div style="padding:20px;text-align:center;color:var(--gray)">
+        <p>Leaderboard dáta sú uložené v pamäti Telegram bota.</p>
+        <p style="margin-top:8px;font-size:12px">Pre persistentný leaderboard je potrebné pridať DB tabuľku <code>user_xp</code>.</p>
+        <p style="margin-top:8px">Používatelia môžu zobraziť leaderboard príkazom <strong>/leaderboard</strong> v bote.</p>
+      </div>`;
+    document.getElementById('gam-total-xp').textContent = 'N/A';
+    document.getElementById('gam-active-players').textContent = 'In-memory';
+    document.getElementById('gam-top-xp').textContent = 'N/A';
+    document.getElementById('gam-challenges-today').textContent = 'N/A';
+  }
+
+  function renderLeaderboard(data) {
+    const medals = ['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟'];
+    const players = data.players || [];
+    document.getElementById('gam-active-players').textContent = players.length;
+    const totalXp = players.reduce((s, p) => s + (p.xp || 0), 0);
+    document.getElementById('gam-total-xp').textContent = totalXp;
+    document.getElementById('gam-top-xp').textContent = players[0] ? players[0].xp : '—';
+
+    if (!players.length) {
+      document.getElementById('gam-leaderboard').innerHTML = '<div style="padding:20px;text-align:center;color:var(--gray)">Zatiaľ žiadni hráči.</div>';
+      return;
+    }
+    const rows = players.slice(0,10).map((p, i) => `
+      <tr style="border-bottom:1px solid #f3f4f6">
+        <td style="padding:10px 14px">${medals[i] || (i+1)+'.'}</td>
+        <td style="padding:10px 14px">${esc(p.name || 'Anonymný')}</td>
+        <td style="padding:10px 14px;font-weight:600;color:var(--orange)">${p.xp} XP</td>
+        <td style="padding:10px 14px">${esc(p.level || '—')}</td>
+      </tr>`).join('');
+    document.getElementById('gam-leaderboard').innerHTML = `
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr style="background:#f8f9fa">
+          <th style="padding:8px 14px;text-align:left">#</th>
+          <th style="padding:8px 14px;text-align:left">Hráč</th>
+          <th style="padding:8px 14px;text-align:left">XP</th>
+          <th style="padding:8px 14px;text-align:left">Úroveň</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+
+  async function sendDailyChallenge() {
+    if (!confirm('Odoslať dennú výzvu všetkým Telegram používateľom z leadov?')) return;
+    alert('Táto funkcia vyžaduje uložené Telegram chat_id v databáze. Pre broadcast použite /vyzva priamo v bote alebo implementujte DB rozšírenie.');
+  }
+
+  // Load telegram status automatically on page load
+  document.addEventListener('DOMContentLoaded', () => {
     const ta = document.getElementById('tts-text');
     if (ta) ta.addEventListener('input', updateTTSStats);
   });
