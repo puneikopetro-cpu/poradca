@@ -186,29 +186,43 @@ def sitemap():
     return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "sitemap.xml"), media_type="application/xml")
 
 
+NO_CACHE_HEADERS = {
+    "Cache-Control": "no-cache, no-store, must-revalidate",
+    "Pragma": "no-cache",
+    "Expires": "0",
+}
+
+
+def _html(filename: str):
+    """Serve a frontend HTML file with no-cache headers."""
+    path = os.path.join(os.path.dirname(__file__), "..", "frontend", filename)
+    return FileResponse(path, headers=NO_CACHE_HEADERS)
+
+
 @app.get("/privacy", include_in_schema=False)
 def privacy():
-    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "privacy.html"))
+    return _html("privacy.html")
 
 
 @app.get("/terms", include_in_schema=False)
 def terms():
-    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "terms.html"))
+    return _html("terms.html")
 
 
 @app.get("/admin", include_in_schema=False)
 def admin_panel():
-    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "admin.html"))
+    return _html("admin.html")
 
 
 @app.get("/app", include_in_schema=False)
 def serve_app():
-    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "app.html"))
+    return _html("app.html")
 
 
 @app.get("/learn", include_in_schema=False)
 def serve_learn():
-    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "learn.html"))
+    return _html("learn.html")
+
 
 
 @app.get("/og-image.png", include_in_schema=False)
