@@ -762,6 +762,7 @@ async def build_application(token: str) -> Application:
     app = Application.builder().token(token).build()
     _register_handlers(app)
     await app.initialize()
+    await app.start()
     return app
 
 
