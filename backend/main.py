@@ -443,6 +443,15 @@ if os.path.isdir(_frontend_dir):
     app.mount("/static", StaticFiles(directory=_frontend_dir), name="static")
 
 
+_tg_app = None
+
+async def _get_tg_app():
+    global _tg_app
+    if _tg_app is None:
+        from telegram_bot.bot import build_application
+        _tg_app = await build_application(settings.TELEGRAM_BOT_TOKEN)
+    return _tg_app
+
 @app.post("/telegram/webhook", tags=["telegram"])
 async def telegram_webhook(request: Request):
     """Receives Telegram updates via webhook (used in production)."""
@@ -451,14 +460,13 @@ async def telegram_webhook(request: Request):
         return JSONResponse({"ok": False}, status_code=503)
     try:
         from telegram import Update
-        from telegram.ext import Application
-        from telegram_bot.bot import build_application
-
         update_data = await request.json()
-        app_instance = await build_application(token)
+        app_instance = await _get_tg_app()
         update = Update.de_json(update_data, app_instance.bot)
         await app_instance.process_update(update)
         return {"ok": True}
     except Exception as e:
         logger.exception("Webhook error: %s", e)
+        global _tg_app
+        _tg_app = None  # reset on error, retry next request
         return JSONResponse({"ok": False}, status_code=500)
