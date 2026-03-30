@@ -964,6 +964,344 @@ const _bl=(navigator.language||'sk').substring(0,2).toLowerCase();
 setLearnLang({sk:'sk',cs:'sk',en:'en',uk:'uk',pl:'pl',de:'de',hu:'hu'}[_bl]||'sk');
 </script>
 
+<!-- ══════════════════════════════════════════════════════════
+     GAMIFICATION SYSTEM — XP · Levels · Streaks · Badges
+     ══════════════════════════════════════════════════════════ -->
+
+<!-- GAME HUD (fixed top bar under nav) -->
+<div id="game-hud" style="position:fixed;top:56px;left:0;right:0;z-index:90;background:rgba(15,23,42,.97);border-bottom:1px solid rgba(124,58,237,.3);padding:6px 16px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(10px)">
+  <!-- Level badge -->
+  <div id="hud-level" style="background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;cursor:pointer" onclick="showBadges()">⚡ Úr. 1</div>
+  <!-- XP bar -->
+  <div style="flex:1;min-width:60px">
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-bottom:2px">
+      <span id="hud-xp-text">0 XP</span><span id="hud-xp-next">100 XP</span>
+    </div>
+    <div style="height:6px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden">
+      <div id="hud-xp-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#7c3aed,#2563eb);border-radius:99px;transition:width .4s ease"></div>
+    </div>
+  </div>
+  <!-- Streak -->
+  <div id="hud-streak" style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#f59e0b;cursor:pointer" onclick="showStreakInfo()" title="Denný streak">
+    🔥 <span id="streak-count">0</span>
+  </div>
+  <!-- Daily challenge -->
+  <div id="hud-daily" style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#fbbf24;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;cursor:pointer;white-space:nowrap" onclick="showDailyChallenge()">🎯 Výzva</div>
+</div>
+
+<!-- LEVEL UP CELEBRATION -->
+<div id="levelup-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;flex-direction:column">
+  <div style="text-align:center;animation:bounceIn .5s ease">
+    <div id="levelup-emoji" style="font-size:80px;line-height:1;margin-bottom:16px">🎉</div>
+    <div style="font-size:14px;color:#94a3b8;font-weight:600;letter-spacing:2px;margin-bottom:8px">NOVÝ LEVEL!</div>
+    <div id="levelup-name" style="font-size:32px;font-weight:900;color:#fff;margin-bottom:8px"></div>
+    <div id="levelup-desc" style="font-size:14px;color:#94a3b8;max-width:280px;margin:0 auto 24px"></div>
+    <button onclick="closeLevelUp()" style="background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border:none;padding:12px 32px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer">Pokračovať 🚀</button>
+  </div>
+</div>
+
+<!-- BADGES PANEL -->
+<div id="badges-panel" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.8);align-items:flex-end;justify-content:center">
+  <div style="background:#1e293b;border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:24px;max-height:70vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="font-size:18px;font-weight:800">🏆 Tvoje odznaky</div>
+      <button onclick="closeBadges()" style="background:rgba(255,255,255,.1);border:none;color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer">✕</button>
+    </div>
+    <div id="badges-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;text-align:center"></div>
+  </div>
+</div>
+
+<!-- DAILY CHALLENGE PANEL -->
+<div id="daily-panel" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.8);align-items:center;justify-content:center">
+  <div style="background:#1e293b;border:1px solid rgba(245,158,11,.3);border-radius:20px;width:90%;max-width:400px;padding:28px">
+    <div style="font-size:24px;text-align:center;margin-bottom:8px">🎯</div>
+    <div style="font-size:16px;font-weight:800;text-align:center;margin-bottom:4px">Denná výzva</div>
+    <div id="daily-xp-badge" style="text-align:center;margin-bottom:16px"><span style="background:rgba(245,158,11,.2);color:#fbbf24;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px">+25 XP</span></div>
+    <div id="daily-question" style="font-size:15px;font-weight:600;text-align:center;margin-bottom:20px;line-height:1.5"></div>
+    <div id="daily-options" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div id="daily-result" style="display:none;text-align:center;margin-top:16px;padding:12px;border-radius:12px"></div>
+    <button onclick="closeDaily()" style="margin-top:16px;width:100%;background:rgba(255,255,255,.07);border:none;color:#fff;padding:10px;border-radius:10px;cursor:pointer;font-size:13px">Zavrieť</button>
+  </div>
+</div>
+
+<!-- XP POPUP (floating +XP notification) -->
+<div id="xp-popup" style="display:none;position:fixed;top:80px;right:16px;z-index:9997;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;font-size:16px;font-weight:800;padding:10px 18px;border-radius:14px;pointer-events:none;transition:all .3s"></div>
+
+<style>
+@keyframes bounceIn{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes floatUp{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-60px);opacity:0}}
+#levelup-modal.show{display:flex!important}
+#badges-panel.show{display:flex!important}
+#daily-panel.show{display:flex!important}
+.badge-item{padding:8px 4px;cursor:default}
+.badge-item .badge-icon{font-size:28px;filter:grayscale(1);opacity:.3;transition:.2s}
+.badge-item.earned .badge-icon{filter:none;opacity:1;animation:bounceIn .4s ease}
+.badge-item .badge-name{font-size:9px;color:#94a3b8;margin-top:4px}
+.badge-item.earned .badge-name{color:#f59e0b;font-weight:700}
+.daily-opt{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-size:14px;text-align:left;transition:.15s}
+.daily-opt:hover{background:rgba(124,58,237,.2);border-color:#7c3aed}
+.daily-opt.correct{background:rgba(22,163,74,.25)!important;border-color:#16a34a!important}
+.daily-opt.wrong{background:rgba(239,68,68,.2)!important;border-color:#ef4444!important}
+</style>
+
+<script>
+// ══════════════════════════════════════════════════
+// GAMIFICATION ENGINE
+// ══════════════════════════════════════════════════
+
+const LEVELS = [
+  { name:'Nováčik',     emoji:'🌱', xp:0,    desc:'Vitaj! Tvoja cesta začína.' },
+  { name:'Učeň',        emoji:'📚', xp:100,  desc:'Prvé kroky vo finančnom vzdelávaní.' },
+  { name:'Záujemca',    emoji:'🔍', xp:300,  desc:'Zaujímaš sa o svet peňazí.' },
+  { name:'Pozorovateľ', emoji:'👀', xp:600,  desc:'Začínaš vidieť súvislosti.' },
+  { name:'Analytik',    emoji:'📊', xp:1000, desc:'Analyzuješ, nie len čítaš.' },
+  { name:'Stratég',     emoji:'♟️', xp:1500, desc:'Myslíš dlhodobo.' },
+  { name:'Expert',      emoji:'🎯', xp:2200, desc:'Zvládaš komplexné témy.' },
+  { name:'Majster',     emoji:'🏆', xp:3000, desc:'Finančná gramotnosť na vysokej úrovni.' },
+  { name:'Mentor',      emoji:'🦉', xp:4000, desc:'Vieš vysvetliť aj zložité veci jednoducho.' },
+  { name:'Legenda',     emoji:'⚡', xp:6000, desc:'Najvyšší level. Ty si finančná legenda!' },
+];
+
+const BADGES_DEF = [
+  { id:'first_lesson',  icon:'📖', name:'Prvá lekcia',    cond: s => s.lessonsCompleted >= 1 },
+  { id:'streak3',       icon:'🔥', name:'3-dňový streak', cond: s => s.streak >= 3 },
+  { id:'streak7',       icon:'🌟', name:'7-dňový streak', cond: s => s.streak >= 7 },
+  { id:'streak30',      icon:'💎', name:'30 dní!',        cond: s => s.streak >= 30 },
+  { id:'xp500',         icon:'💡', name:'500 XP',         cond: s => s.xp >= 500 },
+  { id:'xp1000',        icon:'🚀', name:'1000 XP',        cond: s => s.xp >= 1000 },
+  { id:'xp3000',        icon:'🏅', name:'3000 XP',        cond: s => s.xp >= 3000 },
+  { id:'calc',          icon:'🧮', name:'Kalkulátor',     cond: s => s.calcsUsed >= 1 },
+  { id:'quiz5',         icon:'🎓', name:'5 kvízov',       cond: s => s.quizzesDone >= 5 },
+  { id:'quiz20',        icon:'🎯', name:'20 kvízov',      cond: s => s.quizzesDone >= 20 },
+  { id:'perfect',       icon:'✨', name:'Perfektný',      cond: s => s.perfectAnswers >= 5 },
+  { id:'nbs',           icon:'📜', name:'NBS Ready',      cond: s => s.nbsCards >= 10 },
+];
+
+const DAILY_CHALLENGES = [
+  { q:'Čo je to ETF?', opts:['Európska daňová forma','Fond obchodovaný na burze','Bankový termínovaný vklad','Typ hypotéky'], correct:1, xp:25 },
+  { q:'Aký je maximálny ročný daňový odpočet pre III. pilier?', opts:['€100','€180','€250','€500'], correct:1, xp:25 },
+  { q:'Čo znamená skratka RPMN pri hypotéke?', opts:['Ročná percentuálna miera nákladov','Reálna percento mesačná norma','Regulačné percento miesta nákladov','Ročná platba mimoriadna náhrada'], correct:0, xp:30 },
+  { q:'Koľko pilierov má dôchodkový systém v SR?', opts:['1','2','3','4'], correct:2, xp:20 },
+  { q:'Čo je to diverzifikácia portfólia?', opts:['Predaj všetkých akcií','Rozloženie investícií do viacerých aktív','Investovanie len do zlata','Uzatvorenie bankového účtu'], correct:1, xp:25 },
+  { q:'Čo je inflačný cieľ ECB?', opts:['0%','1%','2%','5%'], correct:2, xp:30 },
+  { q:'Čo je P/E ratio akcie?', opts:['Pomer ceny k zisku','Pomer príjmu k výdavkom','Pomer poistného k expozícii','Preferenčné euro ratio'], correct:0, xp:35 },
+];
+
+// ─── State ───────────────────────────────────────
+let GS = JSON.parse(localStorage.getItem('finadvisor_game') || 'null') || {
+  xp: 0, level: 0, streak: 0, lastDate: null,
+  lessonsCompleted: 0, quizzesDone: 0, perfectAnswers: 0,
+  calcsUsed: 0, nbsCards: 0, earnedBadges: [],
+  dailyDone: false, dailyDate: null,
+};
+
+function saveGS() { localStorage.setItem('finadvisor_game', JSON.stringify(GS)); }
+
+// ─── Streak ───────────────────────────────────────
+function checkStreak() {
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  if (GS.lastDate === today) return;
+  if (GS.lastDate === yesterday) { GS.streak++; }
+  else if (GS.lastDate !== today) { GS.streak = 1; }
+  GS.lastDate = today;
+  saveGS();
+}
+
+// ─── XP ───────────────────────────────────────────
+function addXP(amount, reason) {
+  GS.xp += amount;
+  const oldLevel = GS.level;
+  GS.level = LEVELS.filter(l => GS.xp >= l.xp).length - 1;
+  saveGS();
+  updateHUD();
+  showXPPopup(amount, reason);
+  checkBadges();
+  if (GS.level > oldLevel) setTimeout(() => showLevelUp(GS.level), 600);
+}
+
+function updateHUD() {
+  const lvl = LEVELS[GS.level];
+  const nextLvl = LEVELS[GS.level + 1];
+  document.getElementById('hud-level').textContent = `${lvl.emoji} Úr. ${GS.level + 1}`;
+  document.getElementById('hud-xp-text').textContent = GS.xp + ' XP';
+  document.getElementById('streak-count').textContent = GS.streak;
+  if (nextLvl) {
+    const pct = Math.min(100, ((GS.xp - lvl.xp) / (nextLvl.xp - lvl.xp)) * 100);
+    document.getElementById('hud-xp-bar').style.width = pct + '%';
+    document.getElementById('hud-xp-next').textContent = nextLvl.xp + ' XP';
+  } else {
+    document.getElementById('hud-xp-bar').style.width = '100%';
+    document.getElementById('hud-xp-next').textContent = 'MAX';
+  }
+  // daily challenge button color if done
+  const btn = document.getElementById('hud-daily');
+  if (GS.dailyDate === new Date().toDateString()) {
+    btn.style.background = 'rgba(22,163,74,.2)';
+    btn.style.borderColor = 'rgba(22,163,74,.3)';
+    btn.style.color = '#4ade80';
+    btn.textContent = '✅ Hotovo';
+  }
+}
+
+function showXPPopup(amount, reason) {
+  const el = document.getElementById('xp-popup');
+  el.textContent = `+${amount} XP${reason ? ' · ' + reason : ''}`;
+  el.style.display = 'block';
+  el.style.animation = 'none';
+  requestAnimationFrame(() => {
+    el.style.animation = 'floatUp 1.5s ease forwards';
+  });
+  setTimeout(() => { el.style.display = 'none'; }, 1500);
+}
+
+// ─── Level Up ─────────────────────────────────────
+function showLevelUp(lvlIdx) {
+  const l = LEVELS[lvlIdx];
+  document.getElementById('levelup-emoji').textContent = l.emoji;
+  document.getElementById('levelup-name').textContent = l.name;
+  document.getElementById('levelup-desc').textContent = l.desc;
+  document.getElementById('levelup-modal').classList.add('show');
+  // confetti
+  launchConfetti();
+}
+function closeLevelUp() { document.getElementById('levelup-modal').classList.remove('show'); }
+
+// ─── Confetti ─────────────────────────────────────
+function launchConfetti() {
+  const colors = ['#7c3aed','#2563eb','#f59e0b','#16a34a','#ef4444','#06b6d4'];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.style.cssText = `position:fixed;top:-10px;left:${Math.random()*100}%;width:8px;height:8px;border-radius:${Math.random()>0.5?'50%':'2px'};background:${colors[Math.floor(Math.random()*colors.length)]};z-index:10000;pointer-events:none;animation:confettiFall ${1.5+Math.random()}s ease-in forwards;animation-delay:${Math.random()*0.5}s`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+  }
+}
+if (!document.getElementById('confetti-style')) {
+  const s = document.createElement('style');
+  s.id = 'confetti-style';
+  s.textContent = '@keyframes confettiFall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}';
+  document.head.appendChild(s);
+}
+
+// ─── Badges ───────────────────────────────────────
+function checkBadges() {
+  let newBadge = false;
+  BADGES_DEF.forEach(b => {
+    if (!GS.earnedBadges.includes(b.id) && b.cond(GS)) {
+      GS.earnedBadges.push(b.id);
+      newBadge = true;
+      showXPPopup(0, '🏅 ' + b.name);
+    }
+  });
+  if (newBadge) saveGS();
+}
+function showBadges() {
+  const grid = document.getElementById('badges-grid');
+  grid.innerHTML = BADGES_DEF.map(b => `
+    <div class="badge-item ${GS.earnedBadges.includes(b.id)?'earned':''}">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.name}</div>
+    </div>`).join('');
+  document.getElementById('badges-panel').classList.add('show');
+}
+function closeBadges() { document.getElementById('badges-panel').classList.remove('show'); }
+
+// ─── Streak info ──────────────────────────────────
+function showStreakInfo() {
+  const next = GS.streak >= 30 ? 'Legenda!' : GS.streak >= 7 ? '30 dní' : GS.streak >= 3 ? '7 dní' : '3 dni';
+  showXPPopup(0, `🔥 ${GS.streak} dní! Cieľ: ${next}`);
+}
+
+// ─── Daily Challenge ──────────────────────────────
+function showDailyChallenge() {
+  const today = new Date().toDateString();
+  const ch = DAILY_CHALLENGES[new Date().getDate() % DAILY_CHALLENGES.length];
+  document.getElementById('daily-question').textContent = ch.q;
+  document.getElementById('daily-xp-badge').innerHTML = `<span style="background:rgba(245,158,11,.2);color:#fbbf24;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px">+${ch.xp} XP</span>`;
+  const opts = document.getElementById('daily-options');
+  opts.innerHTML = ch.opts.map((o, i) => `<button class="daily-opt" onclick="answerDaily(${i},${ch.correct},${ch.xp},this)">${o}</button>`).join('');
+  document.getElementById('daily-result').style.display = 'none';
+  if (GS.dailyDate === today) {
+    opts.querySelectorAll('button').forEach(b => b.disabled = true);
+    document.getElementById('daily-result').style.display = 'block';
+    document.getElementById('daily-result').innerHTML = '✅ Dnes si už odpovedal!';
+    document.getElementById('daily-result').style.background = 'rgba(22,163,74,.15)';
+  }
+  document.getElementById('daily-panel').classList.add('show');
+}
+function answerDaily(idx, correct, xp, btn) {
+  const today = new Date().toDateString();
+  if (GS.dailyDate === today) return;
+  document.querySelectorAll('.daily-opt').forEach((b, i) => {
+    b.disabled = true;
+    if (i === correct) b.classList.add('correct');
+    else if (i === idx && idx !== correct) b.classList.add('wrong');
+  });
+  const res = document.getElementById('daily-result');
+  res.style.display = 'block';
+  if (idx === correct) {
+    res.innerHTML = `🎉 Správne! <strong>+${xp} XP</strong>`;
+    res.style.background = 'rgba(22,163,74,.15)';
+    GS.quizzesDone++;
+    GS.perfectAnswers++;
+    addXP(xp, 'Denná výzva');
+  } else {
+    res.innerHTML = `❌ Nesprávne. Správna odpoveď: <strong>${document.querySelectorAll('.daily-opt')[correct].textContent}</strong>`;
+    res.style.background = 'rgba(239,68,68,.15)';
+    GS.quizzesDone++;
+    addXP(5, 'Účasť');
+  }
+  GS.dailyDate = today;
+  GS.dailyDone = true;
+  saveGS();
+  updateHUD();
+  checkBadges();
+}
+function closeDaily() { document.getElementById('daily-panel').classList.remove('show'); }
+
+// ─── Hook into existing actions ──────────────────
+// Lesson read
+const _origLesson = window.openLesson;
+window.openLesson = function(...a) {
+  if (_origLesson) _origLesson.apply(this, a);
+  GS.lessonsCompleted++;
+  addXP(20, 'Lekcia');
+  saveGS();
+};
+// Calculator use
+const _origCalc = window.calcCompound;
+if (_origCalc) window.calcCompound = function(...a) { _origCalc.apply(this, a); if(!GS._calcXP){GS.calcsUsed++;GS._calcXP=true;setTimeout(()=>{GS._calcXP=false;},30000);addXP(10,'Kalkulátor');} };
+// NBS flashcard
+const _origNbsNext = window.nbsNext;
+window.nbsNext = function(...a) { if(_origNbsNext)_origNbsNext.apply(this,a); GS.nbsCards++; if(GS.nbsCards%5===0){addXP(15,'NBS otázky');saveGS();} };
+// Quiz answer hook (generic — watch button clicks with data-correct)
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-correct]');
+  if (!t) return;
+  const isCorrect = t.dataset.correct === 'true';
+  GS.quizzesDone++;
+  if (isCorrect) { GS.perfectAnswers++; addXP(15, 'Správna odpoveď'); }
+  else { addXP(5, 'Účasť'); }
+  saveGS();
+  checkBadges();
+});
+
+// ─── Init ─────────────────────────────────────────
+checkStreak();
+updateHUD();
+checkBadges();
+
+// Auto daily challenge after 3 seconds if not done today
+setTimeout(() => {
+  if (GS.dailyDate !== new Date().toDateString()) {
+    document.getElementById('hud-daily').style.animation = 'bounceIn .3s ease';
+  }
+}, 3000);
+
+console.log(`🎮 FinAdvisor Game Engine loaded | XP: ${GS.xp} | Level: ${GS.level+1} | Streak: ${GS.streak}`);
+</script>
+
 <!-- COOKIE CONSENT BANNER (GDPR) -->
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:#fff;padding:16px 24px;z-index:99999;display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:0.9rem;border-top:2px solid #3b82f6;">
   <span style="flex:1;min-width:200px">Táto stránka používa technické cookies nevyhnutné pre základnú funkčnosť. Analytické cookies nepoužívame. <a href="/privacy" style="color:#3b82f6">Viac info</a></span>

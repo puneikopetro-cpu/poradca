@@ -525,8 +525,57 @@ async def menu_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     text = update.message.text or ""
     text_lower = text.lower()
 
+    # ── Daily challenge answer ──────────────────────────────
+    if ctx.user_data.get("awaiting_daily"):
+        answer = text.strip().upper()
+        ch = ctx.user_data.get("daily_challenge", {})
+        if answer in ("A", "B", "C", "D"):
+            uid = update.effective_user.id
+            correct = ch.get("ans", "")
+            xp_reward = ch.get("xp", 25)
+            ctx.user_data["awaiting_daily"] = False
+            ctx.user_data["daily_date"] = _today()
+            # streak
+            last_d = ctx.user_data.get("last_day")
+            today = _today()
+            yesterday = (_dt.date.today() - _dt.timedelta(days=1)).isoformat()
+            if last_d == yesterday:
+                ctx.user_data["streak"] = ctx.user_data.get("streak", 0) + 1
+            elif last_d != today:
+                ctx.user_data["streak"] = 1
+            ctx.user_data["last_day"] = today
+            streak = ctx.user_data.get("streak", 1)
+
+            if answer == correct:
+                new_xp = _add_xp(uid, xp_reward)
+                lvl = _level_name(new_xp)
+                await update.message.reply_text(
+                    f"🎉 *Správne! +{xp_reward} XP*\n\n"
+                    f"⚡ Celkom: *{new_xp} XP* | {lvl}\n"
+                    f"🔥 Streak: *{streak} dní*\n\n"
+                    f"{'🏆 Level up!' if new_xp in [100,300,600,1000,1500,2200,3000] else '📈 Skvelá práca!'}\n\n"
+                    f"📚 Pokračuj: https://finadvisor.sk/learn\n"
+                    f"/leaderboard — porovnaj sa s ostatnými",
+                    parse_mode="Markdown"
+                )
+            else:
+                new_xp = _add_xp(uid, 5)
+                await update.message.reply_text(
+                    f"❌ Nesprávne. Správna odpoveď: *{correct}*\n\n"
+                    f"+5 XP za účasť 💪\n"
+                    f"⚡ Celkom: *{new_xp} XP*\n\n"
+                    f"Nauč sa viac: https://finadvisor.sk/learn\n"
+                    f"Skús zajtra: /vyzva",
+                    parse_mode="Markdown"
+                )
+            return
+
     if "finančný iq" in text_lower or "analyza" in text_lower or "iq test" in text_lower:
         return await analyze_start(update, ctx)
+    elif "výzva" in text_lower or "vyzva" in text_lower or "🎯" in text:
+        await cmd_daily_challenge(update, ctx)
+    elif "skóre" in text_lower or "skore" in text_lower or "xp" in text_lower:
+        await cmd_score(update, ctx)
     elif "tip" in text_lower:
         await tip(update, ctx)
     elif "kontakt" in text_lower:
@@ -573,7 +622,104 @@ async def cmd_test(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(msg, parse_mode="Markdown")
 
 
-def _register_handlers(app: Application):
+# ══════════════════════════════════════════════════════════════
+# GAMIFICATION — Daily Challenge · Score · Leaderboard
+# ══════════════════════════════════════════════════════════════
+
+DAILY_TG = [
+    {"q": "Čo je ETF fond?", "opts": ["A) Termínovaný vklad", "B) Fond obchodovaný na burze", "C) Typ hypotéky", "D) Bankový produkt"], "ans": "B", "xp": 25},
+    {"q": "Max. daňový odpočet III. pilier / rok?", "opts": ["A) €100", "B) €180", "C) €250", "D) €500"], "ans": "B", "xp": 25},
+    {"q": "Čo je RPMN pri hypotéke?", "opts": ["A) Ročná percentuálna miera nákladov", "B) Regulačné percento miesta nákladov", "C) Reálna platba mesačná norma", "D) Rozšírená platba mesačnej normy"], "ans": "A", "xp": 30},
+    {"q": "Koľko pilierov má dôchodkový systém SR?", "opts": ["A) 1", "B) 2", "C) 3", "D) 4"], "ans": "C", "xp": 20},
+    {"q": "Čo je to diverzifikácia portfólia?", "opts": ["A) Predaj všetkých akcií", "B) Len zlato", "C) Rozloženie investícií do viacerých aktív", "D) Jeden fond"], "ans": "C", "xp": 25},
+    {"q": "Inflačný cieľ ECB je?", "opts": ["A) 0%", "B) 1%", "C) 2%", "D) 5%"], "ans": "C", "xp": 30},
+    {"q": "P/E ratio akcie znamená?", "opts": ["A) Pomer ceny k zisku", "B) Poistná expozícia", "C) Preferenčné euro", "D) Pomer príjmu k výdavkom"], "ans": "A", "xp": 35},
+]
+
+# Simple in-memory XP store (resets on restart — for persistent use DB)
+_tg_xp: dict[int, int] = {}
+_tg_streak: dict[int, str] = {}
+
+import datetime as _dt
+
+def _today() -> str:
+    return _dt.date.today().isoformat()
+
+def _get_xp(uid: int) -> int:
+    return _tg_xp.get(uid, 0)
+
+def _add_xp(uid: int, amount: int) -> int:
+    _tg_xp[uid] = _tg_xp.get(uid, 0) + amount
+    return _tg_xp[uid]
+
+def _level_name(xp: int) -> str:
+    levels = [(0,"🌱 Nováčik"),(100,"📚 Učeň"),(300,"🔍 Záujemca"),(600,"👀 Pozorovateľ"),
+              (1000,"📊 Analytik"),(1500,"♟️ Stratég"),(2200,"🎯 Expert"),(3000,"🏆 Majster"),(4000,"🦉 Mentor"),(6000,"⚡ Legenda")]
+    name = levels[0][1]
+    for threshold, lname in levels:
+        if xp >= threshold: name = lname
+    return name
+
+
+async def cmd_daily_challenge(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    uid = update.effective_user.id
+    today = _today()
+    last = ctx.user_data.get("daily_date")
+    ch = DAILY_TG[_dt.date.today().day % len(DAILY_TG)]
+
+    if last == today:
+        await update.message.reply_text(
+            f"✅ *Dnešnú výzvu si už splnil!*\n\n"
+            f"Tvoje XP: *{_get_xp(uid)} XP* | {_level_name(_get_xp(uid))}\n\n"
+            f"Príď zajtra pre novú výzvu 🔥\n\n"
+            f"📚 Pokračuj na: https://finadvisor.sk/learn",
+            parse_mode="Markdown"
+        )
+        return
+
+    opts_text = "\n".join(ch["opts"])
+    await update.message.reply_text(
+        f"🎯 *DENNÁ VÝZVA — +{ch['xp']} XP*\n\n"
+        f"❓ {ch['q']}\n\n"
+        f"{opts_text}\n\n"
+        f"Odpovedaj písmenom: A, B, C alebo D",
+        parse_mode="Markdown"
+    )
+    ctx.user_data["daily_challenge"] = ch
+    ctx.user_data["awaiting_daily"] = True
+
+
+async def cmd_score(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    uid = update.effective_user.id
+    xp = _get_xp(uid)
+    lvl = _level_name(xp)
+    streak = ctx.user_data.get("streak", 0)
+    await update.message.reply_text(
+        f"🎮 *Tvoje skóre*\n\n"
+        f"⚡ XP: *{xp}*\n"
+        f"🏅 Level: *{lvl}*\n"
+        f"🔥 Streak: *{streak} dní*\n\n"
+        f"Zarob viac XP na: https://finadvisor.sk/learn\n"
+        f"Denná výzva: /vyzva",
+        parse_mode="Markdown"
+    )
+
+
+async def cmd_leaderboard(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    if not _tg_xp:
+        await update.message.reply_text("📊 Leaderboard je zatiaľ prázdny. Buď prvý! /vyzva")
+        return
+    sorted_xp = sorted(_tg_xp.items(), key=lambda x: x[1], reverse=True)[:10]
+    medals = ["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"]
+    lines = [f"{medals[i]} {_level_name(xp)} — *{xp} XP*" for i, (_, xp) in enumerate(sorted_xp)]
+    await update.message.reply_text(
+        f"🏆 *Top hráči FinAdvisor SK*\n\n" + "\n".join(lines) +
+        f"\n\nTvoje XP: *{_get_xp(update.effective_user.id)}*\n/vyzva — zarob viac!",
+        parse_mode="Markdown"
+    )
+
+
+
     conv = ConversationHandler(
         entry_points=[
             CommandHandler("analyze", analyze_start),
@@ -604,6 +750,9 @@ def _register_handlers(app: Application):
     app.add_handler(CommandHandler("kontakt", contact))
     app.add_handler(CommandHandler("tip", tip))
     app.add_handler(CommandHandler("test", cmd_test))
+    app.add_handler(CommandHandler("vyzva", cmd_daily_challenge))
+    app.add_handler(CommandHandler("skore", cmd_score))
+    app.add_handler(CommandHandler("leaderboard", cmd_leaderboard))
     app.add_handler(conv)
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, menu_handler))
 
