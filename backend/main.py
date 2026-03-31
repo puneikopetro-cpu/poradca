@@ -167,7 +167,12 @@ app.include_router(subscriptions_router)
 
 @app.get("/health", tags=["health"])
 def health_check():
-    return {"status": "ok", "service": "Financial Advisor API", "version": "e29a652", "tg_token": bool(settings.TELEGRAM_BOT_TOKEN)}
+    import subprocess, os
+    try:
+        git_ver = subprocess.check_output(["git","rev-parse","--short","HEAD"], stderr=subprocess.DEVNULL).decode().strip()
+    except Exception:
+        git_ver = os.environ.get("RAILWAY_GIT_COMMIT_SHA","unknown")[:7]
+    return {"status": "ok", "service": "Financial Advisor API", "version": git_ver, "tg_token": bool(settings.TELEGRAM_BOT_TOKEN)}
 
 
 @app.get("/", include_in_schema=False)
