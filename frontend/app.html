@@ -1,778 +1,945 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#2563eb">
-<link rel="manifest" href="/static/manifest.json">
-<title>FinAdvisor SK</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>FinAdvisor SK — Platforma</title>
+<meta name="description" content="FinAdvisor SK klientská platforma — kurzy, kalkulačky, AI radca."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--blue:#2563eb;--green:#16a34a;--dark:#0f172a;--card:#1e293b;--border:#334155;--text:#f1f5f9;--muted:#94a3b8;--gold:#f59e0b;--purple:#7c3aed;--red:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#060A14;--bg2:#0D1421;--bg3:#121C2E;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#F8FAFC;--muted:#94A3B8;--muted2:#64748B;
+  --indigo:#6366F1;--indigo2:#818CF8;--indigo-glow:rgba(99,102,241,0.15);
+  --green:#10B981;--green-glow:rgba(16,185,129,0.15);
+  --gold:#F59E0B;--gold-glow:rgba(245,158,11,0.15);
+  --red:#EF4444;--r:16px;--r-sm:12px;--sidebar:240px;
+}
 html{scroll-behavior:smooth}
-body{background:var(--dark);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
-/* NAV */
-.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,23,42,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:56px;gap:8px}
-.nav-logo{font-weight:900;font-size:17px;color:#fff;white-space:nowrap}
-.nav-right{display:flex;align-items:center;gap:6px}
-.lang-switcher{display:flex;gap:2px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:3px}
-.lang-btn{border:none;background:transparent;color:var(--muted);font-size:12px;font-weight:700;padding:4px 7px;border-radius:7px;cursor:pointer;transition:all .15s}
-.lang-btn.active{background:var(--blue);color:#fff}
-.nav-cta{background:var(--blue);color:#fff;border:none;border-radius:20px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+/* ─── LAYOUT ─────────────────────────── */
+.app-shell{display:flex;min-height:100vh}
 
-/* HERO */
-.hero{padding:88px 20px 56px;text-align:center;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(37,99,235,.22),transparent)}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(37,99,235,.18);border:1px solid rgba(37,99,235,.35);border-radius:20px;padding:6px 14px;font-size:12px;color:#93c5fd;margin-bottom:18px;font-weight:600}
-.hero h1{font-size:clamp(1.9rem,7vw,3rem);font-weight:900;line-height:1.1;margin-bottom:14px}
-.hero h1 span{background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero-sub{font-size:clamp(14px,4vw,17px);color:var(--muted);max-width:500px;margin:0 auto 28px;line-height:1.65}
-.hero-ctas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:36px}
-.btn-primary{background:var(--blue);color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
-.btn-primary:active{transform:scale(.97)}
-.btn-ghost{background:rgba(255,255,255,.07);color:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 28px;font-size:15px;font-weight:600;cursor:pointer}
-.hero-stats{display:flex;gap:28px;justify-content:center;flex-wrap:wrap}
-.stat{text-align:center}
-.stat-num{font-size:26px;font-weight:900}
-.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+/* ─── SIDEBAR ────────────────────────── */
+.sidebar{
+  width:var(--sidebar);min-height:100vh;
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;z-index:50;
+  transition:transform .3s;
+}
+.sidebar-logo{
+  display:flex;align-items:center;gap:10px;
+  padding:22px 20px 20px;border-bottom:1px solid var(--border);
+  text-decoration:none;
+}
+.logo-icon{
+  width:34px;height:34px;
+  background:linear-gradient(135deg,var(--indigo),#8B5CF6);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+}
+.logo-text{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.3px;line-height:1.2}
+.logo-text span{color:var(--indigo2);display:block;font-size:11px;font-weight:500;letter-spacing:.3px}
 
-/* LANGS PROMO */
-.langs-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:20px 20px 0;margin-top:8px}
-.lang-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
-.lang-pill:hover{border-color:var(--blue);color:#fff}
-.lang-pill.active{background:rgba(37,99,235,.2);border-color:var(--blue);color:#93c5fd}
+.sidebar-nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:2px}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 12px;border-radius:10px;
+  color:var(--muted);font-size:14px;font-weight:500;
+  cursor:pointer;transition:all .2s;text-decoration:none;
+  border:1px solid transparent;
+}
+.nav-item:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+.nav-item.active{color:var(--indigo2);background:var(--indigo-glow);border-color:rgba(99,102,241,0.2)}
+.nav-item .icon{font-size:17px;width:20px;text-align:center;flex-shrink:0}
 
-/* SECTION */
-section{padding:56px 20px;max-width:960px;margin:0 auto}
-.sec-label{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--blue);text-transform:uppercase;text-align:center;margin-bottom:8px}
-.sec-title{font-size:clamp(1.4rem,5vw,2rem);font-weight:800;text-align:center;margin-bottom:10px;line-height:1.2}
-.sec-sub{color:var(--muted);text-align:center;max-width:500px;margin:0 auto 40px;font-size:14px;line-height:1.65}
+.sidebar-bottom{padding:16px 12px;border-top:1px solid var(--border)}
+.user-chip{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:10px;
+  background:var(--bg3);cursor:pointer;
+}
+.user-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--indigo),#8B5CF6);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.user-info{flex:1;overflow:hidden}
+.user-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-level{font-size:11px;color:var(--muted2)}
 
-/* FEATURES */
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
-.feat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px}
-.feat-icon{font-size:30px;margin-bottom:12px;display:block}
-.feat-card h3{font-size:15px;font-weight:700;margin-bottom:7px}
-.feat-card p{font-size:13px;color:var(--muted);line-height:1.6}
-.feat-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;margin-top:10px;text-transform:uppercase}
-.badge-free{background:rgba(22,163,74,.2);color:#4ade80}
-.badge-pro{background:rgba(124,58,237,.2);color:#a78bfa}
-.badge-new{background:rgba(245,158,11,.2);color:#fbbf24}
+/* ─── MAIN CONTENT ───────────────────── */
+.main{
+  margin-left:var(--sidebar);flex:1;
+  display:flex;flex-direction:column;min-height:100vh;
+}
 
-/* HOW IT WORKS */
-.steps{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:0}
-.step{display:flex;gap:18px;align-items:flex-start;padding-bottom:24px;position:relative}
-.step-num{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;flex-shrink:0;z-index:1}
-.step:not(:last-child)::after{content:'';position:absolute;left:20px;top:42px;bottom:0;width:2px;background:var(--border)}
-.step-body{padding-top:8px}
-.step-body h4{font-size:15px;font-weight:700;margin-bottom:5px}
-.step-body p{font-size:13px;color:var(--muted);line-height:1.55}
+/* ─── TOP HEADER ─────────────────────── */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:rgba(6,10,20,0.9);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 28px;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.topbar-title{font-size:16px;font-weight:600;color:var(--text)}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.xp-bar-wrap{display:flex;align-items:center;gap:10px}
+.xp-label{font-size:12px;font-weight:600;color:var(--gold);font-family:'JetBrains Mono',monospace}
+.xp-track{
+  width:120px;height:6px;border-radius:3px;
+  background:var(--border2);overflow:hidden;
+}
+.xp-fill{
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,var(--gold),#FBBF24);
+  transition:width 1s ease;
+}
+.level-badge{
+  font-size:11px;font-weight:700;color:var(--bg);
+  background:var(--gold);border-radius:6px;
+  padding:2px 7px;
+}
+.notif-btn{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--bg3);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:16px;transition:all .2s;
+}
+.notif-btn:hover{border-color:var(--border2);background:var(--bg2)}
 
-/* PRICING */
-.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
-.price-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;position:relative}
-.price-card.popular{border-color:var(--blue);background:rgba(37,99,235,.07)}
-.popular-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;font-size:11px;font-weight:700;padding:3px 14px;border-radius:99px;white-space:nowrap}
-.price-name{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-.price-amount{font-size:36px;font-weight:900;line-height:1}
-.price-amount span{font-size:14px;font-weight:400;color:var(--muted)}
-.price-period{font-size:11px;color:var(--muted);margin-bottom:18px}
-.price-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:20px;font-size:13px}
-.price-feats li::before{content:'✓ ';color:var(--green);font-weight:700}
-.price-feats li.no{color:var(--muted)}
-.price-feats li.no::before{content:'✕ ';color:var(--border)}
-.btn-plan{width:100%;padding:13px;border-radius:11px;font-size:14px;font-weight:700;border:none;cursor:pointer}
-.btn-plan-blue{background:var(--blue);color:#fff}
-.btn-plan-ghost{background:rgba(255,255,255,.07);color:var(--text);border:1px solid var(--border)}
+/* ─── PAGE AREA ──────────────────────── */
+.page-area{flex:1;padding:32px 28px 80px;max-width:1100px;width:100%}
+.page{display:none}
+.page.active{display:block}
 
-/* FAQ */
-.faq-list{max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
-.faq-item{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.faq-q{padding:15px 18px;cursor:pointer;font-size:14px;font-weight:600;display:flex;justify-content:space-between;gap:12px}
-.faq-icon{color:var(--blue);flex-shrink:0;transition:transform .2s}
-.faq-a{display:none;padding:0 18px 14px;font-size:13px;color:var(--muted);line-height:1.7}
-.faq-item.open .faq-a{display:block}
-.faq-item.open .faq-icon{transform:rotate(45deg)}
+/* ─── CARDS ──────────────────────────── */
+.card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);padding:24px;
+  transition:border-color .2s,transform .2s;
+}
+.card:hover{border-color:var(--border2)}
+.card-sm{padding:18px 20px}
 
-/* TESTIMONIALS */
-.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-.tcard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
-.tcard-stars{color:var(--gold);font-size:13px;margin-bottom:8px}
-.tcard-text{font-size:13px;line-height:1.6;margin-bottom:12px}
-.tcard-author{display:flex;align-items:center;gap:10px}
-.tcard-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:800}
-.tcard-name{font-size:13px;font-weight:600}
-.tcard-meta{font-size:11px;color:var(--muted)}
+/* ─── WELCOME ────────────────────────── */
+.welcome-card{
+  background:linear-gradient(135deg,var(--bg3),rgba(99,102,241,0.08));
+  border:1px solid rgba(99,102,241,0.2);
+  border-radius:var(--r);padding:28px;
+  margin-bottom:24px;
+  position:relative;overflow:hidden;
+}
+.welcome-card::before{
+  content:'';position:absolute;right:-40px;top:-40px;
+  width:180px;height:180px;
+  background:radial-gradient(circle,rgba(99,102,241,0.15),transparent 70%);
+  border-radius:50%;pointer-events:none;
+}
+.welcome-card h1{font-size:22px;font-weight:700;margin-bottom:6px}
+.welcome-card p{font-size:14px;color:var(--muted);line-height:1.6}
+.welcome-streak{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:14px;padding:6px 14px;
+  background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);
+  border-radius:20px;font-size:13px;font-weight:600;color:var(--gold);
+}
 
-/* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center}
-.modal-overlay.show{display:flex}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:26px 22px 40px;width:100%;max-width:460px;animation:slideUp .22s ease;position:relative}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-handle{width:38px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 18px}
-.modal h3{font-size:19px;font-weight:800;margin-bottom:5px}
-.modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+/* ─── STATS GRID ─────────────────────── */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.stat-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);padding:20px;
+  transition:all .2s;
+}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.stat-icon{font-size:22px;margin-bottom:10px}
+.stat-value{font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.stat-label{font-size:12px;color:var(--muted)}
+.stat-sub{font-size:11px;color:var(--muted2);margin-top:2px}
+
+/* ─── IQ SCORE CARD ──────────────────── */
+.iq-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.iq-card{
+  background:linear-gradient(135deg,rgba(245,158,11,0.08),var(--bg2));
+  border:1px solid rgba(245,158,11,0.2);
+  border-radius:var(--r);padding:24px;
+}
+.iq-score{font-size:42px;font-weight:800;color:var(--gold);font-family:'JetBrains Mono',monospace;line-height:1}
+.iq-max{font-size:18px;color:var(--muted2)}
+.iq-label{font-size:13px;color:var(--muted);margin-top:6px;margin-bottom:14px}
+.iq-bar-track{height:8px;background:var(--border2);border-radius:4px;overflow:hidden}
+.iq-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),#FBBF24);width:87%}
+.iq-tip{font-size:11px;color:var(--muted2);margin-top:8px}
+
+.recent-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px}
+.section-title{font-size:15px;font-weight:600;margin-bottom:16px;color:var(--text)}
+.lesson-row{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 0;border-bottom:1px solid var(--border);
+  transition:background .2s;
+}
+.lesson-row:last-child{border-bottom:none}
+.lesson-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.lesson-dot.done{background:var(--green)}
+.lesson-dot.prog{background:var(--gold)}
+.lesson-title-sm{font-size:13px;color:var(--text);flex:1}
+.lesson-xp{font-size:11px;font-weight:600;color:var(--muted2);font-family:'JetBrains Mono',monospace}
+
+/* ─── KURZY ──────────────────────────── */
+.kurzy-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.page-title{font-size:22px;font-weight:700}
+.filter-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.filter-tab{
+  padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;
+  background:var(--bg3);border:1px solid var(--border);color:var(--muted);
+  cursor:pointer;transition:all .2s;
+}
+.filter-tab:hover{color:var(--text);border-color:var(--border2)}
+.filter-tab.active{background:var(--indigo-glow);border-color:rgba(99,102,241,0.3);color:var(--indigo2)}
+
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.course-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;
+  transition:all .25s;cursor:pointer;
+}
+.course-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.course-banner{height:90px;display:flex;align-items:center;justify-content:center;font-size:32px;position:relative}
+.course-cat{
+  position:absolute;top:10px;right:10px;
+  font-size:10px;font-weight:600;letter-spacing:.4px;
+  padding:3px 8px;border-radius:6px;text-transform:uppercase;
+}
+.cat-zaklady{background:rgba(16,185,129,0.15);color:var(--green)}
+.cat-investicie{background:rgba(99,102,241,0.15);color:var(--indigo2)}
+.cat-nbs{background:rgba(245,158,11,0.15);color:var(--gold)}
+.cat-krypto{background:rgba(239,68,68,0.12);color:var(--red)}
+.course-body{padding:18px}
+.course-title{font-size:14px;font-weight:600;margin-bottom:6px;line-height:1.4}
+.course-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:14px}
+.course-footer{display:flex;align-items:center;justify-content:space-between}
+.progress-bar-wrap{flex:1;margin-right:12px}
+.progress-bar-label{font-size:11px;color:var(--muted2);margin-bottom:4px}
+.progress-track{height:4px;background:var(--border2);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--indigo),var(--indigo2))}
+.xp-badge{
+  font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:6px;
+  background:rgba(245,158,11,0.12);color:var(--gold);
+  white-space:nowrap;font-family:'JetBrains Mono',monospace;
+}
+
+/* ─── KALKULAČKY ─────────────────────── */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.calc-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px}
+.calc-card h3{font-size:15px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.calc-card p{font-size:12px;color:var(--muted);margin-bottom:20px}
 .form-group{margin-bottom:14px}
-.form-group label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
-.form-input{width:100%;padding:13px 14px;background:rgba(255,255,255,.06);border:1.5px solid var(--border);border-radius:11px;color:#fff;font-size:14px;outline:none;transition:border .15s}
-.form-input:focus{border-color:var(--blue)}
-.modal-btn{width:100%;padding:15px;background:var(--blue);color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px}
-.modal-close{position:absolute;top:18px;right:18px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer}
-.plan-info{background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);border-radius:9px;padding:11px;font-size:12px;margin-bottom:14px;display:none}
+.form-label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+.form-input{
+  width:100%;padding:10px 14px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);
+  color:var(--text);font-size:14px;font-family:'JetBrains Mono',monospace;
+  outline:none;transition:border-color .2s;
+}
+.form-input:focus{border-color:var(--indigo)}
+.calc-btn{
+  width:100%;padding:11px;border-radius:var(--r-sm);border:none;
+  background:var(--indigo);color:#fff;font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .2s;margin-top:4px;
+}
+.calc-btn:hover{background:#5558E8;transform:translateY(-1px)}
+.calc-result{
+  margin-top:14px;padding:14px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--green);
+  display:none;
+}
+.calc-result.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px}
+.result-row .r-label{color:var(--muted)}
+.result-row .r-val{color:var(--text);font-weight:600}
+.result-total{
+  margin-top:8px;padding-top:8px;border-top:1px solid var(--border);
+  font-size:15px;font-weight:700;color:var(--green);
+  display:flex;justify-content:space-between;
+}
 
-/* INSTALL */
-.install-banner{position:fixed;bottom:0;left:0;right:0;z-index:200;background:linear-gradient(135deg,#1e3a5f,#1e293b);border-top:1px solid var(--border);padding:14px 18px;display:flex;align-items:center;gap:12px}
-.install-icon{font-size:34px;flex-shrink:0}
-.install-text{flex:1}
-.install-text b{display:block;font-size:13px;margin-bottom:1px}
-.install-text span{font-size:11px;color:var(--muted)}
-.install-btn{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:9px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
-.install-x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;padding:4px}
+/* ─── AI RADCA ───────────────────────── */
+.ai-layout{display:flex;flex-direction:column;height:calc(100vh - 180px);max-height:680px}
+.ai-header{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r) var(--r) 0 0;
+  padding:16px 20px;display:flex;align-items:center;gap:12px;
+}
+.ai-avatar{
+  width:38px;height:38px;border-radius:12px;
+  background:linear-gradient(135deg,var(--indigo),#8B5CF6);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.ai-name{font-size:14px;font-weight:600}
+.ai-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px}
+.ai-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block}
+.ai-disclaimer{
+  font-size:11px;color:var(--muted2);margin-left:auto;
+  background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.15);
+  padding:4px 10px;border-radius:6px;max-width:280px;text-align:right;
+}
 
-footer{padding:36px 20px;text-align:center;border-top:1px solid var(--border)}
-footer a{color:#60a5fa;text-decoration:none}
+.chat-messages{
+  flex:1;overflow-y:auto;padding:20px;
+  background:var(--bg);border-left:1px solid var(--border);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;gap:16px;
+}
+.msg{display:flex;gap:10px;align-items:flex-end;max-width:80%}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.msg-bubble{
+  padding:12px 16px;border-radius:16px;font-size:13px;line-height:1.6;
+}
+.msg.ai .msg-bubble{
+  background:var(--bg2);border:1px solid var(--border);
+  border-bottom-left-radius:4px;color:var(--text);
+}
+.msg.user .msg-bubble{
+  background:var(--indigo);color:#fff;
+  border-bottom-right-radius:4px;
+}
+.msg-time{font-size:10px;color:var(--muted2);white-space:nowrap}
+.msg-icon{
+  width:28px;height:28px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+}
+.msg.ai .msg-icon{background:var(--indigo-glow);border:1px solid rgba(99,102,241,0.2)}
+.msg.user .msg-icon{background:rgba(99,102,241,0.3)}
 
-@media(max-width:480px){section{padding:44px 16px}.hero{padding:76px 16px 44px}.pricing-grid{grid-template-columns:1fr}}
+.chat-input-wrap{
+  background:var(--bg2);border:1px solid var(--border);
+  border-top:none;border-radius:0 0 var(--r) var(--r);
+  padding:14px 16px;display:flex;gap:10px;align-items:center;
+}
+.chat-input{
+  flex:1;padding:10px 16px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);
+  color:var(--text);font-size:13px;font-family:'Inter',sans-serif;
+  outline:none;resize:none;transition:border-color .2s;
+}
+.chat-input:focus{border-color:var(--indigo)}
+.chat-send{
+  width:40px;height:40px;border-radius:10px;
+  background:var(--indigo);border:none;color:#fff;
+  cursor:pointer;font-size:16px;transition:all .2s;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.chat-send:hover{background:#5558E8;transform:scale(1.05)}
+.chat-hint{font-size:11px;color:var(--muted2);text-align:center;padding:8px 16px 0;font-style:italic}
+
+/* ─── PROFIL ─────────────────────────── */
+.profil-grid{display:grid;grid-template-columns:1fr 2fr;gap:20px}
+.profil-aside{display:flex;flex-direction:column;gap:16px}
+.profil-avatar-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+  padding:28px 20px;text-align:center;
+}
+.profil-avatar-big{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--indigo),#8B5CF6);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:700;color:#fff;margin:0 auto 14px;
+}
+.profil-name{font-size:16px;font-weight:700;margin-bottom:4px}
+.profil-email{font-size:12px;color:var(--muted);margin-bottom:14px}
+.plan-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;
+  background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:var(--green);
+}
+
+.profil-stats-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+.profil-stat-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;
+}
+.profil-stat-row:last-child{border-bottom:none}
+.profil-stat-row .r-val{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--indigo2)}
+
+.profil-main{display:flex;flex-direction:column;gap:16px}
+.form-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px}
+.form-section h3{font-size:15px;font-weight:600;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-save{
+  padding:11px 28px;border-radius:var(--r-sm);border:none;
+  background:var(--indigo);color:#fff;font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.form-save:hover{background:#5558E8;transform:translateY(-1px)}
+.save-success{
+  display:none;font-size:12px;color:var(--green);
+  margin-left:10px;align-items:center;gap:4px;
+}
+.save-success.show{display:inline-flex}
+
+/* ─── MOBILE BOTTOM NAV ───────────────── */
+.bottom-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:rgba(13,20,33,0.95);backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  padding:8px 0 max(8px,env(safe-area-inset-bottom));
+}
+.bottom-nav-inner{display:flex;justify-content:space-around}
+.bnav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 16px;border-radius:10px;cursor:pointer;
+  color:var(--muted2);font-size:10px;font-weight:500;
+  transition:color .2s;
+}
+.bnav-item.active{color:var(--indigo2)}
+.bnav-item .icon{font-size:20px}
+
+/* ─── MOBILE ──────────────────────────── */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .bottom-nav{display:block}
+  .page-area{padding:20px 16px 90px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .iq-wrap{grid-template-columns:1fr}
+  .calc-grid{grid-template-columns:1fr}
+  .profil-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .topbar{padding:0 16px}
+  .xp-bar-wrap .xp-track{width:80px}
+  .courses-grid{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+  .stats-grid{grid-template-columns:1fr}
+}
+
+/* ─── ANIMATIONS ──────────────────────── */
+.fade-in{opacity:0;transform:translateY(16px);transition:opacity .4s ease,transform .4s ease}
+.fade-in.visible{opacity:1;transform:none}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+.page.active{animation:slideIn .25s ease}
+.typing-dot{
+  display:inline-block;width:7px;height:7px;
+  border-radius:50%;background:var(--muted2);margin:0 2px;
+  animation:typingBounce 1.2s infinite;
+}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
 </style>
 </head>
 <body>
 
-<nav class="nav">
-  <div class="nav-logo">💹 FinAdvisor</div>
-  <div class="nav-right">
-    <div class="lang-switcher">
-      <button class="lang-btn active" onclick="setLang('sk')">SK</button>
-      <button class="lang-btn" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" onclick="setLang('uk')">UA</button>
-      <button class="lang-btn" onclick="setLang('pl')">PL</button>
-      <button class="lang-btn" onclick="setLang('de')">DE</button>
-      <button class="lang-btn" onclick="setLang('hu')">HU</button>
+<!-- ─── SIDEBAR ──────────────────────── -->
+<aside class="sidebar" id="sidebar">
+  <a href="index.html" class="sidebar-logo">
+    <div class="logo-icon">💡</div>
+    <div class="logo-text">FinAdvisor<span>SK Platforma</span></div>
+  </a>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" data-page="dashboard"><span class="icon">📊</span> Dashboard</div>
+    <div class="nav-item" data-page="kurzy"><span class="icon">📚</span> Kurzy</div>
+    <div class="nav-item" data-page="kalkul"><span class="icon">🧮</span> Kalkulačky</div>
+    <div class="nav-item" data-page="ai"><span class="icon">🤖</span> AI Radca</div>
+    <div class="nav-item" data-page="profil"><span class="icon">👤</span> Profil</div>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="user-chip">
+      <div class="user-avatar">P</div>
+      <div class="user-info">
+        <div class="user-name">Používateľ</div>
+        <div class="user-level">Level 4 · Starter</div>
+      </div>
     </div>
-    <button class="nav-cta" onclick="openModal('register')" data-i18n="nav_cta">Začať zadarmo</button>
+  </div>
+</aside>
+
+<!-- ─── MAIN ─────────────────────────── -->
+<div class="main">
+  <header class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div id="burger" style="display:none;cursor:pointer;font-size:20px;padding:4px">☰</div>
+      <span class="topbar-title" id="topbar-title">Dashboard</span>
+    </div>
+    <div class="topbar-right">
+      <div class="xp-bar-wrap">
+        <div class="xp-label">742 / 1000 XP</div>
+        <div class="xp-track"><div class="xp-fill" style="width:74.2%"></div></div>
+        <div class="level-badge">Lv 4</div>
+      </div>
+      <div class="notif-btn" title="Notifikácie">🔔</div>
+    </div>
+  </header>
+
+  <!-- ─── DASHBOARD ─── -->
+  <div class="page-area">
+
+    <div class="page active" id="page-dashboard">
+      <div class="welcome-card fade-in">
+        <h1>Vitajte späť, Používateľ 👋</h1>
+        <p>Pokračujte vo finančnom vzdelávaní. Máte nakročené skvele!</p>
+        <div class="welcome-streak">🔥 7-dňová séria · Skvelá práca!</div>
+      </div>
+
+      <div class="iq-wrap">
+        <div class="iq-card fade-in">
+          <div style="display:flex;align-items:baseline;gap:4px">
+            <div class="iq-score">742</div><div class="iq-max">/850</div>
+          </div>
+          <div class="iq-label">💰 Financial IQ skóre</div>
+          <div class="iq-bar-track"><div class="iq-bar-fill"></div></div>
+          <div class="iq-tip">Top 18% spomedzi všetkých používateľov</div>
+        </div>
+        <div class="card fade-in" style="display:flex;flex-direction:column;justify-content:center;gap:10px">
+          <div class="section-title" style="margin-bottom:4px">⚡ Rýchle akcie</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="calc-btn" onclick="showPage('kurzy')" style="text-align:left;padding:10px 14px;border-radius:10px">📚 Pokračovať v kurze</button>
+            <button class="calc-btn" onclick="showPage('ai')" style="background:rgba(99,102,241,0.15);color:var(--indigo2);border:1px solid rgba(99,102,241,0.2);text-align:left;padding:10px 14px;border-radius:10px">🤖 Opýtať sa AI Radcu</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card fade-in">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" style="color:var(--gold)">7</div>
+          <div class="stat-label">Dňová séria</div>
+          <div class="stat-sub">Najdlhšia: 14 dní</div>
+        </div>
+        <div class="stat-card fade-in">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value" style="color:var(--green)">23</div>
+          <div class="stat-label">Dokončených lekcií</div>
+          <div class="stat-sub">+3 tento týždeň</div>
+        </div>
+        <div class="stat-card fade-in">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-value" style="color:var(--indigo2)">NBS</div>
+          <div class="stat-label">Ďalší cieľ</div>
+          <div class="stat-sub">Príprava na skúšku</div>
+        </div>
+      </div>
+
+      <div class="recent-card fade-in">
+        <div class="section-title">📋 Posledná aktivita</div>
+        <div class="lesson-row"><div class="lesson-dot done"></div><div class="lesson-title-sm">Čo je ETF a prečo funguje</div><div class="lesson-xp">+50 XP</div></div>
+        <div class="lesson-row"><div class="lesson-dot done"></div><div class="lesson-title-sm">Diverzifikácia portfólia</div><div class="lesson-xp">+40 XP</div></div>
+        <div class="lesson-row"><div class="lesson-dot prog"></div><div class="lesson-title-sm">Dlhopisy a ich riziká</div><div class="lesson-xp">v procese</div></div>
+        <div class="lesson-row"><div class="lesson-dot done"></div><div class="lesson-title-sm">Inflačné ochrany</div><div class="lesson-xp">+35 XP</div></div>
+      </div>
+    </div>
+
+    <!-- ─── KURZY ─── -->
+    <div class="page" id="page-kurzy">
+      <div class="kurzy-header">
+        <div class="page-title">📚 Kurzy</div>
+        <div class="filter-tabs">
+          <div class="filter-tab active" onclick="filterCourses(this,'all')">Všetky</div>
+          <div class="filter-tab" onclick="filterCourses(this,'zaklady')">Základy</div>
+          <div class="filter-tab" onclick="filterCourses(this,'investicie')">Investície</div>
+          <div class="filter-tab" onclick="filterCourses(this,'nbs')">NBS</div>
+          <div class="filter-tab" onclick="filterCourses(this,'krypto')">Krypto</div>
+        </div>
+      </div>
+      <div class="courses-grid" id="courses-grid">
+        <!-- injected by JS -->
+      </div>
+    </div>
+
+    <!-- ─── KALKULAČKY ─── -->
+    <div class="page" id="page-kalkul">
+      <div style="margin-bottom:24px"><div class="page-title">🧮 Finančné kalkulačky</div></div>
+      <div class="calc-grid">
+
+        <!-- Mortgage -->
+        <div class="calc-card">
+          <h3>🏠 Hypotéka</h3>
+          <p>Vypočítajte mesačnú splátku a celkové náklady</p>
+          <div class="form-group"><label class="form-label">Výška úveru (€)</label><input class="form-input" id="m-amount" type="number" placeholder="150 000" value="150000"/></div>
+          <div class="form-group"><label class="form-label">Ročná úroková sadzba (%)</label><input class="form-input" id="m-rate" type="number" placeholder="3.5" value="3.5" step="0.1"/></div>
+          <div class="form-group"><label class="form-label">Doba splácania (roky)</label><input class="form-input" id="m-years" type="number" placeholder="30" value="30"/></div>
+          <button class="calc-btn" onclick="calcMortgage()">Vypočítať</button>
+          <div class="calc-result" id="m-result">
+            <div class="result-row"><span class="r-label">Mesačná splátka</span><span class="r-val" id="m-monthly"></span></div>
+            <div class="result-row"><span class="r-label">Celkovo zaplatíte</span><span class="r-val" id="m-total"></span></div>
+            <div class="result-total"><span>Úroky celkom</span><span id="m-interest"></span></div>
+          </div>
+        </div>
+
+        <!-- Investment -->
+        <div class="calc-card">
+          <h3>📈 Investícia</h3>
+          <p>Zistite budúcu hodnotu pravidelného investovania</p>
+          <div class="form-group"><label class="form-label">Mesačný vklad (€)</label><input class="form-input" id="i-monthly" type="number" placeholder="200" value="200"/></div>
+          <div class="form-group"><label class="form-label">Ročný výnos (%)</label><input class="form-input" id="i-rate" type="number" placeholder="7" value="7" step="0.1"/></div>
+          <div class="form-group"><label class="form-label">Horizont (roky)</label><input class="form-input" id="i-years" type="number" placeholder="20" value="20"/></div>
+          <button class="calc-btn" onclick="calcInvestment()">Vypočítať</button>
+          <div class="calc-result" id="i-result">
+            <div class="result-row"><span class="r-label">Vložené celkom</span><span class="r-val" id="i-invested"></span></div>
+            <div class="result-row"><span class="r-label">Výnosy (úrok)</span><span class="r-val" id="i-gains"></span></div>
+            <div class="result-total"><span>Celková hodnota</span><span id="i-total"></span></div>
+          </div>
+        </div>
+
+        <!-- Retirement -->
+        <div class="calc-card">
+          <h3>🏖️ Dôchodok</h3>
+          <p>Koľko potrebujete na pohodlný dôchodok?</p>
+          <div class="form-group"><label class="form-label">Aktuálny vek</label><input class="form-input" id="r-age" type="number" placeholder="30" value="30"/></div>
+          <div class="form-group"><label class="form-label">Vek odchodu do dôchodku</label><input class="form-input" id="r-retire" type="number" placeholder="65" value="65"/></div>
+          <div class="form-group"><label class="form-label">Mesačný príjem v dôchodku (€)</label><input class="form-input" id="r-income" type="number" placeholder="1200" value="1200"/></div>
+          <button class="calc-btn" onclick="calcRetirement()">Vypočítať</button>
+          <div class="calc-result" id="r-result">
+            <div class="result-row"><span class="r-label">Roky do dôchodku</span><span class="r-val" id="r-years"></span></div>
+            <div class="result-row"><span class="r-label">Potrebný kapitál (4% pr.)</span><span class="r-val" id="r-capital"></span></div>
+            <div class="result-total"><span>Odp. mes. úspora</span><span id="r-monthly"></span></div>
+          </div>
+        </div>
+
+        <!-- Inflation -->
+        <div class="calc-card">
+          <h3>📉 Inflácia</h3>
+          <p>Ako inflácia znehodnotí vaše peniaze?</p>
+          <div class="form-group"><label class="form-label">Suma dnes (€)</label><input class="form-input" id="inf-amount" type="number" placeholder="10000" value="10000"/></div>
+          <div class="form-group"><label class="form-label">Ročná inflácia (%)</label><input class="form-input" id="inf-rate" type="number" placeholder="3" value="3" step="0.1"/></div>
+          <div class="form-group"><label class="form-label">Počet rokov</label><input class="form-input" id="inf-years" type="number" placeholder="10" value="10"/></div>
+          <button class="calc-btn" onclick="calcInflation()">Vypočítať</button>
+          <div class="calc-result" id="inf-result">
+            <div class="result-row"><span class="r-label">Reálna hodnota o N rokov</span><span class="r-val" id="inf-future"></span></div>
+            <div class="result-row"><span class="r-label">Strata kúpnej sily</span><span class="r-val" id="inf-loss" style="color:var(--red)"></span></div>
+            <div class="result-total"><span>Pokles v %</span><span id="inf-pct" style="color:var(--red)"></span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── AI RADCA ─── -->
+    <div class="page" id="page-ai">
+      <div class="ai-layout">
+        <div class="ai-header">
+          <div class="ai-avatar">🤖</div>
+          <div>
+            <div class="ai-name">FinAdvisor AI</div>
+            <div class="ai-status">Online · pripravený pomôcť</div>
+          </div>
+          <div class="ai-disclaimer">⚠️ Toto nie je finančné poradenstvo — iba vzdelávanie.</div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <!-- injected -->
+        </div>
+        <div class="chat-input-wrap">
+          <input class="chat-input" id="chat-input" type="text" placeholder="Napíšte otázku o investovaní, ETF, dôchodku..."/>
+          <button class="chat-send" onclick="sendMsg()">➤</button>
+        </div>
+        <div class="chat-hint">Toto nie je finančné poradenstvo — iba vzdelávacie informácie podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>
+      </div>
+    </div>
+
+    <!-- ─── PROFIL ─── -->
+    <div class="page" id="page-profil">
+      <div style="margin-bottom:24px"><div class="page-title">👤 Môj profil</div></div>
+      <div class="profil-grid">
+        <div class="profil-aside">
+          <div class="profil-avatar-card">
+            <div class="profil-avatar-big">P</div>
+            <div class="profil-name">Používateľ</div>
+            <div class="profil-email">pouzi@email.sk</div>
+            <div class="plan-badge">✅ Starter plán</div>
+          </div>
+          <div class="profil-stats-card">
+            <div class="section-title" style="margin-bottom:12px">📊 Štatistiky</div>
+            <div class="profil-stat-row"><span>XP celkom</span><span class="r-val">742</span></div>
+            <div class="profil-stat-row"><span>Level</span><span class="r-val">4</span></div>
+            <div class="profil-stat-row"><span>Séria</span><span class="r-val">7 dní</span></div>
+            <div class="profil-stat-row"><span>Lekcie</span><span class="r-val">23</span></div>
+            <div class="profil-stat-row"><span>Financial IQ</span><span class="r-val" style="color:var(--gold)">742 / 850</span></div>
+            <div class="profil-stat-row"><span>Člen od</span><span class="r-val" style="color:var(--muted);font-size:12px">jan. 2025</span></div>
+          </div>
+        </div>
+        <div class="profil-main">
+          <div class="form-section">
+            <h3>✏️ Upraviť profil</h3>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Meno</label><input class="form-input" id="prof-name" value="Používateľ"/></div>
+              <div class="form-group"><label class="form-label">Priezvisko</label><input class="form-input" id="prof-surname" value="Novák"/></div>
+            </div>
+            <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" id="prof-email" type="email" value="pouzi@email.sk"/></div>
+            <div style="display:flex;align-items:center;margin-top:4px">
+              <button class="form-save" onclick="saveProfile()">Uložiť zmeny</button>
+              <span class="save-success" id="save-ok">✅ Uložené!</span>
+            </div>
+          </div>
+          <div class="form-section">
+            <h3>🔒 Bezpečnosť</h3>
+            <div class="form-group"><label class="form-label">Aktuálne heslo</label><input class="form-input" type="password" placeholder="••••••••"/></div>
+            <div class="form-group"><label class="form-label">Nové heslo</label><input class="form-input" type="password" placeholder="Minimálne 8 znakov"/></div>
+            <button class="form-save" onclick="alert('Heslo by bolo zmenené (demo)')">Zmeniť heslo</button>
+          </div>
+          <div class="form-section">
+            <h3>💳 Predplatné</h3>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+              <div>
+                <div style="font-size:15px;font-weight:600">Starter plán</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px">Základné funkcie zadarmo</div>
+              </div>
+              <div class="plan-badge">Aktívny</div>
+            </div>
+            <button class="calc-btn" style="background:linear-gradient(135deg,var(--indigo),#8B5CF6)" onclick="alert('Upgrade na Pro — čoskoro dostupný!')">⬆️ Upgradovať na Pro</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-area -->
+</div><!-- /main -->
+
+<!-- ─── MOBILE BOTTOM NAV ─── -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <div class="bnav-item active" data-page="dashboard"><div class="icon">📊</div><span>Dashboard</span></div>
+    <div class="bnav-item" data-page="kurzy"><div class="icon">📚</div><span>Kurzy</span></div>
+    <div class="bnav-item" data-page="kalkul"><div class="icon">🧮</div><span>Kalk.</span></div>
+    <div class="bnav-item" data-page="ai"><div class="icon">🤖</div><span>AI</span></div>
+    <div class="bnav-item" data-page="profil"><div class="icon">👤</div><span>Profil</span></div>
   </div>
 </nav>
 
-<!-- LEGAL DISCLAIMER BAR -->
-<div style="background:#fef3c7;border-bottom:1px solid #fcd34d;padding:8px 20px;text-align:center;font-size:0.82rem;color:#92400e;line-height:1.4">
-  Obsah tejto platformy slúži <strong>výlučne na vzdelávacie účely</strong>. Neposkytujeme finančné poradenstvo v zmysle zákona 186/2009 Z.z. Pred akýmkoľvek finančným rozhodnutím sa poraďte s licencovaným odborníkom.
-</div>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-badge" data-i18n="hero_badge">🇸🇰 #1 vzdelávacia finančná platforma v SR</div>
-  <h1 data-i18n="hero_title">Tvoj osobný<br><span>finančný sprievodca</span><br>vzdelávaním</h1>
-  <p class="hero-sub" data-i18n="hero_sub">Kalkulačky, investície, daňová vzdelávacia kalkulačka, AI sprievodca a príprava na NBS skúšku — všetko po slovensky za cenu 2 káv mesačne.</p>
-  <div class="hero-ctas">
-    <button class="btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">🚀 <span data-i18n="hero_cta1">Začať zadarmo</span></button>
-    <button class="btn-ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" data-i18n="hero_cta2">Zistiť viac</button>
-  </div>
-  <div class="hero-stats">
-    <div class="stat"><div class="stat-num">1 334</div><div class="stat-lbl" data-i18n="stat1">NBS otázok</div></div>
-    <div class="stat"><div class="stat-num">12</div><div class="stat-lbl" data-i18n="stat2">kalkulačiek</div></div>
-    <div class="stat"><div class="stat-num">6</div><div class="stat-lbl" data-i18n="stat3">jazykov</div></div>
-    <div class="stat"><div class="stat-num">€0</div><div class="stat-lbl" data-i18n="stat4">na začiatok</div></div>
-  </div>
-</section>
-
-<!-- LANGUAGE PILLS -->
-<div class="langs-row">
-  <div class="lang-pill active" onclick="setLang('sk')">🇸🇰 Slovenčina</div>
-  <div class="lang-pill" onclick="setLang('en')">🇬🇧 English</div>
-  <div class="lang-pill" onclick="setLang('uk')">🇺🇦 Українська</div>
-  <div class="lang-pill" onclick="setLang('pl')">🇵🇱 Polski</div>
-  <div class="lang-pill" onclick="setLang('de')">🇩🇪 Deutsch</div>
-  <div class="lang-pill" onclick="setLang('hu')">🇭🇺 Magyar</div>
-</div>
-
-<!-- FEATURES -->
-<section id="features" style="background:rgba(255,255,255,.02);max-width:100%;padding:56px 20px">
-<div style="max-width:960px;margin:0 auto">
-  <div class="sec-label" data-i18n="feat_label">Čo dostaneš</div>
-  <h2 class="sec-title" data-i18n="feat_title">Všetko na jednom mieste</h2>
-  <p class="sec-sub" data-i18n="feat_sub">Bez poradcov, bez stretnutí, bez čakania. Sám. Kedykoľvek.</p>
-  <div class="features-grid">
-    <div class="feat-card"><span class="feat-icon">🧾</span><h3 data-i18n="f1_title">Daňový optimalizátor</h3><p data-i18n="f1_desc">SZČO aj zamestnanec. Paušálne výdavky, III. pilier, daňový bonus. Priemerná úspora €2 400/rok.</p><span class="feat-badge badge-free" data-i18n="badge_free">Zadarmo</span></div>
-    <div class="feat-card"><span class="feat-icon">🏠</span><h3 data-i18n="f2_title">Hypotekálny simulátor</h3><p data-i18n="f2_desc">Splátka, preplatok, LTV, potrebný príjem. Porovnaj podmienky a zisti koľko naozaj zaplatíš.</p><span class="feat-badge badge-free" data-i18n="badge_free">Zadarmo</span></div>
-    <div class="feat-card"><span class="feat-icon">📈</span><h3 data-i18n="f3_title">Investičný sprievodca</h3><p data-i18n="f3_desc">ETF, II. a III. pilier, zložený úrok. Portfólio podľa tvojho rizikového profilu.</p><span class="feat-badge badge-free" data-i18n="badge_free">Zadarmo</span></div>
-    <div class="feat-card"><span class="feat-icon">🤖</span><h3 data-i18n="f4_title">AI Finančný sprievodca</h3><p data-i18n="f4_desc">Opýtaj sa čokoľvek na tému finančného vzdelávania. 24/7 priamo v aplikácii.</p><span class="feat-badge badge-pro">Pro</span></div>
-    <div class="feat-card"><span class="feat-icon">🎓</span><h3 data-i18n="f5_title">Príprava na NBS skúšku</h3><p data-i18n="f5_desc">1 334 reálnych otázok s vysvetleniami. Mock exam, progress tracking. Jediná SK platforma.</p><span class="feat-badge badge-pro">Pro</span></div>
-    <div class="feat-card"><span class="feat-icon">🔊</span><h3 data-i18n="f6_title">Audio vzdelávanie</h3><p data-i18n="f6_desc">Každú lekciu, zákon, stratégiu si vypočuj. Uč sa počas šoférovania alebo cvičenia.</p><span class="feat-badge badge-new" data-i18n="badge_new">Nové</span></div>
-    <div class="feat-card"><span class="feat-icon">⚖️</span><h3 data-i18n="f7_title">Legislatíva jednoducho</h3><p data-i18n="f7_desc">8 zákonov SR v zrozumiteľnom jazyku. 186/2009, AML, MiFID — bez právnickej hantírky.</p><span class="feat-badge badge-free" data-i18n="badge_free">Zadarmo</span></div>
-    <div class="feat-card"><span class="feat-icon">📊</span><h3 data-i18n="f8_title">Financial IQ Score</h3><p data-i18n="f8_desc">Skóre 0–850 ako kreditný rating. Sleduj rast svojich finančných znalostí každý deň.</p><span class="feat-badge badge-new" data-i18n="badge_new">Nové</span></div>
-    <div class="feat-card"><span class="feat-icon">🌍</span><h3 data-i18n="f9_title">6 jazykov</h3><p data-i18n="f9_desc">SK · EN · UA · PL · DE · HU. Platforma pre každého kto žije alebo pracuje na Slovensku.</p><span class="feat-badge badge-new" data-i18n="badge_new">Nové</span></div>
-  </div>
-</div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section>
-  <div class="sec-label" data-i18n="how_label">Ako to funguje</div>
-  <h2 class="sec-title" data-i18n="how_title">Začni za 2 minúty. Sám.</h2>
-  <p class="sec-sub" data-i18n="how_sub">Žiadne stretnutia, žiadne čakanie, žiadni poradcovia. Všetko zvládneš sám.</p>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num" style="background:var(--blue)">1</div>
-      <div class="step-body"><h4 data-i18n="step1_title">Zaregistruj sa zadarmo</h4><p data-i18n="step1_desc">Email + heslo. Žiadna kreditná karta. Prístup k základným funkciám ihneď.</p></div>
-    </div>
-    <div class="step">
-      <div class="step-num" style="background:var(--purple)">2</div>
-      <div class="step-body"><h4 data-i18n="step2_title">Otestuj svoje finančné zdravie</h4><p data-i18n="step2_desc">10-otázkový kvíz odhalí kde si a čo riešiť ako prvé. Výsledok ihneď.</p></div>
-    </div>
-    <div class="step">
-      <div class="step-num" style="background:var(--green)">3</div>
-      <div class="step-body"><h4 data-i18n="step3_title">Uč sa vlastným tempom</h4><p data-i18n="step3_desc">21-dňový program, kalkulačky, legislatíva, audio. Každý deň 5 minút.</p></div>
-    </div>
-    <div class="step">
-      <div class="step-num" style="background:var(--gold)">4</div>
-      <div class="step-body"><h4 data-i18n="step4_title">Upgraduj na Pro keď budeš pripravený</h4><p data-i18n="step4_desc">AI poradca, NBS príprava, daňový optimalizátor. €9.90/mes. Zruš kedykoľvek.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section id="pricing" style="background:rgba(255,255,255,.02);max-width:100%;padding:56px 20px">
-<div style="max-width:960px;margin:0 auto">
-  <div class="sec-label" data-i18n="price_label">Predplatné</div>
-  <h2 class="sec-title" data-i18n="price_title">Jednoduchá cena. Obrovská hodnota.</h2>
-  <p class="sec-sub" data-i18n="price_sub">Ušetríš viac za 1 deň s naším daňovým optimalizátorom ako zaplatíš za celý rok.</p>
-  <div class="pricing-grid">
-    <div class="price-card">
-      <div class="price-name" data-i18n="plan_free">Free</div>
-      <div class="price-amount">€0<span data-i18n="per_month">/mes</span></div>
-      <div class="price-period" data-i18n="free_forever">navždy zadarmo</div>
-      <ul class="price-feats">
-        <li data-i18n="pf1">5 článkov mesačne</li>
-        <li data-i18n="pf2">Základné kalkulačky</li>
-        <li data-i18n="pf3">Finančný IQ test</li>
-        <li class="no" data-i18n="pf4">AI poradca</li>
-        <li class="no" data-i18n="pf5">NBS príprava</li>
-      </ul>
-      <button class="btn-plan btn-plan-ghost" onclick="openModal('register')" data-i18n="btn_free">Začať zadarmo</button>
-    </div>
-    <div class="price-card">
-      <div class="price-name">Starter</div>
-      <div class="price-amount">€4.90<span data-i18n="per_month">/mes</span></div>
-      <div class="price-period" data-i18n="billing_monthly">platba mesačne</div>
-      <ul class="price-feats">
-        <li data-i18n="ps1">Neobmedzená knižnica</li>
-        <li data-i18n="ps2">Všetky kalkulačky (12)</li>
-        <li data-i18n="ps3">Audio vzdelávanie</li>
-        <li data-i18n="ps4">Progress tracking</li>
-        <li class="no" data-i18n="ps5">AI poradca</li>
-      </ul>
-      <button class="btn-plan btn-plan-ghost" onclick="openCheckout('starter')" data-i18n="btn_choose">Vybrať</button>
-    </div>
-    <div class="price-card popular">
-      <div class="popular-tag" data-i18n="most_popular">⭐ Najpopulárnejší</div>
-      <div class="price-name">Pro</div>
-      <div class="price-amount">€9.90<span data-i18n="per_month">/mes</span></div>
-      <div class="price-period" data-i18n="billing_monthly">platba mesačne</div>
-      <ul class="price-feats">
-        <li data-i18n="pp1">Všetko zo Starter</li>
-        <li data-i18n="pp2">🤖 AI poradca 24/7</li>
-        <li data-i18n="pp3">🧾 Daňový optimalizátor</li>
-        <li data-i18n="pp4">📈 NBS príprava (1334 otázok)</li>
-        <li data-i18n="pp5">📊 Financial IQ Score</li>
-      </ul>
-      <button class="btn-plan btn-plan-blue" onclick="openCheckout('pro')" data-i18n="btn_pro">Začať Pro ✨</button>
-    </div>
-    <div class="price-card">
-      <div class="price-name">Expert</div>
-      <div class="price-amount">€14.90<span data-i18n="per_month">/mes</span></div>
-      <div class="price-period" data-i18n="billing_monthly">platba mesačne</div>
-      <ul class="price-feats">
-        <li data-i18n="pe1">Všetko z Pro</li>
-        <li data-i18n="pe2">👨‍👩‍👧 Family sharing (4 osoby)</li>
-        <li data-i18n="pe3">📧 Prioritná emailová podpora</li>
-        <li data-i18n="pe4">📄 PDF reporty</li>
-        <li data-i18n="pe5">🎓 Certifikát o absolvovaní kurzu</li>
-      </ul>
-      <button class="btn-plan btn-plan-ghost" onclick="openCheckout('expert')" data-i18n="btn_choose">Vybrať</button>
-    </div>
-  </div>
-  <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:20px" data-i18n="stripe_note">💳 Platba kartou cez Stripe · 🔒 Bezpečné · ❌ Zrušenie kedykoľvek</p>
-</div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section>
-  <div class="sec-label" data-i18n="rev_label">Recenzie</div>
-  <h2 class="sec-title" data-i18n="rev_title">Čo hovoria používatelia</h2>
-  <div class="tgrid">
-    <div class="tcard">
-      <div class="tcard-stars">★★★★★</div>
-      <p class="tcard-text" data-i18n="t1">"Daňový optimalizátor mi ukázal úsporu €3 200 ročne. Pro plán sa zaplatil z prvého výpočtu."</p>
-      <div class="tcard-author"><div class="tcard-av">M</div><div><div class="tcard-name">Martin K.</div><div class="tcard-meta">SZČO · Bratislava 🇸🇰</div></div></div>
-    </div>
-    <div class="tcard">
-      <div class="tcard-stars">★★★★★</div>
-      <p class="tcard-text" data-i18n="t2">"I passed the NBS exam on first try. 1,334 questions with explanations — better than any €300 course."</p>
-      <div class="tcard-author"><div class="tcard-av">L</div><div><div class="tcard-name">Lucia H.</div><div class="tcard-meta">Financial agent · Košice 🇸🇰</div></div></div>
-    </div>
-    <div class="tcard">
-      <div class="tcard-stars">★★★★★</div>
-      <p class="tcard-text" data-i18n="t3">"Як українець у Словаччині — нарешті зрозумів місцеву податкову систему. Мова зрозуміла."</p>
-      <div class="tcard-author"><div class="tcard-av">О</div><div><div class="tcard-name">Олексій В.</div><div class="tcard-meta">Zamestnanec · Žilina 🇺🇦</div></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section style="background:rgba(255,255,255,.02);max-width:100%;padding:56px 20px">
-<div style="max-width:960px;margin:0 auto">
-  <div class="sec-label" data-i18n="faq_label">FAQ</div>
-  <h2 class="sec-title" data-i18n="faq_title">Časté otázky</h2>
-  <div class="faq-list">
-    <div class="faq-item"><div class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')"><span data-i18n="faq1_q">Je FinAdvisor SK regulovaný NBS?</span><span class="faq-icon">+</span></div><div class="faq-a" data-i18n="faq1_a">FinAdvisor SK je vzdelávacia platforma. Neposkytujeme investičné poradenstvo v zmysle zákona 186/2009. Obsah slúži na vzdelávanie.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')"><span data-i18n="faq2_q">Môžem zrušiť predplatné kedykoľvek?</span><span class="faq-icon">+</span></div><div class="faq-a" data-i18n="faq2_a">Áno, kedykoľvek bez poplatkov. Prístup zostáva aktívny do konca zaplateného obdobia.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')"><span data-i18n="faq3_q">Funguje aplikácia aj bez internetu?</span><span class="faq-icon">+</span></div><div class="faq-a" data-i18n="faq3_a">Áno — nainštaluj ako PWA (Pridať na domovskú obrazovku). Raz načítaný obsah funguje offline.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')"><span data-i18n="faq4_q">V akých jazykoch je platforma dostupná?</span><span class="faq-icon">+</span></div><div class="faq-a" data-i18n="faq4_a">Slovenčina, Angličtina, Ukrajinčina, Poľština, Nemčina, Maďarčina. Ďalšie jazyky pridávame.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')"><span data-i18n="faq5_q">Ako nainštalujem app na telefón?</span><span class="faq-icon">+</span></div><div class="faq-a" data-i18n="faq5_a">iPhone: Safari → Zdieľať → Pridať na domovskú obrazovku. Android: Chrome → menu → Pridať na plochu. Bez App Store.</div></div>
-  </div>
-</div>
-</section>
-
-<!-- CTA -->
-<section style="text-align:center;background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(37,99,235,.18),transparent)">
-  <div style="font-size:44px;margin-bottom:14px">💹</div>
-  <h2 style="font-size:clamp(1.4rem,5vw,1.9rem);font-weight:800;margin-bottom:10px" data-i18n="cta_title">Začni dnes. Zadarmo.</h2>
-  <p style="color:var(--muted);margin-bottom:28px;font-size:14px" data-i18n="cta_sub">Za cenu 2 káv mesačne môžeš ušetriť tisíce eur ročne.</p>
-  <button class="btn-primary" style="font-size:16px;padding:15px 32px" onclick="openModal('register')">🚀 <span data-i18n="cta_btn">Vytvoriť bezplatný účet</span></button>
-  <p style="font-size:11px;color:var(--muted);margin-top:12px" data-i18n="cta_note">Bez kreditnej karty · Bez záväzkov · 2 minúty</p>
-</section>
-
-<footer>
-  <p style="font-size:17px;font-weight:800;margin-bottom:10px">💹 FinAdvisor SK</p>
-  <p><strong>Prevádzkovateľ:</strong> Petro Puneiko · <a href="mailto:petropuneiko@gmail.com">petropuneiko@gmail.com</a> · <a href="tel:+421908118957">+421 908 118 957</a></p>
-  <p style="margin-top:8px"><a href="/privacy">Ochrana osobných údajov</a> · <a href="/terms">Obchodné podmienky</a> · <a href="/learn">Academy</a></p>
-  <p style="margin-top:14px;font-size:11px;color:var(--muted)">© 2026 FinAdvisor SK · Vzdelávacia platforma · Nie sme finančný sprostredkovateľ podľa zákona 186/2009 Z.z.</p>
-</footer>
-
-<!-- INSTALL BANNER -->
-<div class="install-banner" id="install-banner" style="display:none">
-  <span class="install-icon">📱</span>
-  <div class="install-text"><b data-i18n="install_title">Nainštaluj ako app</b><span data-i18n="install_sub">Funguje offline · Rýchlejšie</span></div>
-  <button class="install-btn" id="install-btn" data-i18n="install_btn">Inštalovať</button>
-  <button class="install-x" onclick="document.getElementById('install-banner').style.display='none'">×</button>
-</div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-register" onclick="closeModal()">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-handle"></div>
-    <button class="modal-close" onclick="closeModal()">×</button>
-    <h3 id="modal-title" data-i18n="modal_title">Vytvoriť bezplatný účet</h3>
-    <p class="modal-sub" id="modal-sub" data-i18n="modal_sub">Začni zadarmo, upgraduj kedykoľvek</p>
-    <div class="plan-info" id="plan-info"></div>
-    <div class="form-group"><label data-i18n="form_name">Meno</label><input class="form-input" type="text" id="reg-name" data-i18n-ph="form_name_ph"></div>
-    <div class="form-group"><label>Email</label><input class="form-input" type="email" id="reg-email" placeholder="email@example.com"></div>
-    <div class="form-group"><label data-i18n="form_pwd">Heslo</label><input class="form-input" type="password" id="reg-pwd" data-i18n-ph="form_pwd_ph"></div>
-    <button class="modal-btn" onclick="submitRegister()" data-i18n="modal_btn">Zaregistrovať sa zadarmo →</button>
-    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:10px">Registráciou súhlasíš s <a href="/terms" style="color:#60a5fa">podmienkami</a>. Platené plány: 14-dňové právo na odstúpenie (zák. 102/2014).</p>
-  </div>
-</div>
-
 <script>
-// ══════════════════════════════════════════════
-// TRANSLATIONS
-// ══════════════════════════════════════════════
-const T = {
-  sk:{
-    nav_cta:'Začať zadarmo', hero_badge:'🇸🇰 #1 vzdelávacia finančná platforma v SR',
-    hero_title:'Tvoj osobný<br><span>finančný sprievodca</span><br>vzdelávaním',
-    hero_sub:'Kalkulačky, investície, daňová vzdelávacia kalkulačka, AI sprievodca a NBS príprava — všetko po slovensky za cenu 2 káv mesačne.',
-    hero_cta1:'Začať zadarmo', hero_cta2:'Zistiť viac',
-    stat1:'NBS otázok', stat2:'kalkulačiek', stat3:'jazykov', stat4:'na začiatok',
-    feat_label:'Čo dostaneš', feat_title:'Všetko na jednom mieste',
-    feat_sub:'Bez poradcov, bez stretnutí, bez čakania. Sám. Kedykoľvek.',
-    f1_title:'Daňový optimalizátor', f1_desc:'SZČO aj zamestnanec. Priemerná úspora €2 400/rok.',
-    f2_title:'Hypotekálny simulátor', f2_desc:'Splátka, preplatok, LTV. Zisti koľko naozaj zaplatíš.',
-    f3_title:'Investičný sprievodca', f3_desc:'ETF, II. a III. pilier, zložený úrok. Portfólio podľa profilu.',
-    f4_title:'AI Finančný sprievodca', f4_desc:'Opýtaj sa čokoľvek na tému finančného vzdelávania. Odpovede 24/7.',
-    f5_title:'Príprava na NBS skúšku', f5_desc:'1 334 otázok s vysvetleniami. Mock exam. Jediná SK platforma.',
-    f6_title:'Audio vzdelávanie', f6_desc:'Každú lekciu si vypočuj. Uč sa počas šoférovania.',
-    f7_title:'Legislatíva jednoducho', f7_desc:'8 zákonov SR bez právnickej hantírky.',
-    f8_title:'Financial IQ Score', f8_desc:'Skóre 0–850. Sleduj rast znalostí každý deň.',
-    f9_title:'6 jazykov', f9_desc:'SK · EN · UA · PL · DE · HU. Pre každého kto žije v SR.',
-    badge_free:'Zadarmo', badge_new:'Nové',
-    how_label:'Ako to funguje', how_title:'Začni za 2 minúty. Sám.',
-    how_sub:'Žiadne stretnutia, žiadne čakanie. Všetko zvládneš sám.',
-    step1_title:'Zaregistruj sa zadarmo', step1_desc:'Email + heslo. Žiadna kreditná karta. Prístup ihneď.',
-    step2_title:'Otestuj svoje finančné zdravie', step2_desc:'10 otázok odhalí kde si a čo riešiť ako prvé.',
-    step3_title:'Uč sa vlastným tempom', step3_desc:'21-dňový program, kalkulačky, audio. 5 minút denne.',
-    step4_title:'Upgraduj na Pro', step4_desc:'AI poradca, NBS príprava. €9.90/mes. Zruš kedykoľvek.',
-    price_label:'Predplatné', price_title:'Jednoduchá cena. Obrovská hodnota.',
-    price_sub:'Ušetríš viac za 1 deň ako zaplatíš za celý rok.',
-    plan_free:'Free', per_month:'/mes', free_forever:'navždy zadarmo', billing_monthly:'platba mesačne',
-    pf1:'5 článkov mesačne', pf2:'Základné kalkulačky', pf3:'Finančný IQ test', pf4:'AI poradca', pf5:'NBS príprava',
-    ps1:'Neobmedzená knižnica', ps2:'Všetky kalkulačky (12)', ps3:'Audio vzdelávanie', ps4:'Progress tracking', ps5:'AI poradca',
-    pp1:'Všetko zo Starter', pp2:'🤖 AI poradca 24/7', pp3:'🧾 Daňový optimalizátor', pp4:'📈 NBS príprava', pp5:'📊 Financial IQ Score',
-    pe1:'Všetko z Pro', pe2:'👨‍👩‍👧 Family sharing (4)', pe3:'📞 Konzultácia 30 min', pe4:'📄 PDF reporty', pe5:'🎓 Certifikát o absolvovaní kurzu',
-    most_popular:'⭐ Najpopulárnejší', btn_free:'Začať zadarmo', btn_choose:'Vybrať', btn_pro:'Začať Pro ✨',
-    stripe_note:'💳 Platba kartou cez Stripe · 🔒 Bezpečné · ❌ Zrušenie kedykoľvek',
-    rev_label:'Recenzie', rev_title:'Čo hovoria používatelia',
-    t1:'"Daňový optimalizátor mi ukázal úsporu €3 200 ročne."',
-    t2:'"Prešla som NBS skúšku na prvý pokus. Lepšia príprava ako €300 kurz."',
-    t3:'"Ako Ukrajinec v SR — konečne som pochopil daňový systém."',
-    faq_label:'FAQ', faq_title:'Časté otázky',
-    faq1_q:'Je FinAdvisor SK regulovaný NBS?', faq1_a:'Vzdelávacia platforma. Neposkytujeme investičné poradenstvo v zmysle zákona 186/2009.',
-    faq2_q:'Môžem zrušiť kedykoľvek?', faq2_a:'Áno, kedykoľvek bez poplatkov. Prístup do konca obdobia.',
-    faq3_q:'Funguje offline?', faq3_a:'Áno — nainštaluj ako PWA. Načítaný obsah funguje bez internetu.',
-    faq4_q:'V akých jazykoch?', faq4_a:'SK, EN, UA, PL, DE, HU. Ďalšie jazyky pridávame.',
-    faq5_q:'Ako nainštalovať na telefón?', faq5_a:'iPhone: Safari → Zdieľať → Pridať na plochu. Android: Chrome → menu → Pridať.',
-    cta_title:'Začni dnes. Zadarmo.', cta_sub:'Za cenu 2 káv mesačne ušetríš tisíce eur.',
-    cta_btn:'Vytvoriť bezplatný účet', cta_note:'Bez kreditnej karty · 2 minúty',
-    install_title:'Nainštaluj ako app', install_sub:'Funguje offline · Rýchlejšie', install_btn:'Inštalovať',
-    modal_title:'Vytvoriť bezplatný účet', modal_sub:'Začni zadarmo, upgraduj kedykoľvek',
-    form_name:'Meno', form_name_ph:'Tvoje meno', form_pwd:'Heslo', form_pwd_ph:'Minimálne 8 znakov',
-    modal_btn:'Zaregistrovať sa zadarmo →', modal_terms:'Registráciou súhlasíš s podmienkami'
-  },
-  en:{
-    nav_cta:'Start free', hero_badge:'🇸🇰 #1 Financial education platform in Slovakia',
-    hero_title:'Your personal<br><span>financial education</span><br>guide',
-    hero_sub:'Calculators, investments, tax optimization, AI advisor and exam prep — all in English for the price of 2 coffees a month.',
-    hero_cta1:'Start for free', hero_cta2:'Learn more',
-    stat1:'NBS questions', stat2:'calculators', stat3:'languages', stat4:'to start',
-    feat_label:'What you get', feat_title:'Everything in one place',
-    feat_sub:'No advisors, no meetings, no waiting. Do it yourself. Anytime.',
-    f1_title:'Tax optimizer', f1_desc:'Employee & self-employed. Average saving €2,400/year.',
-    f2_title:'Mortgage simulator', f2_desc:'Monthly payment, total cost, LTV. Know what you really pay.',
-    f3_title:'Investment guide', f3_desc:'ETF, pension pillars, compound interest. Portfolio by your risk profile.',
-    f4_title:'AI Financial guide', f4_desc:'Ask anything about financial education. Get answers 24/7.',
-    f5_title:'NBS exam preparation', f5_desc:'1,334 real questions with explanations. Mock exam. Only Slovak platform.',
-    f6_title:'Audio learning', f6_desc:'Listen to every lesson. Learn while driving or exercising.',
-    f7_title:'Legislation made simple', f7_desc:'8 Slovak laws explained in plain language.',
-    f8_title:'Financial IQ Score', f8_desc:'Score 0–850. Track your financial knowledge growth daily.',
-    f9_title:'6 languages', f9_desc:'SK · EN · UA · PL · DE · HU. For everyone living in Slovakia.',
-    badge_free:'Free', badge_new:'New',
-    how_label:'How it works', how_title:'Start in 2 minutes. On your own.',
-    how_sub:'No meetings, no waiting. You can do everything yourself.',
-    step1_title:'Register for free', step1_desc:'Email + password. No credit card. Instant access.',
-    step2_title:'Test your financial health', step2_desc:'10 questions reveal where you are and what to fix first.',
-    step3_title:'Learn at your own pace', step3_desc:'21-day program, calculators, audio. 5 minutes a day.',
-    step4_title:'Upgrade to Pro when ready', step4_desc:'AI advisor, NBS prep. €9.90/month. Cancel anytime.',
-    price_label:'Pricing', price_title:'Simple price. Huge value.',
-    price_sub:'You save more in 1 day with our tax optimizer than you pay for a full year.',
-    plan_free:'Free', per_month:'/mo', free_forever:'free forever', billing_monthly:'billed monthly',
-    pf1:'5 articles/month', pf2:'Basic calculators', pf3:'Financial IQ test', pf4:'AI advisor', pf5:'NBS prep',
-    ps1:'Unlimited library', ps2:'All calculators (12)', ps3:'Audio learning', ps4:'Progress tracking', ps5:'AI advisor',
-    pp1:'Everything in Starter', pp2:'🤖 AI advisor 24/7', pp3:'🧾 Tax optimizer', pp4:'📈 NBS prep (1334 Qs)', pp5:'📊 Financial IQ Score',
-    pe1:'Everything in Pro', pe2:'👨‍👩‍👧 Family sharing (4)', pe3:'📞 Monthly consultation 30 min', pe4:'📄 PDF reports', pe5:'🎓 Course completion certificate',
-    most_popular:'⭐ Most popular', btn_free:'Start free', btn_choose:'Choose', btn_pro:'Start Pro ✨',
-    stripe_note:'💳 Card payment via Stripe · 🔒 Secure · ❌ Cancel anytime',
-    rev_label:'Reviews', rev_title:'What users say',
-    t1:'"The tax optimizer showed me €3,200 savings per year. Pro paid for itself immediately."',
-    t2:'"I passed the NBS exam on first try. Better than any €300 course."',
-    t3:'"As a Ukrainian in Slovakia — I finally understood the local tax system."',
-    faq_label:'FAQ', faq_title:'Frequently asked questions',
-    faq1_q:'Is FinAdvisor SK regulated by NBS?', faq1_a:'FinAdvisor SK is an educational platform, not a financial intermediary under Act 186/2009.',
-    faq2_q:'Can I cancel anytime?', faq2_a:'Yes, anytime with no fees. Access remains until end of paid period.',
-    faq3_q:'Does it work offline?', faq3_a:'Yes — install as PWA. Loaded content works without internet.',
-    faq4_q:'What languages are available?', faq4_a:'SK, EN, UA, PL, DE, HU. More languages coming.',
-    faq5_q:'How to install on phone?', faq5_a:'iPhone: Safari → Share → Add to Home Screen. Android: Chrome → menu → Add to Home.',
-    cta_title:'Start today. For free.', cta_sub:'For the price of 2 coffees a month, save thousands a year.',
-    cta_btn:'Create free account', cta_note:'No credit card · No commitment · 2 minutes',
-    install_title:'Install as app', install_sub:'Works offline · Faster', install_btn:'Install',
-    modal_title:'Create free account', modal_sub:'Start free, upgrade anytime',
-    form_name:'Name', form_name_ph:'Your name', form_pwd:'Password', form_pwd_ph:'At least 8 characters',
-    modal_btn:'Register for free →', modal_terms:'By registering you agree to our terms'
-  },
-  uk:{
-    nav_cta:'Почати безкоштовно', hero_badge:'🇸🇰 #1 освітня фінансова платформа у Словаччині',
-    hero_title:'Твій особистий<br><span>фінансовий гід</span><br>з навчання',
-    hero_sub:'Калькулятори, інвестиції, оптимізація податків, AI радник — все зрозумілою мовою за ціну 2 кав на місяць.',
-    hero_cta1:'Почати безкоштовно', hero_cta2:'Дізнатись більше',
-    stat1:'питань NBS', stat2:'калькуляторів', stat3:'мов', stat4:'для старту',
-    feat_label:'Що отримаєш', feat_title:'Все в одному місці',
-    feat_sub:'Без радників, без зустрічей, без очікування. Сам. Будь-коли.',
-    f1_title:'Податковий оптимізатор', f1_desc:'Для найманців і ФОП. Середня економія €2 400/рік.',
-    f2_title:'Іпотечний симулятор', f2_desc:'Щомісячний платіж, переплата, LTV. Дізнайся реальну вартість.',
-    f3_title:'Інвестиційний гід', f3_desc:'ETF, пенсійні програми, складний відсоток.',
-    f4_title:'AI Фінансовий гід', f4_desc:'Запитай будь-що на тему фінансового навчання. Відповіді 24/7.',
-    f5_title:'Підготовка до іспиту NBS', f5_desc:'1 334 реальних питань з поясненнями.',
-    f6_title:'Аудіо навчання', f6_desc:'Слухай кожен урок. Навчайся за кермом чи на тренуванні.',
-    f7_title:'Законодавство просто', f7_desc:'8 законів Словаччини зрозумілою мовою.',
-    f8_title:'Financial IQ Score', f8_desc:'Рейтинг 0–850. Відстежуй зростання знань щодня.',
-    f9_title:'6 мов', f9_desc:'СК · АН · УА · ПЛ · НІМ · УГ. Для кожного хто живе у Словаччині.',
-    badge_free:'Безкоштовно', badge_new:'Нове',
-    how_label:'Як це працює', how_title:'Старт за 2 хвилини. Самостійно.',
-    how_sub:'Жодних зустрічей, жодного очікування. Все зробиш сам.',
-    step1_title:'Зареєструйся безкоштовно', step1_desc:'Email + пароль. Без картки. Доступ одразу.',
-    step2_title:'Перевір фінансове здоров\'я', step2_desc:'10 питань — дізнайся де ти і що виправити першим.',
-    step3_title:'Навчайся у своєму темпі', step3_desc:'21-денна програма, калькулятори, аудіо. 5 хвилин на день.',
-    step4_title:'Оновись до Pro коли будеш готовий', step4_desc:'AI радник, підготовка NBS. €9.90/міс. Скасуй будь-коли.',
-    price_label:'Підписка', price_title:'Проста ціна. Величезна цінність.',
-    price_sub:'Заощадиш більше за 1 день ніж заплатиш за цілий рік.',
-    plan_free:'Безкоштовно', per_month:'/міс', free_forever:'назавжди безкоштовно', billing_monthly:'оплата щомісяця',
-    pf1:'5 статей на місяць', pf2:'Базові калькулятори', pf3:'Тест фін. IQ', pf4:'AI радник', pf5:'Підготовка NBS',
-    ps1:'Необмежена бібліотека', ps2:'Всі калькулятори (12)', ps3:'Аудіо навчання', ps4:'Відстеження прогресу', ps5:'AI радник',
-    pp1:'Все зі Starter', pp2:'🤖 AI радник 24/7', pp3:'🧾 Оптимізатор податків', pp4:'📈 Підготовка NBS', pp5:'📊 Financial IQ Score',
-    pe1:'Все з Pro', pe2:'👨‍👩‍👧 Сімейний доступ (4)', pe3:'📞 Консультація 30 хв', pe4:'📄 PDF звіти', pe5:'🎓 Сертифікат про завершення курсу',
-    most_popular:'⭐ Найпопулярніший', btn_free:'Почати безкоштовно', btn_choose:'Вибрати', btn_pro:'Почати Pro ✨',
-    stripe_note:'💳 Оплата карткою через Stripe · 🔒 Безпечно · ❌ Скасування будь-коли',
-    rev_label:'Відгуки', rev_title:'Що кажуть користувачі',
-    t1:'"Оптимізатор показав економію €3 200 на рік. Pro окупився з першого розрахунку."',
-    t2:'"Склала іспит NBS з першого разу. Краща підготовка ніж курс за €300."',
-    t3:'"Як українець у Словаччині — нарешті зрозумів місцеву податкову систему."',
-    faq_label:'Питання', faq_title:'Часті запитання',
-    faq1_q:'FinAdvisor SK регулюється NBS?', faq1_a:'Освітня платформа. Не надаємо інвестиційних порад за законом 186/2009.',
-    faq2_q:'Можна скасувати будь-коли?', faq2_a:'Так, без комісій. Доступ до кінця оплаченого періоду.',
-    faq3_q:'Працює офлайн?', faq3_a:'Так — встанови як PWA. Завантажений контент без інтернету.',
-    faq4_q:'Які мови доступні?', faq4_a:'СК, АН, УА, ПЛ, НІМ, УГ. Додаємо нові мови.',
-    faq5_q:'Як встановити на телефон?', faq5_a:'iPhone: Safari → Поділитись → На головний екран. Android: Chrome → меню → На plochu.',
-    cta_title:'Почни сьогодні. Безкоштовно.', cta_sub:'За ціну 2 кав на місяць заощадиш тисячі євро.',
-    cta_btn:'Створити безкоштовний акаунт', cta_note:'Без картки · Без зобов\'язань · 2 хвилини',
-    install_title:'Встановити як додаток', install_sub:'Працює офлайн · Швидше', install_btn:'Встановити',
-    modal_title:'Створити безкоштовний акаунт', modal_sub:'Почни безкоштовно, оновись коли захочеш',
-    form_name:'Ім\'я', form_name_ph:'Твоє ім\'я', form_pwd:'Пароль', form_pwd_ph:'Мінімум 8 символів',
-    modal_btn:'Зареєструватися безкоштовно →', modal_terms:'Реєструючись ти погоджуєшся з умовами'
-  },
-  pl:{
-    nav_cta:'Zacznij za darmo', hero_badge:'🇸🇰 #1 platforma edukacji finansowej na Słowacji',
-    hero_title:'Twój osobisty<br><span>przewodnik finansowy</span><br>w nauce',
-    hero_sub:'Kalkulatory, inwestycje, optymalizacja podatkowa, doradca AI — wszystko po polsku za cenę 2 kaw miesięcznie.',
-    hero_cta1:'Zacznij za darmo', hero_cta2:'Dowiedz się więcej',
-    stat1:'pytań NBS', stat2:'kalkulatorów', stat3:'języków', stat4:'na start',
-    feat_label:'Co otrzymujesz', feat_title:'Wszystko w jednym miejscu',
-    feat_sub:'Bez doradców, bez spotkań, bez czekania. Sam. Kiedy chcesz.',
-    f1_title:'Optymalizator podatkowy', f1_desc:'Pracownik i samozatrudniony. Średnia oszczędność €2 400/rok.',
-    f2_title:'Symulator hipoteczny', f2_desc:'Rata, nadpłata, LTV. Dowiedz się ile naprawdę zapłacisz.',
-    f3_title:'Przewodnik inwestycyjny', f3_desc:'ETF, filary emerytalne, procent składany.',
-    f4_title:'Doradca AI', f4_desc:'Odpowiedzi na pytania edukacyjne o finansach. 24/7.',
-    f5_title:'Przygotowanie do egzaminu NBS', f5_desc:'1 334 pytań z wyjaśnieniami. Mock exam.',
-    f6_title:'Nauka audio', f6_desc:'Słuchaj każdej lekcji. Ucz się podczas jazdy.',
-    f7_title:'Prawo po ludzku', f7_desc:'8 słowackich ustaw bez prawniczego żargonu.',
-    f8_title:'Financial IQ Score', f8_desc:'Wynik 0–850. Śledź wzrost wiedzy finansowej każdego dnia.',
-    f9_title:'6 języków', f9_desc:'SK · EN · UA · PL · DE · HU. Dla każdego kto mieszka na Słowacji.',
-    badge_free:'Darmowe', badge_new:'Nowe',
-    how_label:'Jak to działa', how_title:'Zacznij w 2 minuty. Sam.',
-    how_sub:'Żadnych spotkań, żadnego czekania. Wszystko zrobisz sam.',
-    step1_title:'Zarejestruj się za darmo', step1_desc:'Email + hasło. Brak karty. Dostęp od razu.',
-    step2_title:'Sprawdź zdrowie finansowe', step2_desc:'10 pytań pokaże gdzie jesteś i co naprawić.',
-    step3_title:'Ucz się we własnym tempie', step3_desc:'Program 21-dniowy, kalkulatory, audio. 5 min dziennie.',
-    step4_title:'Przejdź na Pro gdy będziesz gotowy', step4_desc:'Doradca AI, przygotowanie NBS. €9,90/mies.',
-    price_label:'Subskrypcja', price_title:'Prosta cena. Ogromna wartość.',
-    price_sub:'Zaoszczędzisz więcej w 1 dzień niż zapłacisz za cały rok.',
-    plan_free:'Bezpłatny', per_month:'/mies', free_forever:'za darmo na zawsze', billing_monthly:'płatność miesięczna',
-    pf1:'5 artykułów/miesiąc', pf2:'Podstawowe kalkulatory', pf3:'Test IQ finansowy', pf4:'Doradca AI', pf5:'Przygotowanie NBS',
-    ps1:'Nieograniczona biblioteka', ps2:'Wszystkie kalkulatory (12)', ps3:'Nauka audio', ps4:'Śledzenie postępów', ps5:'Doradca AI',
-    pp1:'Wszystko ze Starter', pp2:'🤖 Doradca AI 24/7', pp3:'🧾 Optymalizator podatkowy', pp4:'📈 Przygotowanie NBS', pp5:'📊 Financial IQ Score',
-    pe1:'Wszystko z Pro', pe2:'👨‍👩‍👧 Family sharing (4)', pe3:'📧 Priorytetowe wsparcie email', pe4:'📄 Raporty PDF', pe5:'🎓 Certyfikat ukończenia kursu',
-    most_popular:'⭐ Najpopularniejszy', btn_free:'Zacznij za darmo', btn_choose:'Wybierz', btn_pro:'Zacznij Pro ✨',
-    stripe_note:'💳 Płatność kartą przez Stripe · 🔒 Bezpieczne · ❌ Anuluj kiedy chcesz',
-    rev_label:'Opinie', rev_title:'Co mówią użytkownicy',
-    t1:'"Optymalizator pokazał oszczędność €3 200 rocznie."',
-    t2:'"Zdałam egzamin NBS za pierwszym razem."',
-    t3:'"Jako Ukrainiec na Słowacji — w końcu zrozumiałem system podatkowy."',
-    faq_label:'FAQ', faq_title:'Często zadawane pytania',
-    faq1_q:'Czy FinAdvisor SK jest regulowany przez NBS?', faq1_a:'Platforma edukacyjna. Nie świadczymy usług doradztwa inwestycyjnego.',
-    faq2_q:'Czy mogę anulować w dowolnym momencie?', faq2_a:'Tak, bez opłat. Dostęp do końca opłaconego okresu.',
-    faq3_q:'Czy działa offline?', faq3_a:'Tak — zainstaluj jako PWA.',
-    faq4_q:'W jakich językach?', faq4_a:'SK, EN, UA, PL, DE, HU.',
-    faq5_q:'Jak zainstalować na telefon?', faq5_a:'iPhone: Safari → Udostępnij → Dodaj do ekranu głównego.',
-    cta_title:'Zacznij dziś. Za darmo.', cta_sub:'Za cenę 2 kaw miesięcznie oszczędzisz tysiące euro.',
-    cta_btn:'Utwórz bezpłatne konto', cta_note:'Bez karty · Bez zobowiązań · 2 minuty',
-    install_title:'Zainstaluj jako aplikację', install_sub:'Działa offline · Szybciej', install_btn:'Zainstaluj',
-    modal_title:'Utwórz bezpłatne konto', modal_sub:'Zacznij za darmo, ulepsz kiedy chcesz',
-    form_name:'Imię', form_name_ph:'Twoje imię', form_pwd:'Hasło', form_pwd_ph:'Minimum 8 znaków',
-    modal_btn:'Zarejestruj się za darmo →', modal_terms:'Rejestrując się akceptujesz warunki'
-  },
-  de:{
-    nav_cta:'Kostenlos starten', hero_badge:'🇸🇰 #1 Finanzbildungs-Plattform in der Slowakei',
-    hero_title:'Deine persönliche<br><span>Finanzbildungs-Plattform</span>',
-    hero_sub:'Rechner, Investitionen, Steueroptimierung, KI-Berater — alles auf Deutsch für den Preis von 2 Kaffee im Monat.',
-    hero_cta1:'Kostenlos starten', hero_cta2:'Mehr erfahren',
-    stat1:'NBS-Fragen', stat2:'Rechner', stat3:'Sprachen', stat4:'zum Start',
-    feat_label:'Was du bekommst', feat_title:'Alles an einem Ort',
-    feat_sub:'Keine Berater, keine Meetings, kein Warten. Selbst. Jederzeit.',
-    f1_title:'Steueroptimierung', f1_desc:'Angestellte & Selbstständige. Durchschnittliche Ersparnis €2.400/Jahr.',
-    f2_title:'Hypotheken-Simulator', f2_desc:'Monatsrate, Aufpreis, LTV. Erfahre was du wirklich zahlst.',
-    f3_title:'Investment-Guide', f3_desc:'ETF, Rentenprogramme, Zinseszins.',
-    f4_title:'KI-Finanzberater', f4_desc:'Antworten auf Finanzbildungsfragen. 24/7.',
-    f5_title:'NBS-Prüfungsvorbereitung', f5_desc:'1.334 echte Fragen mit Erklärungen.',
-    f6_title:'Audio-Lernen', f6_desc:'Jede Lektion anhören. Lernen beim Fahren.',
-    f7_title:'Gesetze einfach erklärt', f7_desc:'8 slowakische Gesetze ohne Fachjargon.',
-    f8_title:'Financial IQ Score', f8_desc:'Score 0–850. Verfolge dein Wissenswachstum täglich.',
-    f9_title:'6 Sprachen', f9_desc:'SK · EN · UA · PL · DE · HU. Für jeden in der Slowakei.',
-    badge_free:'Kostenlos', badge_new:'Neu',
-    how_label:'So funktioniert es', how_title:'Start in 2 Minuten. Alleine.',
-    how_sub:'Keine Meetings, kein Warten. Du schaffst alles alleine.',
-    step1_title:'Kostenlos registrieren', step1_desc:'E-Mail + Passwort. Keine Kreditkarte. Sofortiger Zugang.',
-    step2_title:'Finanzgesundheit testen', step2_desc:'10 Fragen zeigen wo du stehst.',
-    step3_title:'In eigenem Tempo lernen', step3_desc:'21-Tage-Programm, Rechner, Audio. 5 Min täglich.',
-    step4_title:'Auf Pro upgraden wenn bereit', step4_desc:'KI-Berater, NBS-Prep. €9,90/Mon. Jederzeit kündbar.',
-    price_label:'Abonnement', price_title:'Einfacher Preis. Riesiger Wert.',
-    price_sub:'Du sparst mehr an einem Tag als du im ganzen Jahr zahlst.',
-    plan_free:'Kostenlos', per_month:'/Mon', free_forever:'für immer kostenlos', billing_monthly:'monatliche Zahlung',
-    pf1:'5 Artikel/Monat', pf2:'Grundrechner', pf3:'Finanz-IQ-Test', pf4:'KI-Berater', pf5:'NBS-Vorbereitung',
-    ps1:'Unbegrenzte Bibliothek', ps2:'Alle Rechner (12)', ps3:'Audio-Lernen', ps4:'Fortschrittsverfolgung', ps5:'KI-Berater',
-    pp1:'Alles aus Starter', pp2:'🤖 KI-Berater 24/7', pp3:'🧾 Steueroptimierung', pp4:'📈 NBS-Vorbereitung', pp5:'📊 Financial IQ Score',
-    pe1:'Alles aus Pro', pe2:'👨‍👩‍👧 Family Sharing (4)', pe3:'📧 Prioritäts-E-Mail-Support', pe4:'📄 PDF-Berichte', pe5:'🎓 Kursabschluss-Zertifikat',
-    most_popular:'⭐ Beliebtester', btn_free:'Kostenlos starten', btn_choose:'Wählen', btn_pro:'Pro starten ✨',
-    stripe_note:'💳 Kartenzahlung via Stripe · 🔒 Sicher · ❌ Jederzeit kündbar',
-    rev_label:'Bewertungen', rev_title:'Was Nutzer sagen',
-    t1:'"Der Steueroptimierer zeigte mir €3.200 Ersparnis pro Jahr."',
-    t2:'"Ich habe die NBS-Prüfung beim ersten Versuch bestanden."',
-    t3:'"Als Ukrainer in der Slowakei — endlich das Steuersystem verstanden."',
-    faq_label:'FAQ', faq_title:'Häufige Fragen',
-    faq1_q:'Ist FinAdvisor SK von der NBS reguliert?', faq1_a:'Bildungsplattform. Wir bieten keine Anlageberatung gemäß Gesetz 186/2009.',
-    faq2_q:'Kann ich jederzeit kündigen?', faq2_a:'Ja, jederzeit ohne Gebühren.',
-    faq3_q:'Funktioniert es offline?', faq3_a:'Ja — als PWA installieren.',
-    faq4_q:'Welche Sprachen?', faq4_a:'SK, EN, UA, PL, DE, HU.',
-    faq5_q:'Wie auf Handy installieren?', faq5_a:'iPhone: Safari → Teilen → Zum Startbildschirm. Android: Chrome → Menü → Zum Startbildschirm.',
-    cta_title:'Starte heute. Kostenlos.', cta_sub:'Für den Preis von 2 Kaffee im Monat tausende Euro sparen.',
-    cta_btn:'Kostenloses Konto erstellen', cta_note:'Keine Kreditkarte · 2 Minuten',
-    install_title:'Als App installieren', install_sub:'Offline · Schneller', install_btn:'Installieren',
-    modal_title:'Kostenloses Konto erstellen', modal_sub:'Kostenlos starten, jederzeit upgraden',
-    form_name:'Name', form_name_ph:'Dein Name', form_pwd:'Passwort', form_pwd_ph:'Mindestens 8 Zeichen',
-    modal_btn:'Kostenlos registrieren →', modal_terms:'Mit der Registrierung stimmst du den Bedingungen zu'
-  },
-  hu:{
-    nav_cta:'Ingyenes indítás', hero_badge:'🇸🇰 #1 Pénzügyi oktatási platform Szlovákiában',
-    hero_title:'A személyes<br><span>pénzügyi oktatási platformod</span>',
-    hero_sub:'Kalkulátorok, befektetések, adóoptimalizálás, AI tanácsadó — mindez magyarul, 2 kávé áráért havonta.',
-    hero_cta1:'Ingyenes indítás', hero_cta2:'Tudj meg többet',
-    stat1:'NBS kérdés', stat2:'kalkulátor', stat3:'nyelv', stat4:'az induláshoz',
-    feat_label:'Mit kapsz', feat_title:'Minden egy helyen',
-    feat_sub:'Tanácsadók, találkozók, várakozás nélkül. Egyedül. Bármikor.',
-    f1_title:'Adóoptimalizáló', f1_desc:'Alkalmazott és önálló vállalkozó. Átlagos megtakarítás €2 400/év.',
-    f2_title:'Jelzálog-szimulátor', f2_desc:'Havi törlesztő, teljes visszafizetés, LTV.',
-    f3_title:'Befektetési útmutató', f3_desc:'ETF, nyugdíjpillér, kamatos kamat.',
-    f4_title:'AI Pénzügyi tanácsadó', f4_desc:'Kérdezz bármit. 24/7.',
-    f5_title:'NBS vizsga felkészítő', f5_desc:'1 334 valódi kérdés magyarázattal.',
-    f6_title:'Audio tanulás', f6_desc:'Hallgass minden leckét. Tanulj vezetés közben.',
-    f7_title:'Jogszabályok egyszerűen', f7_desc:'8 szlovák törvény érthetően.',
-    f8_title:'Financial IQ Score', f8_desc:'0–850 pontszám. Kövesd a pénzügyi tudásod növekedését.',
-    f9_title:'6 nyelv', f9_desc:'SK · EN · UA · PL · DE · HU. Mindenkinek aki Szlovákiában él.',
-    badge_free:'Ingyenes', badge_new:'Új',
-    how_label:'Hogyan működik', how_title:'Indulj 2 perc alatt. Egyedül.',
-    how_sub:'Semmilyen találkozó, semmilyen várakozás. Mindent meg tudsz csinálni egyedül.',
-    step1_title:'Regisztrálj ingyen', step1_desc:'Email + jelszó. Nincs bankkártya. Azonnali hozzáférés.',
-    step2_title:'Teszteld a pénzügyi egészséged', step2_desc:'10 kérdés megmutatja hol tartasz.',
-    step3_title:'Tanulj a saját tempódban', step3_desc:'21 napos program, kalkulátorok, audio. Napi 5 perc.',
-    step4_title:'Frissíts Pro-ra amikor készen vagy', step4_desc:'AI tanácsadó, NBS felkészítő. €9,90/hó.',
-    price_label:'Előfizetés', price_title:'Egyszerű ár. Hatalmas érték.',
-    price_sub:'Az adóoptimalizálóval egy nap alatt többet spórolsz mint amennyit egy évre fizetsz.',
-    plan_free:'Ingyenes', per_month:'/hó', free_forever:'örökre ingyenes', billing_monthly:'havi fizetés',
-    pf1:'5 cikk/hónap', pf2:'Alap kalkulátorok', pf3:'Pénzügyi IQ teszt', pf4:'AI tanácsadó', pf5:'NBS felkészítő',
-    ps1:'Korlátlan könyvtár', ps2:'Minden kalkulátor (12)', ps3:'Audio tanulás', ps4:'Haladás követése', ps5:'AI tanácsadó',
-    pp1:'Minden a Starterből', pp2:'🤖 AI tanácsadó 24/7', pp3:'🧾 Adóoptimalizáló', pp4:'📈 NBS felkészítő', pp5:'📊 Financial IQ Score',
-    pe1:'Minden a Pro-ból', pe2:'👨‍👩‍👧 Családi megosztás (4)', pe3:'📧 Prioritás email támogatás', pe4:'📄 PDF jelentések', pe5:'🎓 Kurzus-elvégzési tanúsítvány',
-    most_popular:'⭐ Legnépszerűbb', btn_free:'Ingyenes indítás', btn_choose:'Kiválaszt', btn_pro:'Pro indítása ✨',
-    stripe_note:'💳 Kártyás fizetés Stripe-on · 🔒 Biztonságos · ❌ Bármikor lemondható',
-    rev_label:'Vélemények', rev_title:'Mit mondanak a felhasználók',
-    t1:'"Az adóoptimalizáló évi €3 200 megtakarítást mutatott."',
-    t2:'"Első próbálkozásra sikerült az NBS vizsga."',
-    t3:'"Ukránként Szlovákiában — végre megértettem az adórendszert."',
-    faq_label:'GYIK', faq_title:'Gyakran ismételt kérdések',
-    faq1_q:'Szabályozza az NBS a FinAdvisor SK-t?', faq1_a:'Oktatási platform. Nem nyújtunk befektetési tanácsot.',
-    faq2_q:'Bármikor lemondható?', faq2_a:'Igen, díjmentesen. Hozzáférés a fizetett időszak végéig.',
-    faq3_q:'Offline is működik?', faq3_a:'Igen — telepítsd PWA-ként.',
-    faq4_q:'Milyen nyelveken?', faq4_a:'SK, EN, UA, PL, DE, HU.',
-    faq5_q:'Hogyan telepítsem telefonra?', faq5_a:'iPhone: Safari → Megosztás → Főképernyőre. Android: Chrome → menü → Főképernyőre.',
-    cta_title:'Kezdj ma. Ingyen.', cta_sub:'Havi 2 kávé áráért ezreket spórolhatsz évente.',
-    cta_btn:'Ingyenes fiók létrehozása', cta_note:'Bankkártya nélkül · 2 perc',
-    install_title:'Telepítés appként', install_sub:'Offline · Gyorsabb', install_btn:'Telepítés',
-    modal_title:'Ingyenes fiók létrehozása', modal_sub:'Kezdj ingyen, frissíts bármikor',
-    form_name:'Név', form_name_ph:'A neved', form_pwd:'Jelszó', form_pwd_ph:'Legalább 8 karakter',
-    modal_btn:'Ingyenes regisztráció →', modal_terms:'A regisztrációval elfogadod a feltételeket'
-  }
-};
+// ─── COURSES DATA ───────────────────────────────────
+const COURSES = [
+  {id:1,cat:'zaklady',emoji:'📖',color:'#0D2B1F',title:'Základy osobných financií',desc:'Rozpočet, fond núdzových situácií a prvé kroky k finančnej slobode.',progress:100,xp:'+80 XP'},
+  {id:2,cat:'zaklady',emoji:'🏦',color:'#0D2B1F',title:'Ako fungujú banky',desc:'Sporenie, úroky, vklady a záruky do 100 000 € podľa DGS.',progress:70,xp:'+60 XP'},
+  {id:3,cat:'investicie',emoji:'📈',color:'#0D1A2E',title:'ETF fondy pre začiatočníkov',desc:'S&P 500, TER, UCITS a prečo sú ETF skvelé pre dlhodobých investorov.',progress:45,xp:'+100 XP'},
+  {id:4,cat:'investicie',emoji:'🌍',color:'#0D1A2E',title:'Diverzifikácia portfólia',desc:'Geografická, sektorová a aktívová diverzifikácia krok za krokom.',progress:20,xp:'+90 XP'},
+  {id:5,cat:'investicie',emoji:'🏠',color:'#0D1A2E',title:'Investovanie do nehnuteľností',desc:'REITs, priame investície a daňové aspekty na Slovensku.',progress:0,xp:'+120 XP'},
+  {id:6,cat:'nbs',emoji:'🏛️',color:'#2B1F0A',title:'Zákon č. 186/2009 Z.z.',desc:'Základy regulácie finančných sprostredkovateľov a NBS dohľad.',progress:60,xp:'+150 XP'},
+  {id:7,cat:'nbs',emoji:'📋',color:'#2B1F0A',title:'Príprava na skúšku NBS',desc:'Testové otázky, kľúčové pojmy a simulácie skúšobných testov.',progress:10,xp:'+200 XP'},
+  {id:8,cat:'krypto',emoji:'₿',color:'#2B0A0A',title:'Bitcoin a blockchain',desc:'Ako funguje blockchain, ťažba, peňaženky a bezpečnosť.',progress:0,xp:'+80 XP'},
+  {id:9,cat:'krypto',emoji:'🔷',color:'#2B0A0A',title:'DeFi a stablecoiny',desc:'Decentralizované financie, riziká a regulačný výhľad EÚ (MiCA).',progress:0,xp:'+100 XP'},
+];
 
-let lang = 'sk', selectedPlan = null, billingMode = 'monthly';
+let currentFilter = 'all';
 
-function detectLang() {
-  const bl = (navigator.language || navigator.userLanguage || 'sk').toLowerCase().substring(0,2);
-  const map = {sk:'sk',cs:'sk',en:'en',uk:'uk',pl:'pl',de:'de',hu:'hu'};
-  return map[bl] || 'sk';
+function renderCourses(){
+  const grid = document.getElementById('courses-grid');
+  const filtered = currentFilter === 'all' ? COURSES : COURSES.filter(c=>c.cat===currentFilter);
+  grid.innerHTML = filtered.map(c=>`
+    <div class="course-card" onclick="openCourse(${c.id})">
+      <div class="course-banner" style="background:${c.color}">${c.emoji}
+        <span class="course-cat cat-${c.cat}">${catLabel(c.cat)}</span>
+      </div>
+      <div class="course-body">
+        <div class="course-title">${c.title}</div>
+        <div class="course-desc">${c.desc}</div>
+        <div class="course-footer">
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-label">${c.progress}% dokončené</div>
+            <div class="progress-track"><div class="progress-fill" style="width:${c.progress}%"></div></div>
+          </div>
+          <div class="xp-badge">${c.xp}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
-function setLang(l) {
-  lang = l;
-  // nav lang buttons
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase()===l || (l==='uk'&&b.textContent==='UA')));
-  // lang pills
-  const pillMap = {sk:'SK',en:'EN',uk:'UA',pl:'PL',de:'DE',hu:'HU'};
-  document.querySelectorAll('.lang-pill').forEach(p => p.classList.toggle('active', p.textContent.includes(pillMap[l])));
-  // translate all
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (T[l] && T[l][key]) {
-      if (key==='hero_title') el.innerHTML = T[l][key];
-      else el.textContent = T[l][key];
-    }
-  });
-  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-    const key = el.getAttribute('data-i18n-ph');
-    if (T[l] && T[l][key]) el.placeholder = T[l][key];
-  });
-  document.documentElement.lang = l;
+function catLabel(cat){return{zaklady:'Základy',investicie:'Investície',nbs:'NBS',krypto:'Krypto'}[cat]||cat}
+
+function filterCourses(el, cat){
+  document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  currentFilter = cat;
+  renderCourses();
 }
 
-// ── PWA INSTALL ──
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/static/sw.js').catch(()=>{});
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault(); deferredPrompt = e;
-  setTimeout(() => { document.getElementById('install-banner').style.display = 'flex'; }, 4000);
+function openCourse(id){
+  window.location.href = 'learn.html';
+}
+
+// ─── CALCULATORS ──────────────────────────────────
+function fmt(n){return new Intl.NumberFormat('sk-SK',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(n)}
+
+function calcMortgage(){
+  const P=+document.getElementById('m-amount').value;
+  const r=+document.getElementById('m-rate').value/100/12;
+  const n=+document.getElementById('m-years').value*12;
+  const monthly=P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+  const total=monthly*n;
+  const interest=total-P;
+  document.getElementById('m-monthly').textContent=fmt(monthly);
+  document.getElementById('m-total').textContent=fmt(total);
+  document.getElementById('m-interest').textContent=fmt(interest);
+  document.getElementById('m-result').classList.add('show');
+}
+
+function calcInvestment(){
+  const m=+document.getElementById('i-monthly').value;
+  const r=+document.getElementById('i-rate').value/100/12;
+  const n=+document.getElementById('i-years').value*12;
+  const total=m*((Math.pow(1+r,n)-1)/r)*(1+r);
+  const invested=m*n;
+  const gains=total-invested;
+  document.getElementById('i-invested').textContent=fmt(invested);
+  document.getElementById('i-gains').textContent=fmt(gains);
+  document.getElementById('i-total').textContent=fmt(total);
+  document.getElementById('i-result').classList.add('show');
+}
+
+function calcRetirement(){
+  const age=+document.getElementById('r-age').value;
+  const retire=+document.getElementById('r-retire').value;
+  const income=+document.getElementById('r-income').value;
+  const years=retire-age;
+  const capital=income*12/0.04;
+  const r=0.07/12;
+  const n=years*12;
+  const monthly=capital*r/(Math.pow(1+r,n)-1);
+  document.getElementById('r-years').textContent=years+' rokov';
+  document.getElementById('r-capital').textContent=fmt(capital);
+  document.getElementById('r-monthly').textContent=fmt(monthly);
+  document.getElementById('r-result').classList.add('show');
+}
+
+function calcInflation(){
+  const A=+document.getElementById('inf-amount').value;
+  const rate=+document.getElementById('inf-rate').value/100;
+  const n=+document.getElementById('inf-years').value;
+  const future=A/Math.pow(1+rate,n);
+  const loss=A-future;
+  const pct=(loss/A*100).toFixed(1);
+  document.getElementById('inf-future').textContent=fmt(future);
+  document.getElementById('inf-loss').textContent='-'+fmt(loss);
+  document.getElementById('inf-pct').textContent='-'+pct+'%';
+  document.getElementById('inf-result').classList.add('show');
+}
+
+// ─── CHAT ─────────────────────────────────────────
+const CHAT_HISTORY = [
+  {role:'ai',msg:'Ahoj! Som FinAdvisor AI. Pomôžem vám zorientovať sa vo svete investícií a osobných financií. Čo vás zaujíma?',time:'09:14'},
+  {role:'user',msg:'Chcem začať investovať do ETF. Kde začať?',time:'09:15'},
+  {role:'ai',msg:'Skvelé rozhodnutie! ETF (Exchange Traded Funds) sú pasívne fondy obchodované na burze. Pre začiatočníkov odporúčam tieto kroky:\n\n1. Otvorte si účet u brokera (napr. Degiro, IBKR, XTB)\n2. Zamerajte sa na UCITS ETF — chránené európskou reguláciou\n3. Zvážte <strong>CSPX</strong> (S&P 500, TER 0.07%) alebo <strong>VWCE</strong> (celosvetový, TER 0.22%)\n4. Investujte pravidelne malé sumy — DCA stratégia\n\n⚠️ Toto je vzdelávacia informácia, nie finančné poradenstvo.',time:'09:15'},
+  {role:'user',msg:'Aký je rozdiel medzi SPY a CSPX?',time:'09:17'},
+  {role:'ai',msg:'Oba sledujú S&P 500, ale majú dôležité rozdiely pre európskych investorov:\n\n<strong>SPY (SPDR S&P 500 ETF)</strong>\n• TER: 0.09% ročne\n• Domicilovaný v USA → 30% dividendová daň\n• Nie je UCITS → menej vhodný pre EÚ investorov\n\n<strong>CSPX (iShares Core S&P 500 UCITS)</strong>\n• TER: 0.07% ročne\n• Domicil: Írsko → 15% dividendová daň\n• UCITS kompatibilný → ideálny pre Slovákov\n\nPre slovenského investora je CSPX zvyčajne výhodnejší.',time:'09:17'},
+];
+
+function renderChat(){
+  const box = document.getElementById('chat-messages');
+  box.innerHTML = CHAT_HISTORY.map(m=>`
+    <div class="msg ${m.role}">
+      <div class="msg-icon">${m.role==='ai'?'🤖':'👤'}</div>
+      <div>
+        <div class="msg-bubble">${m.msg.replace(/\n/g,'<br>')}</div>
+        <div class="msg-time">${m.time}</div>
+      </div>
+    </div>
+  `).join('');
+  box.scrollTop = box.scrollHeight;
+}
+
+function sendMsg(){
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if(!text) return;
+  const now = new Date().toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'});
+  CHAT_HISTORY.push({role:'user',msg:text,time:now});
+  input.value='';
+  renderChat();
+  // typing indicator
+  const box = document.getElementById('chat-messages');
+  const typing = document.createElement('div');
+  typing.className='msg ai';typing.id='typing';
+  typing.innerHTML=`<div class="msg-icon">🤖</div><div class="msg-bubble" style="padding:14px 18px"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+  box.appendChild(typing);
+  box.scrollTop=box.scrollHeight;
+  setTimeout(()=>{
+    typing.remove();
+    const replies=[
+      'Toto je zaujímavá otázka! V kontexte finančného vzdelávania môžem povedať, že diverzifikácia a dlhodobý horizont sú kľúčové. Viac info nájdete v sekcii Kurzy.',
+      'Skvelá otázka! Odporúčam pozrieť si náš kurz o ETF fondoch v sekcii Kurzy → Investície. Obsahuje detailné vysvetlenia a príklady.',
+      'Všeobecne platí: čím dlhší horizont, tým viac si môžete dovoliť riziko. Pre detaily odporúčam konzultáciu s licencovaným finančným poradcom.',
+      'Z vzdelávacieho hľadiska: pravidelné investovanie (DCA) znižuje dopad trhových výkyvov. Je to overená stratégia pre bežných investorov.',
+    ];
+    const reply=replies[Math.floor(Math.random()*replies.length)];
+    CHAT_HISTORY.push({role:'ai',msg:reply,time:new Date().toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'})});
+    renderChat();
+  },1400);
+}
+
+document.getElementById('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}});
+
+// ─── NAVIGATION ────────────────────────────────────
+const PAGE_TITLES = {dashboard:'Dashboard',kurzy:'Kurzy',kalkul:'Kalkulačky',ai:'AI Radca',profil:'Profil'};
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.bnav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelector(`.nav-item[data-page="${id}"]`)?.classList.add('active');
+  document.querySelector(`.bnav-item[data-page="${id}"]`)?.classList.add('active');
+  document.getElementById('topbar-title').textContent = PAGE_TITLES[id]||'';
+  window.scrollTo(0,0);
+  observeFadeIn();
+}
+
+document.querySelectorAll('.nav-item[data-page]').forEach(el=>{
+  el.addEventListener('click',()=>showPage(el.dataset.page));
 });
-document.getElementById('install-btn').addEventListener('click', () => {
-  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.waitForChoiceResult().then(() => { document.getElementById('install-banner').style.display = 'none'; }); }
+document.querySelectorAll('.bnav-item[data-page]').forEach(el=>{
+  el.addEventListener('click',()=>showPage(el.dataset.page));
 });
 
-// ── MODAL ──
-function openModal() {
-  document.getElementById('modal-register').classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-function closeModal() {
-  document.getElementById('modal-register').classList.remove('show');
-  document.body.style.overflow = '';
-}
-function openCheckout(plan) {
-  selectedPlan = plan;
-  const names = {starter:'Starter €4.90', pro:'Pro €9.90', expert:'Expert €14.90'};
-  document.getElementById('plan-info').style.display = 'block';
-  document.getElementById('plan-info').innerHTML = '✅ ' + names[plan] + '/mes<br><small style="color:var(--muted)">Stripe · Bezpečné · Zrušenie kedykoľvek</small>' + '<br><small style="color:#f59e0b;font-size:10px;display:block;margin-top:6px">⚠️ Máte právo odstúpiť od zmluvy do 14 dní bez udania dôvodu (§7 zák. 102/2014). <a href=\'/terms#withdrawal\' style=\'color:#60a5fa\'>Viac info</a></small>';
-  openModal();
-}
-async function submitRegister() {
-  const name = document.getElementById('reg-name').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
-  const pwd = document.getElementById('reg-pwd').value;
-  if (!name || !email || !pwd) { alert(T[lang]?.form_name ? 'Vyplň všetky polia' : 'Fill all fields'); return; }
-  if (pwd.length < 8) return;
-  try {
-    const r = await fetch('/auth/register', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pwd,full_name:name})});
-    const d = await r.json();
-    if (!r.ok) { alert(d.detail || 'Error'); return; }
-    if (selectedPlan) {
-      const cr = await fetch('/subscribe/checkout', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,plan:selectedPlan,billing:billingMode})});
-      const cd = await cr.json();
-      if (cd.url) { window.location.href = cd.url; return; }
-    }
-    closeModal();
-    window.location.href = '/learn';
-  } catch(e) { alert('Connection error'); }
+// ─── PROFILE SAVE ──────────────────────────────────
+function saveProfile(){
+  const ok = document.getElementById('save-ok');
+  ok.classList.add('show');
+  setTimeout(()=>ok.classList.remove('show'),2500);
 }
 
-// Auto detect & init
-window.addEventListener('DOMContentLoaded', () => { setLang(detectLang()); });
-</script>
-
-<!-- COOKIE CONSENT BANNER (GDPR) -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:#fff;padding:16px 24px;z-index:99999;display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:0.9rem;border-top:2px solid #3b82f6;">
-  <span style="flex:1;min-width:200px">Táto stránka používa technické cookies nevyhnutné pre základnú funkčnosť. Analytické cookies nepoužívame. <a href="/privacy" style="color:#3b82f6">Viac info</a></span>
-  <button onclick="cookieChoice('accept')" style="background:#3b82f6;color:#fff;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Prijať</button>
-  <button onclick="cookieChoice('reject')" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.4);padding:8px 20px;border-radius:6px;cursor:pointer">Odmietnuť</button>
-</div>
-<script>
+// ─── MOBILE BURGER ─────────────────────────────────
 (function(){
-  var b=document.getElementById('cookie-banner');
-  if(!localStorage.getItem('cookieConsent')){b.style.display='flex';}
-  window.cookieChoice=function(v){localStorage.setItem('cookieConsent',v);b.style.display='none';};
+  const burger=document.getElementById('burger');
+  const sidebar=document.getElementById('sidebar');
+  if(window.innerWidth<=768){burger.style.display='block'}
+  burger.addEventListener('click',()=>sidebar.classList.toggle('open'));
+  document.addEventListener('click',e=>{
+    if(!sidebar.contains(e.target)&&e.target!==burger)sidebar.classList.remove('open');
+  });
+  window.addEventListener('resize',()=>{
+    burger.style.display=window.innerWidth<=768?'block':'none';
+    if(window.innerWidth>768)sidebar.classList.remove('open');
+  });
 })();
+
+// ─── INTERSECTION OBSERVER ──────────────────────────
+function observeFadeIn(){
+  const els=document.querySelectorAll('.fade-in:not(.visible)');
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}});
+  },{threshold:0.1});
+  els.forEach(el=>io.observe(el));
+}
+
+// ─── INIT ─────────────────────────────────────────
+renderCourses();
+renderChat();
+observeFadeIn();
 </script>
+
+<footer style="text-align:center;padding:20px 28px;font-size:11px;color:var(--muted2);border-top:1px solid var(--border);background:var(--bg2)">
+  Platforma slúži výlučne na vzdelávacie účely podľa §1 ods. 2 zákona č. 186/2009 Z.z. — Nie je finančným poradenstvom.
+</footer>
 </body>
 </html>

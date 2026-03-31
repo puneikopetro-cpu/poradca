@@ -1,1247 +1,574 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0f172a">
-<link rel="manifest" href="/static/manifest.json">
-<title>FinAdvisor SK — Finančné vzdelávanie</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Ako fungujú ETF — FinAdvisor SK</title>
+<meta name="description" content="Zistite, ako fungujú ETF fondy, prečo ich milujú dlhodobí investori a ako začať investovať na Slovensku."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--blue:#2563eb;--purple:#7c3aed;--green:#16a34a;--gold:#f59e0b;--red:#ef4444;--dark:#0f172a;--card:#1e293b;--border:#334155;--text:#f1f5f9;--muted:#94a3b8}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#060A14;--bg2:#0D1421;--bg3:#121C2E;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#F8FAFC;--muted:#94A3B8;--muted2:#64748B;
+  --indigo:#6366F1;--indigo2:#818CF8;--indigo-glow:rgba(99,102,241,0.15);
+  --green:#10B981;--green-glow:rgba(16,185,129,0.15);
+  --gold:#F59E0B;--gold-glow:rgba(245,158,11,0.15);
+  --red:#EF4444;--r:16px;--r-sm:12px;
+}
 html{scroll-behavior:smooth}
-body{background:var(--dark);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden;padding-bottom:80px}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
-/* NAV */
-.nav{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.97);border-bottom:1px solid var(--border);padding:0 16px;height:52px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(10px)}
-.nav-logo{font-weight:900;font-size:15px;color:#fff;text-decoration:none;white-space:nowrap}
-.nav-logo span{color:var(--blue)}
-.nav-spacer{flex:1}
-.nav-btn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap}
+/* ─── READING PROGRESS BAR ─── */
+#read-progress{
+  position:fixed;top:0;left:0;z-index:200;
+  height:3px;width:0%;
+  background:linear-gradient(90deg,var(--indigo),var(--indigo2));
+  transition:width .1s linear;
+}
 
-/* HUD */
-.hud{position:sticky;top:52px;z-index:99;background:rgba(15,23,42,.98);border-bottom:1px solid rgba(124,58,237,.25);padding:6px 14px;display:flex;align-items:center;gap:8px;backdrop-filter:blur(10px)}
-.hud-level{background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;font-size:10px;font-weight:800;padding:3px 8px;border-radius:20px;cursor:pointer;white-space:nowrap}
-.hud-xp{flex:1;min-width:40px}
-.hud-xp-row{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-bottom:2px}
-.hud-xp-bar-bg{height:5px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
-.hud-xp-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--purple),var(--blue));border-radius:99px;transition:width .5s ease}
-.hud-hearts{display:flex;gap:2px;font-size:12px;cursor:pointer}
-.hud-streak{font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;white-space:nowrap}
-.hud-league{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;cursor:pointer;white-space:nowrap}
-.hud-challenge{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:#fbbf24;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;cursor:pointer;white-space:nowrap}
+/* ─── NAVBAR ──────────────────── */
+nav{
+  position:fixed;top:3px;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(16px,5vw,80px);height:64px;
+  background:rgba(6,10,20,0.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:all .3s;
+}
+nav.scrolled{background:rgba(6,10,20,0.97);border-color:var(--border2)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--indigo),#8B5CF6);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.nav-logo-text{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.3px}
+.nav-logo-text span{color:var(--indigo2)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{color:var(--muted);font-size:13px;font-weight:500;text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{
+  padding:8px 18px;background:var(--indigo);border:none;border-radius:var(--r-sm);
+  color:#fff;font-size:13px;font-weight:600;cursor:pointer;
+  text-decoration:none;transition:all .2s;
+}
+.nav-cta:hover{background:#5558E8;transform:translateY(-1px)}
+@media(max-width:768px){.nav-links{display:none}}
 
-/* DISCLAIMER */
-.disclaimer{background:rgba(239,68,68,.08);border-bottom:1px solid rgba(239,68,68,.15);padding:6px 16px;font-size:10px;color:#fca5a5;text-align:center;line-height:1.4}
+/* ─── LAYOUT ──────────────────── */
+.container{max-width:1100px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+.article-layout{
+  display:grid;grid-template-columns:1fr 260px;gap:40px;
+  padding-top:100px;padding-bottom:120px;align-items:start;
+}
 
-/* TABS */
-.tabs{display:flex;overflow-x:auto;gap:0;background:var(--card);border-bottom:1px solid var(--border);scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{padding:11px 16px;font-size:12px;font-weight:700;color:var(--muted);border:none;background:transparent;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:.15s}
-.tab.active{color:#fff;border-bottom-color:var(--blue)}
+/* ─── BREADCRUMB ──────────────── */
+.breadcrumb{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;color:var(--muted2);margin-bottom:28px;flex-wrap:wrap;
+}
+.breadcrumb a{color:var(--muted2);text-decoration:none;transition:color .2s}
+.breadcrumb a:hover{color:var(--indigo2)}
+.breadcrumb span{color:var(--muted2)}
+.breadcrumb .current{color:var(--muted)}
 
-/* PAGES */
-.page{display:none;padding:16px}
-.page.active{display:block}
+/* ─── ARTICLE HEADER ─────────── */
+.article-header{margin-bottom:32px}
+.article-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.meta-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;
+}
+.badge-xp{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25);color:var(--gold)}
+.badge-diff{background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.2);color:var(--indigo2)}
+.badge-time{background:var(--bg3);border:1px solid var(--border);color:var(--muted)}
+.article-title{
+  font-size:clamp(22px,3.5vw,34px);font-weight:800;
+  line-height:1.25;letter-spacing:-.5px;margin-bottom:12px;
+}
+.article-lead{font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:20px}
+.article-divider{height:1px;background:var(--border);margin:24px 0}
 
-/* CARDS */
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
-.card-title{font-size:15px;font-weight:800;margin-bottom:6px}
-.card-sub{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+/* ─── TOC SIDEBAR ─────────────── */
+.toc-wrap{
+  position:sticky;top:88px;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);padding:20px;
+}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted2);margin-bottom:14px}
+.toc-list{list-style:none;display:flex;flex-direction:column;gap:3px}
+.toc-list li a{
+  display:block;font-size:13px;color:var(--muted);text-decoration:none;
+  padding:6px 10px;border-radius:8px;border-left:2px solid transparent;
+  transition:all .2s;line-height:1.4;
+}
+.toc-list li a:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+.toc-list li a.active{color:var(--indigo2);border-left-color:var(--indigo);background:var(--indigo-glow)}
 
-/* LESSON LIST */
-.lesson-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;cursor:pointer;margin-bottom:8px;transition:.15s}
-.lesson-item:active{background:#263352}
-.lesson-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.lesson-body{flex:1}
-.lesson-title{font-size:13px;font-weight:700;margin-bottom:2px}
-.lesson-meta{font-size:11px;color:var(--muted)}
-.lesson-xp{font-size:10px;font-weight:700;color:var(--gold);background:rgba(245,158,11,.1);padding:2px 7px;border-radius:20px;white-space:nowrap}
-.lesson-done{color:var(--green);font-size:16px}
+/* collapsible on mobile */
+.toc-mobile{display:none;margin-bottom:28px}
+.toc-toggle{
+  width:100%;padding:12px 16px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);
+  color:var(--text);font-size:13px;font-weight:500;text-align:left;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.toc-dropdown{
+  display:none;background:var(--bg2);border:1px solid var(--border);
+  border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);
+  padding:8px 0;
+}
+.toc-dropdown.open{display:block}
+.toc-dropdown a{display:block;padding:8px 16px;font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s}
+.toc-dropdown a:hover{color:var(--indigo2)}
+@media(max-width:900px){
+  .article-layout{grid-template-columns:1fr;padding-top:90px}
+  .toc-wrap{display:none}
+  .toc-mobile{display:block}
+}
 
-/* CHAPTER */
-.chapter{margin-bottom:20px}
-.chapter-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;padding-left:4px}
+/* ─── ARTICLE CONTENT ─────────── */
+.article-body{font-size:15px;line-height:1.75;color:var(--text)}
+.article-body h2{
+  font-size:21px;font-weight:700;margin:40px 0 16px;
+  padding-top:8px;color:var(--text);letter-spacing:-.3px;
+  scroll-margin-top:90px;
+}
+.article-body h3{font-size:16px;font-weight:600;margin:28px 0 12px;color:var(--text)}
+.article-body p{margin-bottom:16px;color:var(--muted)}
+.article-body ul,.article-body ol{margin:0 0 16px 20px}
+.article-body li{margin-bottom:6px;color:var(--muted);line-height:1.7}
+.article-body strong{color:var(--text);font-weight:600}
 
-/* QUIZ */
-.quiz-q{font-size:15px;font-weight:700;line-height:1.5;margin-bottom:16px;padding:16px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.15);border-radius:12px}
-.quiz-opt{display:flex;align-items:center;gap:10px;padding:13px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;cursor:pointer;margin-bottom:8px;font-size:13px;transition:.15s;text-align:left;width:100%}
-.quiz-opt:hover{background:rgba(37,99,235,.1);border-color:var(--blue)}
-.quiz-opt.correct{background:rgba(22,163,74,.15)!important;border-color:var(--green)!important}
-.quiz-opt.wrong{background:rgba(239,68,68,.1)!important;border-color:var(--red)!important}
-.quiz-opt.disabled{pointer-events:none}
-.quiz-letter{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+/* Info / Warning boxes */
+.info-box,.warn-box,.green-box{
+  margin:24px 0;padding:16px 20px;border-radius:10px;
+  font-size:14px;line-height:1.7;
+}
+.info-box{
+  background:rgba(99,102,241,0.07);
+  border-left:3px solid var(--indigo);color:var(--muted);
+}
+.info-box strong{color:var(--indigo2)}
+.warn-box{
+  background:rgba(245,158,11,0.07);
+  border-left:3px solid var(--gold);color:var(--muted);
+}
+.warn-box strong{color:var(--gold)}
+.green-box{
+  background:rgba(16,185,129,0.07);
+  border-left:3px solid var(--green);color:var(--muted);
+}
+.green-box strong{color:var(--green)}
 
-/* CALCULATORS */
-.calc-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
-.calc-title{font-size:14px;font-weight:800;margin-bottom:12px}
-.calc-row{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
-.calc-label{font-size:11px;color:var(--muted);font-weight:600}
-.calc-input{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:#fff;font-size:14px;width:100%;outline:none}
-.calc-input:focus{border-color:var(--blue)}
-.calc-btn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;width:100%;margin-top:4px}
-.calc-result{background:rgba(22,163,74,.1);border:1px solid rgba(22,163,74,.2);border-radius:10px;padding:12px;margin-top:10px;text-align:center}
-.calc-result-val{font-size:22px;font-weight:900;color:#4ade80}
-.calc-result-label{font-size:11px;color:var(--muted);margin-top:2px}
+/* Code / calc block */
+.calc-block{
+  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:18px 20px;margin:20px 0;
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  color:var(--green);line-height:1.8;overflow-x:auto;
+}
+.calc-block .comment{color:var(--muted2)}
+.calc-block .highlight{color:var(--indigo2)}
 
-/* INVESTMENT TABLE */
-.inv-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
-.inv-table th{text-align:left;padding:8px 6px;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border);font-size:10px;letter-spacing:.5px}
-.inv-table td{padding:10px 6px;border-bottom:1px solid rgba(51,65,85,.4);vertical-align:middle}
-.inv-table tr:last-child td{border-bottom:none}
-.risk-badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700}
-.risk-low{background:rgba(22,163,74,.15);color:#4ade80}
-.risk-med{background:rgba(245,158,11,.15);color:#fbbf24}
-.risk-high{background:rgba(239,68,68,.15);color:#f87171}
+/* Comparison table */
+.compare-table{
+  width:100%;border-collapse:collapse;margin:24px 0;font-size:13px;
+}
+.compare-table th{
+  padding:10px 14px;text-align:left;
+  background:var(--bg3);border:1px solid var(--border);
+  font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted2);
+}
+.compare-table td{
+  padding:10px 14px;border:1px solid var(--border);color:var(--muted);
+  vertical-align:top;
+}
+.compare-table tr:hover td{background:rgba(255,255,255,0.02)}
+.compare-table .good{color:var(--green)}
+.compare-table .mid{color:var(--gold)}
+.compare-table .bad{color:var(--red)}
 
-/* PROGRESS PATH */
-.path{display:flex;flex-direction:column;gap:4px}
-.path-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;font-size:12px}
-.path-item.done{background:rgba(22,163,74,.08)}
-.path-item.current{background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.2)}
-.path-item.locked{opacity:.4}
-.path-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.dot-done{background:var(--green)}
-.dot-current{background:var(--blue);animation:pulse 2s infinite}
-.dot-locked{background:var(--border)}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.4)}50%{box-shadow:0 0 0 6px rgba(37,99,235,0)}}
+/* ─── RELATED ARTICLES ────────── */
+.related-section{margin-top:60px;padding-top:40px;border-top:1px solid var(--border)}
+.related-title{font-size:18px;font-weight:700;margin-bottom:20px}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.related-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);padding:18px;
+  text-decoration:none;color:inherit;
+  transition:all .25s;cursor:pointer;
+}
+.related-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.related-emoji{font-size:22px;margin-bottom:10px}
+.related-card-title{font-size:13px;font-weight:600;margin-bottom:6px;line-height:1.4}
+.related-card-meta{font-size:11px;color:var(--muted2)}
+.related-xp{display:inline-block;margin-top:8px;font-size:11px;font-weight:600;color:var(--gold);font-family:'JetBrains Mono',monospace}
+@media(max-width:640px){.related-grid{grid-template-columns:1fr}}
 
-/* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.88);align-items:flex-end;justify-content:center}
-.modal-overlay.show{display:flex!important}
-.modal-box{background:#1a2744;border-radius:20px 20px 0 0;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;padding:20px}
-.modal-box.center{border-radius:20px;margin:20px;max-height:85vh}
-.modal-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 16px}
-.modal-title{font-size:17px;font-weight:900;margin-bottom:4px}
-.modal-sub{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5}
-.modal-close{float:right;background:rgba(255,255,255,.08);border:none;color:var(--muted);padding:5px 10px;border-radius:6px;cursor:pointer;font-size:12px;margin-top:-2px}
+/* ─── FIXED COMPLETE BTN ──────── */
+#finish-btn{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  z-index:100;
+  padding:14px 36px;background:var(--indigo);border:none;border-radius:var(--r-sm);
+  color:#fff;font-size:15px;font-weight:700;cursor:pointer;
+  box-shadow:0 8px 32px rgba(99,102,241,0.4);
+  transition:all .25s;white-space:nowrap;
+}
+#finish-btn:hover{background:#5558E8;transform:translateX(-50%) translateY(-2px);box-shadow:0 12px 40px rgba(99,102,241,0.5)}
+#finish-btn.done{background:var(--green);box-shadow:0 8px 32px rgba(16,185,129,0.4)}
+#xp-pop{
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(10px);
+  z-index:101;
+  background:var(--green);color:#fff;font-size:15px;font-weight:700;
+  padding:10px 28px;border-radius:40px;
+  opacity:0;transition:all .4s;pointer-events:none;
+  box-shadow:0 6px 24px rgba(16,185,129,0.4);
+}
+#xp-pop.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* LESSON MODAL */
-.lesson-content{font-size:14px;line-height:1.7;color:#cbd5e1}
-.lesson-content h3{font-size:15px;font-weight:800;color:#fff;margin:16px 0 6px}
-.lesson-content p{margin-bottom:10px}
-.lesson-content ul{padding-left:18px;margin-bottom:10px}
-.lesson-content li{margin-bottom:4px}
-.lesson-content .highlight{background:rgba(37,99,235,.1);border-left:3px solid var(--blue);padding:10px 12px;border-radius:0 8px 8px 0;margin:10px 0;color:#93c5fd}
-.lesson-content .warning{background:rgba(245,158,11,.08);border-left:3px solid var(--gold);padding:10px 12px;border-radius:0 8px 8px 0;margin:10px 0;color:#fde68a;font-size:13px}
-.lesson-content .number-box{background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.2);border-radius:10px;padding:12px;margin:10px 0;text-align:center}
-.lesson-content .number-box .big{font-size:28px;font-weight:900;color:#4ade80}
-
-/* XP POPUP */
-.xp-toast{position:fixed;top:72px;right:12px;z-index:9999;background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;font-size:14px;font-weight:800;padding:8px 16px;border-radius:12px;pointer-events:none;opacity:0;transform:translateY(0);transition:none}
-.xp-toast.show{animation:xpFloat 1.6s ease forwards}
-@keyframes xpFloat{0%{opacity:1;transform:translateY(0)}80%{opacity:1}100%{opacity:0;transform:translateY(-50px)}}
-
-/* CONFETTI */
-@keyframes confettiFall{0%{transform:translateY(-10px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
-
-/* LEVEL UP */
-.levelup-box{text-align:center;padding:24px 16px}
-.levelup-emoji{font-size:72px;line-height:1;margin-bottom:12px}
-@keyframes bounceIn{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
-
-/* BADGES */
-.badges-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.badge-cell{text-align:center;padding:8px 4px}
-.badge-cell .bi{font-size:26px;filter:grayscale(1);opacity:.25;transition:.2s}
-.badge-cell.earned .bi{filter:none;opacity:1}
-.badge-cell .bn{font-size:9px;color:var(--muted);margin-top:3px}
-.badge-cell.earned .bn{color:var(--gold);font-weight:700}
-
-/* LEAGUE ROWS */
-.league-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:12px;margin-bottom:4px}
-.league-row.me{background:rgba(124,58,237,.18);border:1px solid rgba(124,58,237,.3)}
-.league-row.promote{border-left:2px solid var(--green)}
-.league-row.demote{border-left:2px solid rgba(239,68,68,.3)}
-
-/* PAYWALL */
-.paywall{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(239,68,68,.08));border:1px solid rgba(245,158,11,.2);border-radius:16px;padding:24px;text-align:center;margin-top:8px}
-.paywall-icon{font-size:44px;margin-bottom:8px}
-.paywall-title{font-size:18px;font-weight:900;margin-bottom:6px}
-.paywall-sub{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5}
-.paywall-btn{display:block;background:linear-gradient(135deg,var(--gold),var(--red));color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;text-decoration:none;margin-bottom:8px}
-
-/* BOTTOM NAV */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(15,23,42,.98);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:98;backdrop-filter:blur(10px)}
-.bn-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 12px;cursor:pointer;color:var(--muted);font-size:10px;font-weight:600;border:none;background:transparent;transition:.15s}
-.bn-item.active{color:var(--blue)}
-.bn-item .bni{font-size:20px}
-
-/* UTILS */
-.btn-primary{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:700;cursor:pointer;width:100%;display:block;text-align:center;text-decoration:none}
-.btn-ghost{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-size:13px;cursor:pointer;width:100%;text-align:center}
-.section-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
-.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.stat-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
-.stat-val{font-size:20px;font-weight:900}
-.stat-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+/* ─── FOOTER ──────────────────── */
+footer{
+  padding:28px clamp(16px,5vw,80px);
+  border-top:1px solid var(--border);background:var(--bg2);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.footer-logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.footer-logo-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--indigo),#8B5CF6);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.footer-logo-text{font-size:13px;font-weight:600;color:var(--text)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:12px;color:var(--muted2);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--muted)}
+.footer-legal{font-size:11px;color:var(--muted2);width:100%;text-align:center;margin-top:4px}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="nav">
-  <a href="/" class="nav-logo">Fin<span>Advisor</span> SK</a>
-  <div class="nav-spacer"></div>
-  <a href="/app" class="nav-btn">Predplatné</a>
+<!-- Reading progress bar -->
+<div id="read-progress"></div>
+
+<!-- ─── NAVBAR ─── -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">💡</div>
+    <div class="nav-logo-text">FinAdvisor<span>SK</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Domov</a>
+    <a href="app.html">Platforma</a>
+    <a href="hub.html">Kalkulačky</a>
+    <a href="app.html">Kurzy</a>
+  </div>
+  <a href="app.html" class="nav-cta">Pokračovať v učení</a>
 </nav>
 
-<!-- HUD -->
-<div class="hud">
-  <div class="hud-level" id="hud-level" onclick="showBadgesPanel()">🌱 Úr.1</div>
-  <div class="hud-xp">
-    <div class="hud-xp-row"><span id="xp-cur">0 XP</span><span id="xp-nxt">100</span></div>
-    <div class="hud-xp-bar-bg"><div class="hud-xp-fill" id="xp-bar"></div></div>
-  </div>
-  <div class="hud-hearts" id="hud-hearts" onclick="showHeartsInfo()"></div>
-  <div class="hud-streak" id="hud-streak" onclick="showStreakInfo()">🔥0</div>
-  <div class="hud-league" id="hud-league" onclick="showLeaguePanel()">🥉#8</div>
-  <div class="hud-challenge" id="hud-challenge" onclick="showChallenge()">🎯 Výzva</div>
-</div>
+<!-- ─── CONTENT ─── -->
+<div class="container">
+  <div class="article-layout">
 
-<!-- DISCLAIMER -->
-<div class="disclaimer">⚠️ Vzdelávací obsah · Nie sme finančný sprostredkovateľ (§1 zák. 186/2009) · Pred rozhodnutím konzultujte odborníka</div>
+    <!-- ─── MAIN ARTICLE ─── -->
+    <main>
 
-<!-- TABS -->
-<div class="tabs" id="main-tabs">
-  <button class="tab active" onclick="switchPage('home')">🏠 Domov</button>
-  <button class="tab" onclick="switchPage('path')">📍 Cesta</button>
-  <button class="tab" onclick="switchPage('invest')">📈 Investície</button>
-  <button class="tab" onclick="switchPage('calc')">🧮 Kalkulačky</button>
-  <button class="tab" onclick="switchPage('nbs')">📜 NBS</button>
-</div>
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a href="index.html">Domov</a><span>›</span>
+        <a href="app.html">Kurzy</a><span>›</span>
+        <a href="app.html">Investície</a><span>›</span>
+        <span class="current">ETF</span>
+      </nav>
 
-<!-- ═══════════════════════════════════════ PAGE: HOME ═══ -->
-<div class="page active" id="page-home">
-
-  <!-- HERO STATS -->
-  <div class="stat-row" style="margin-top:14px">
-    <div class="stat-box">
-      <div class="stat-val" id="home-xp">0</div>
-      <div class="stat-lbl">Celkom XP</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-val" id="home-streak">0 🔥</div>
-      <div class="stat-lbl">Denný streak</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-val" id="home-lessons">0</div>
-      <div class="stat-lbl">Lekcie</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-val" id="home-quiz">0%</div>
-      <div class="stat-lbl">Úspešnosť</div>
-    </div>
-  </div>
-
-  <!-- DAILY CHALLENGE CARD -->
-  <div class="card" style="border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.05);cursor:pointer" onclick="showChallenge()">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div>
-        <div class="section-label">Denná výzva</div>
-        <div class="card-title" id="dc-status">🎯 Dnes máš nevyriešenú výzvu</div>
-        <div class="card-sub" id="dc-sub">Odpovedz správne a získaj XP bonus</div>
+      <!-- Mobile TOC -->
+      <div class="toc-mobile">
+        <button class="toc-toggle" onclick="toggleToc(this)">
+          📋 Obsah článku <span id="toc-arrow">▼</span>
+        </button>
+        <div class="toc-dropdown" id="toc-dropdown">
+          <a href="#sec-co-su">1. Čo sú ETF fondy?</a>
+          <a href="#sec-sp500">2. Ako funguje S&P 500 ETF?</a>
+          <a href="#sec-naklady">3. Náklady: TER a poplatky</a>
+          <a href="#sec-porovnanie">4. ETF vs. Podielový fond vs. Akcie</a>
+          <a href="#sec-ako-zacat">5. Ako začať investovať?</a>
+        </div>
       </div>
-      <div style="font-size:36px;opacity:.7">🎯</div>
-    </div>
-  </div>
 
-  <!-- CONTINUE LEARNING -->
-  <div class="section-label">Pokračuj v učení</div>
-  <div id="continue-lessons"></div>
+      <!-- Article header -->
+      <header class="article-header">
+        <div class="article-meta">
+          <span class="meta-badge badge-time">⏱ 8 min čítanie</span>
+          <span class="meta-badge badge-xp">⚡ +50 XP</span>
+          <span class="meta-badge badge-diff">📊 Stredné</span>
+        </div>
+        <h1 class="article-title">Ako fungujú ETF fondy a prečo ich milujú investori</h1>
+        <p class="article-lead">ETF (Exchange Traded Funds) sa stali jedným z najobľúbenejších nástrojov pre bežných investorov na celom svete. Zistite, ako fungujú, prečo sú lacné a ako ich využiť na Slovensku.</p>
+        <div class="article-divider"></div>
+      </header>
 
-  <!-- QUICK TOOLS -->
-  <div class="section-label" style="margin-top:8px">Rýchle nástroje</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
-    <div class="card" style="cursor:pointer;text-align:center;padding:14px" onclick="switchPage('calc')">
-      <div style="font-size:28px;margin-bottom:6px">🧮</div>
-      <div style="font-size:12px;font-weight:700">Kalkulačky</div>
-      <div style="font-size:10px;color:var(--muted)">12 nástrojov</div>
-    </div>
-    <div class="card" style="cursor:pointer;text-align:center;padding:14px" onclick="switchPage('invest')">
-      <div style="font-size:28px;margin-bottom:6px">📈</div>
-      <div style="font-size:12px;font-weight:700">Investície</div>
-      <div style="font-size:10px;color:var(--muted)">Porovnanie aktív</div>
-    </div>
-    <div class="card" style="cursor:pointer;text-align:center;padding:14px" onclick="switchPage('nbs')">
-      <div style="font-size:28px;margin-bottom:6px">📜</div>
-      <div style="font-size:12px;font-weight:700">NBS príprava</div>
-      <div style="font-size:10px;color:var(--muted)">1 334 otázok</div>
-    </div>
-    <div class="card" style="cursor:pointer;text-align:center;padding:14px" onclick="showLeaguePanel()">
-      <div style="font-size:28px;margin-bottom:6px" id="home-league-emoji">🥉</div>
-      <div style="font-size:12px;font-weight:700">Moja liga</div>
-      <div style="font-size:10px;color:var(--muted)" id="home-league-name">Bronzová</div>
-    </div>
-  </div>
-</div>
+      <!-- Article body -->
+      <article class="article-body">
 
-<!-- ═══════════════════════════════════════ PAGE: PATH ═══ -->
-<div class="page" id="page-path">
-  <div style="padding-top:6px">
-    <div class="section-label">Tvoja finančná cesta</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5">Každá lekcia odomkne novú zručnosť. Choď svojím tempom.</p>
-  </div>
+        <h2 id="sec-co-su">1. Čo sú ETF fondy?</h2>
+        <p>ETF (Exchange Traded Fund) je fond obchodovaný na burze cenných papierov — podobne ako bežná akcia. Na rozdiel od klasických podielových fondov môžete ETF kúpiť alebo predať kedykoľvek počas obchodovacích hodín za aktuálnu trhovú cenu.</p>
+        <p>Väčšina ETF je <strong>pasívnych</strong> — namiesto toho, aby sa manažéri snažili "poraziť trh", fond jednoducho kopíruje nejaký index (napr. S&P 500, MSCI World). Výsledkom sú <strong>minimálne náklady</strong> a <strong>vysoká diverzifikácia</strong>.</p>
 
-  <div class="chapter">
-    <div class="chapter-title">Kapitola 1 — Základy</div>
-    <div id="chapter-1-lessons"></div>
-  </div>
-  <div class="chapter">
-    <div class="chapter-title">Kapitola 2 — Sporenie & Investovanie</div>
-    <div id="chapter-2-lessons"></div>
-  </div>
-  <div class="chapter">
-    <div class="chapter-title">Kapitola 3 — Dane & II./III. pilier</div>
-    <div id="chapter-3-lessons"></div>
-  </div>
-  <div class="chapter">
-    <div class="chapter-title">Kapitola 4 — Hypotéky & Poistenie</div>
-    <div id="chapter-4-lessons"></div>
-  </div>
-  <div class="chapter">
-    <div class="chapter-title">Kapitola 5 — Pro: Portfólio & NBS</div>
-    <div id="chapter-5-lessons"></div>
-  </div>
-</div>
+        <div class="info-box">
+          <strong>💡 Kľúčový poznatok:</strong> Viac ako 90% aktívne riadených fondov dlhodobo nedosahuje výkonnosť pasívnych indexových ETF po zaratúvaní poplatkov. Práve preto legendárni investori ako Warren Buffett odporúčajú indexové ETF pre väčšinu bežných investorov.
+        </div>
 
-<!-- ═══════════════════════════════════════ PAGE: INVEST ═══ -->
-<div class="page" id="page-invest">
-  <div style="padding-top:6px">
-    <div class="section-label">Prehľad investičných možností</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Vzdelávacie porovnanie aktív. Nie je finančné odporúčanie.</p>
-  </div>
+        <h3>Typy ETF</h3>
+        <ul>
+          <li><strong>Akciové ETF</strong> — kopírujú akciové indexy (S&P 500, MSCI World, DAX)</li>
+          <li><strong>Dlhopisové ETF</strong> — sledujú koše dlhopisov (štátne, korporátne)</li>
+          <li><strong>Komoditné ETF</strong> — zlato, ropa, poľnohospodárske komodity</li>
+          <li><strong>Sektorové ETF</strong> — technológie, zdravotníctvo, energetika</li>
+          <li><strong>Tematické ETF</strong> — ESG, umelá inteligencia, čistá energia</li>
+        </ul>
 
-  <!-- ASSET TABLE -->
-  <div class="card" style="padding:12px;overflow-x:auto">
-    <table class="inv-table">
-      <tr><th>Aktívum</th><th>Ročný výnos*</th><th>Riziko</th><th>Horizont</th></tr>
-      <tr><td>🏦 Sporenie</td><td>2–4%</td><td><span class="risk-badge risk-low">Nízke</span></td><td>1–3 roky</td></tr>
-      <tr><td>📊 ETF (S&P 500)</td><td>7–10%*</td><td><span class="risk-badge risk-med">Stredné</span></td><td>10+ rokov</td></tr>
-      <tr><td>📊 ETF (MSCI World)</td><td>6–9%*</td><td><span class="risk-badge risk-med">Stredné</span></td><td>10+ rokov</td></tr>
-      <tr><td>🏠 Nehnuteľnosť</td><td>4–7%</td><td><span class="risk-badge risk-med">Stredné</span></td><td>10+ rokov</td></tr>
-      <tr><td>📜 Štátne dlhopisy</td><td>3–5%</td><td><span class="risk-badge risk-low">Nízke</span></td><td>5–10 rokov</td></tr>
-      <tr><td>🪙 Zlato</td><td>3–6%*</td><td><span class="risk-badge risk-med">Stredné</span></td><td>10+ rokov</td></tr>
-      <tr><td>₿ Kryptomeny</td><td>Veľmi volatilné</td><td><span class="risk-badge risk-high">Vysoké</span></td><td>Špekulatívne</td></tr>
-      <tr><td>🏢 II. pilier</td><td>3–6%*</td><td><span class="risk-badge risk-low">Nízke</span></td><td>Do dôchodku</td></tr>
-      <tr><td>🏛️ III. pilier</td><td>2–4% + daň.bonus</td><td><span class="risk-badge risk-low">Nízke</span></td><td>10+ rokov</td></tr>
-    </table>
-    <p style="font-size:10px;color:var(--muted);margin-top:10px">*Historický priemer. Minulá výkonnosť nezaručuje budúce výnosy. Pred investovaním konzultujte licencovaného odborníka.</p>
-  </div>
+        <h2 id="sec-sp500">2. Ako funguje S&P 500 ETF?</h2>
+        <p>Index S&P 500 sleduje 500 najväčších amerických spoločností podľa trhovej kapitalizácie — Apple, Microsoft, Amazon, Google, Tesla a stovky ďalších. Keď kúpite ETF sledujúci S&P 500, vlastníte malú časť všetkých týchto spoločností naraz.</p>
 
-  <!-- INVESTMENT LESSONS -->
-  <div class="section-label" style="margin-top:6px">Vzdelávacie lekcie</div>
-  <div id="invest-lessons"></div>
+        <div class="calc-block">
+<span class="comment">// Príklad: Investícia 100 € do S&P 500 ETF</span>
+Váš podiel na <span class="highlight">Apple (AAPL)</span>:     ≈ 7.0 € (7,0% váha)
+Váš podiel na <span class="highlight">Microsoft (MSFT)</span>:  ≈ 6.8 € (6,8% váha)
+Váš podiel na <span class="highlight">Amazon (AMZN)</span>:     ≈ 3.5 € (3,5% váha)
+<span class="comment">... a 497 ďalších spoločností</span>
 
-  <!-- 3 PILLARS -->
-  <div class="section-label" style="margin-top:6px">Dôchodkový systém SR</div>
-  <div class="card">
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
-      <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:10px">
-        <div style="font-size:20px;margin-bottom:4px">🏛️</div>
-        <div style="font-size:11px;font-weight:700">I. pilier</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">Štátny dôchodok</div>
-        <div style="font-size:10px;color:var(--muted)">18% mzdy</div>
+Celkový <span class="highlight">historický priemerný výnos</span> S&P 500: ~10% ročne (nominálne)
+Po zohľadnení inflácie (~3%): ~7% ročne <span class="highlight">reálny výnos</span>
+        </div>
+
+        <h3>Distribučné vs. Akumulačné ETF</h3>
+        <p>Dôležitý rozdiel, ktorý ovplyvňuje zdanenie a zložený úrok:</p>
+        <ul>
+          <li><strong>Distribučné (Dist)</strong> — vyplácajú dividendy na váš účet, musíte ich zdaniť a reinvestovať sami</li>
+          <li><strong>Akumulačné (Acc)</strong> — dividendy automaticky reinvestujú späť do fondu, zložený úrok funguje automaticky</li>
+        </ul>
+
+        <div class="green-box">
+          <strong>✅ Odporúčanie pre slovenských investorov:</strong> Pre dlhodobé investovanie (5+ rokov) preferujte akumulačné ETF (Acc) kvôli automatickej reinvestícii a odloženému zdaneniu. Príklady: <strong>CSPX</strong> (iShares S&P 500 Acc), <strong>VWCE</strong> (Vanguard FTSE All-World Acc).
+        </div>
+
+        <h2 id="sec-naklady">3. Náklady: TER a poplatky</h2>
+        <p>Jednou z najväčších výhod ETF sú minimálne ročné náklady, vyjadrené ukazovateľom <strong>TER (Total Expense Ratio)</strong>. Je to percentuálny poplatok, ktorý fond každoročne odpočítava z vašej investície.</p>
+
+        <div class="calc-block">
+<span class="comment">// Porovnanie TER — vplyv na investíciu 10 000 € za 30 rokov (7% výnos)</span>
+
+<span class="highlight">SPY</span>   (SPDR S&P 500 ETF Trust):     TER 0.09%  →  Konečná hodnota: <span class="highlight">≈ 73 900 €</span>
+<span class="highlight">CSPX</span>  (iShares S&P 500 UCITS):      TER 0.07%  →  Konečná hodnota: <span class="highlight">≈ 74 300 €</span>
+<span class="highlight">VWCE</span>  (Vanguard All-World UCITS):   TER 0.22%  →  Konečná hodnota: <span class="highlight">≈ 70 100 €</span>
+
+Aktívny fond (priemer):               TER 1.50%  →  Konečná hodnota: <span class="highlight">≈ 52 200 €</span>
+<span class="comment">// Rozdiel: ~21 700 € len kvôli poplatkom!</span>
+        </div>
+
+        <div class="warn-box">
+          <strong>⚠️ Pozor na skryté náklady:</strong> Okrem TER sa pri nákupe/predaji ETF platia aj <strong>brokerské poplatky</strong> (od 0 do ~5 €) a <strong>spread</strong> (rozdiel medzi nákupnou a predajnou cenou). Zvoľte brokera s nízkymi poplatkami — Degiro, XTB alebo Interactive Brokers sú populárne voľby na Slovensku.
+        </div>
+
+        <h2 id="sec-porovnanie">4. ETF vs. Podielový fond vs. Akcie</h2>
+        <p>Porovnanie troch hlavných spôsobov investovania pre bežného investora:</p>
+
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Kritérium</th>
+              <th>ETF</th>
+              <th>Podielový fond</th>
+              <th>Jednotlivé akcie</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ročné náklady (TER)</strong></td>
+              <td class="good">0.03% – 0.50%</td>
+              <td class="bad">0.80% – 2.50%</td>
+              <td class="good">0%</td>
+            </tr>
+            <tr>
+              <td><strong>Diverzifikácia</strong></td>
+              <td class="good">Vysoká (100–1000+ cenných papierov)</td>
+              <td class="mid">Stredná</td>
+              <td class="bad">Nízka (riziko jednej firmy)</td>
+            </tr>
+            <tr>
+              <td><strong>Likvidita</strong></td>
+              <td class="good">Obchodovanie v reálnom čase</td>
+              <td class="mid">1–3 pracovné dni</td>
+              <td class="good">Obchodovanie v reálnom čase</td>
+            </tr>
+            <tr>
+              <td><strong>Potrebné vedomosti</strong></td>
+              <td class="good">Nízke</td>
+              <td class="good">Nízke</td>
+              <td class="bad">Vysoké (analýza firiem)</td>
+            </tr>
+            <tr>
+              <td><strong>Minimálna investícia</strong></td>
+              <td class="good">Cena 1 podielu (~od 10 €)</td>
+              <td class="mid">Zvyčajne 50–1000 €</td>
+              <td class="mid">Cena 1 akcie</td>
+            </tr>
+            <tr>
+              <td><strong>Transparentnosť</strong></td>
+              <td class="good">Denné zverejnenie portfólia</td>
+              <td class="mid">Mesačné / kvartálne</td>
+              <td class="good">Plná transparentnosť</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="sec-ako-zacat">5. Ako začať investovať do ETF?</h2>
+        <p>Investovanie do ETF na Slovensku je dostupné pre každého. Tu je postup krok za krokom:</p>
+        <ol>
+          <li><strong>Nastavte investičný cieľ</strong> — dôchodok, bývanie, finančná rezerva? Určte horizont a výšku mesačnej investície.</li>
+          <li><strong>Otvorte si brokerský účet</strong> — populárne voľby pre slovenských investorov: Degiro, XTB, Interactive Brokers. Registrácia trvá cca 15 minút.</li>
+          <li><strong>Vyberte ETF</strong> — pre začiatočníkov odporúčame CSPX alebo VWCE. Oba sú UCITS regulované a dostupné v EÚ.</li>
+          <li><strong>Nastavte pravidelný nákup (DCA)</strong> — Dollar Cost Averaging znižuje riziko zlého načasovania trhu. Investujte rovnakú sumu každý mesiac.</li>
+          <li><strong>Neinvestujte to, čo si nemôžete dovoliť stratiť</strong> — ponechajte si 3–6-mesačný núdzový fond v hotovosti/sporení pred investovaním.</li>
+        </ol>
+
+        <div class="info-box">
+          <strong>📌 Daňový tip pre SR:</strong> Na Slovensku platí <strong>19% daň z príjmu</strong> na zisky z predaja cenných papierov. Ak cenné papiere držíte dlhšie ako <strong>1 rok</strong> a celkové príjmy z ich predaja neprekročia 500 € ročne, zisk je od dane oslobodený. Vždy konzultujte aktuálne pravidlá s daňovým poradcom.
+        </div>
+
+        <div class="warn-box">
+          <strong>⚠️ Upozornenie:</strong> Investovanie je spojené s rizikom. Hodnota ETF môže klesať aj stúpať. Minulé výnosy nezaručujú budúce výsledky. Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.
+        </div>
+
+      </article>
+
+      <!-- Related articles -->
+      <section class="related-section">
+        <div class="related-title">📚 Súvisiace články</div>
+        <div class="related-grid">
+          <a href="learn.html" class="related-card">
+            <div class="related-emoji">🌍</div>
+            <div class="related-card-title">Diverzifikácia portfólia: Prečo nevkladať vajcia do jedného košíka</div>
+            <div class="related-card-meta">⏱ 6 min · Investície</div>
+            <div class="related-xp">+40 XP</div>
+          </a>
+          <a href="learn.html" class="related-card">
+            <div class="related-emoji">📊</div>
+            <div class="related-card-title">DCA stratégia: Ako investovať pravidelne bez stresu</div>
+            <div class="related-card-meta">⏱ 5 min · Investície</div>
+            <div class="related-xp">+35 XP</div>
+          </a>
+          <a href="learn.html" class="related-card">
+            <div class="related-emoji">🏦</div>
+            <div class="related-card-title">Výber brokera: Degiro vs. XTB vs. Interactive Brokers</div>
+            <div class="related-card-meta">⏱ 7 min · Investície</div>
+            <div class="related-xp">+45 XP</div>
+          </a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ─── TOC SIDEBAR ─── -->
+    <aside>
+      <div class="toc-wrap">
+        <div class="toc-title">Obsah článku</div>
+        <ul class="toc-list" id="toc-list">
+          <li><a href="#sec-co-su" class="active">1. Čo sú ETF fondy?</a></li>
+          <li><a href="#sec-sp500">2. Ako funguje S&P 500 ETF?</a></li>
+          <li><a href="#sec-naklady">3. Náklady: TER a poplatky</a></li>
+          <li><a href="#sec-porovnanie">4. ETF vs. Podielový fond vs. Akcie</a></li>
+          <li><a href="#sec-ako-zacat">5. Ako začať investovať?</a></li>
+        </ul>
+        <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border)">
+          <div style="font-size:11px;color:var(--muted2);margin-bottom:8px">Váš postup v kurze</div>
+          <div style="height:5px;background:var(--border2);border-radius:3px;overflow:hidden">
+            <div id="toc-progress" style="height:100%;background:linear-gradient(90deg,var(--indigo),var(--indigo2));width:0%;transition:width .3s;border-radius:3px"></div>
+          </div>
+          <div style="font-size:11px;color:var(--muted2);margin-top:6px;text-align:right" id="toc-pct">0% prečítané</div>
+        </div>
       </div>
-      <div style="padding:10px;background:rgba(37,99,235,.08);border-radius:10px;border:1px solid rgba(37,99,235,.2)">
-        <div style="font-size:20px;margin-bottom:4px">🏢</div>
-        <div style="font-size:11px;font-weight:700">II. pilier</div>
-        <div style="font-size:10px;color:#93c5fd;margin-top:2px">Kapitalizácia</div>
-        <div style="font-size:10px;color:var(--muted)">4% mzdy</div>
-      </div>
-      <div style="padding:10px;background:rgba(22,163,74,.06);border-radius:10px">
-        <div style="font-size:20px;margin-bottom:4px">🏦</div>
-        <div style="font-size:11px;font-weight:700">III. pilier</div>
-        <div style="font-size:10px;color:#4ade80;margin-top:2px">Dobrovoľný</div>
-        <div style="font-size:10px;color:var(--muted)">-€180 dane</div>
-      </div>
-    </div>
+    </aside>
+
+  </div><!-- /article-layout -->
+</div><!-- /container -->
+
+<!-- ─── FIXED COMPLETE BUTTON ─── -->
+<button id="finish-btn" onclick="finishLesson()">✅ Dokončiť lekciu</button>
+<div id="xp-pop">⚡ +50 XP Získané!</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <a href="index.html" class="footer-logo">
+    <div class="footer-logo-icon">💡</div>
+    <div class="footer-logo-text">FinAdvisor SK</div>
+  </a>
+  <div class="footer-links">
+    <a href="privacy.html">Ochrana údajov</a>
+    <a href="terms.html">Podmienky</a>
+    <a href="index.html#contact">Kontakt</a>
   </div>
-</div>
-
-<!-- ═══════════════════════════════════════ PAGE: CALC ═══ -->
-<div class="page" id="page-calc">
-  <div style="padding-top:6px">
-    <div class="section-label">Finančné kalkulačky</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Výsledky sú orientačné. Nie sú finančným odporúčaním.</p>
+  <div class="footer-legal">
+    Platforma slúži výlučne na vzdelávacie účely podľa §1 ods. 2 zákona č. 186/2009 Z.z. — Nie je finančným poradenstvom.
   </div>
-
-  <!-- COMPOUND -->
-  <div class="calc-card">
-    <div class="calc-title">📈 Zložené úročenie (ETF investícia)</div>
-    <div class="calc-row"><label class="calc-label">Mesačná investícia (€)</label><input id="c1-m" type="number" value="100" class="calc-input" oninput="calcCompound()"></div>
-    <div class="calc-row"><label class="calc-label">Ročný výnos (%)</label><input id="c1-r" type="number" value="7" step="0.1" class="calc-input" oninput="calcCompound()"></div>
-    <div class="calc-row"><label class="calc-label">Počet rokov</label><input id="c1-y" type="number" value="20" class="calc-input" oninput="calcCompound()"></div>
-    <div class="calc-result" id="c1-result">
-      <div class="calc-result-val" id="c1-val">€52 093</div>
-      <div class="calc-result-label">Celková hodnota portfólia</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px" id="c1-sub">Investované: €24 000 · Zisk: €28 093</div>
-    </div>
-  </div>
-
-  <!-- MORTGAGE -->
-  <div class="calc-card">
-    <div class="calc-title">🏠 Hypotekálna splátka</div>
-    <div class="calc-row"><label class="calc-label">Suma hypotéky (€)</label><input id="c2-a" type="number" value="150000" class="calc-input" oninput="calcMortgage()"></div>
-    <div class="calc-row"><label class="calc-label">Úroková sadzba (% ročne)</label><input id="c2-r" type="number" value="4.5" step="0.1" class="calc-input" oninput="calcMortgage()"></div>
-    <div class="calc-row"><label class="calc-label">Doba splácania (roky)</label><input id="c2-y" type="number" value="30" class="calc-input" oninput="calcMortgage()"></div>
-    <div class="calc-result" id="c2-result">
-      <div class="calc-result-val" id="c2-val">€760</div>
-      <div class="calc-result-label">Mesačná splátka</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px" id="c2-sub">Celkom zaplatíte: €273 600 · Úroky: €123 600</div>
-    </div>
-  </div>
-
-  <!-- TAX -->
-  <div class="calc-card">
-    <div class="calc-title">🧾 Daňová úspora (III. pilier)</div>
-    <div class="calc-row"><label class="calc-label">Hrubý ročný príjem (€)</label><input id="c3-inc" type="number" value="18000" class="calc-input" oninput="calcTax()"></div>
-    <div class="calc-row"><label class="calc-label">Mesačný príspevok III. pilier (€)</label><input id="c3-con" type="number" value="30" class="calc-input" oninput="calcTax()"></div>
-    <div class="calc-result" id="c3-result">
-      <div class="calc-result-val" id="c3-val">€34</div>
-      <div class="calc-result-label">Ročná daňová úspora</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px" id="c3-sub">Max. odpočet: €180/rok · Pri sadzbe 19%</div>
-    </div>
-  </div>
-
-  <!-- SAVINGS -->
-  <div class="calc-card">
-    <div class="calc-title">🏦 Sporenie — cieľ</div>
-    <div class="calc-row"><label class="calc-label">Cieľová suma (€)</label><input id="c4-g" type="number" value="10000" class="calc-input" oninput="calcSavings()"></div>
-    <div class="calc-row"><label class="calc-label">Mesačná úspora (€)</label><input id="c4-m" type="number" value="200" class="calc-input" oninput="calcSavings()"></div>
-    <div class="calc-row"><label class="calc-label">Úrok (% ročne)</label><input id="c4-r" type="number" value="3" step="0.1" class="calc-input" oninput="calcSavings()"></div>
-    <div class="calc-result">
-      <div class="calc-result-val" id="c4-val">4 roky 1 mes</div>
-      <div class="calc-result-label">Čas do cieľa</div>
-    </div>
-  </div>
-
-  <!-- EMERGENCY FUND -->
-  <div class="calc-card">
-    <div class="calc-title">🛡️ Núdzový fond</div>
-    <div class="calc-row"><label class="calc-label">Mesačné výdavky (€)</label><input id="c5-e" type="number" value="1200" class="calc-input" oninput="calcEmergency()"></div>
-    <div class="calc-row"><label class="calc-label">Mesiace pokrytia</label>
-      <select id="c5-m" class="calc-input" onchange="calcEmergency()" style="appearance:auto">
-        <option value="3">3 mesiace (minimum)</option>
-        <option value="6" selected>6 mesiacov (odporúčané)</option>
-        <option value="12">12 mesiacov (maximum)</option>
-      </select>
-    </div>
-    <div class="calc-result">
-      <div class="calc-result-val" id="c5-val">€7 200</div>
-      <div class="calc-result-label">Odporúčaný núdzový fond</div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════ PAGE: NBS ═══ -->
-<div class="page" id="page-nbs">
-  <div style="padding-top:6px">
-    <div class="section-label">Príprava na NBS skúšku</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Otázky zo zverejnených materiálov NBS pre vzdelávacie účely.</p>
-  </div>
-
-  <!-- FLASHCARD -->
-  <div class="card" id="nbs-card" style="cursor:pointer;min-height:160px" onclick="nbsFlip()">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <span style="font-size:10px;color:var(--muted)" id="nbs-counter">1 / 30</span>
-      <span style="font-size:10px;color:var(--muted)">Klikni na kartičku pre odpoveď</span>
-    </div>
-    <div id="nbs-front">
-      <div style="font-size:11px;color:var(--blue);font-weight:700;margin-bottom:8px">OTÁZKA</div>
-      <div style="font-size:14px;font-weight:700;line-height:1.5" id="nbs-q"></div>
-    </div>
-    <div id="nbs-back" style="display:none">
-      <div style="font-size:11px;color:var(--green);font-weight:700;margin-bottom:8px">ODPOVEĎ</div>
-      <div style="font-size:13px;color:#cbd5e1;line-height:1.6" id="nbs-a"></div>
-    </div>
-  </div>
-  <div style="display:flex;gap:8px;margin-bottom:14px">
-    <button class="btn-ghost" onclick="nbsNav(-1)" style="flex:1">← Predchádzajúca</button>
-    <button class="btn-ghost" onclick="nbsNav(1)" style="flex:1">Ďalšia →</button>
-  </div>
-
-  <!-- NBS QUIZ -->
-  <div class="section-label">Testové otázky</div>
-  <div id="nbs-quiz-area"></div>
-  <button class="btn-primary" onclick="loadNbsQuiz()" style="margin-top:8px">Nová testová otázka</button>
-</div>
-
-<!-- ═══ MODALS ═══ -->
-
-<!-- LESSON MODAL -->
-<div class="modal-overlay" id="lesson-modal">
-  <div class="modal-box">
-    <div class="modal-handle"></div>
-    <div style="display:flex;justify-content:space-between;align-items:flex-start">
-      <div style="flex:1">
-        <div class="modal-title" id="lm-title"></div>
-        <div class="modal-sub" id="lm-meta"></div>
-      </div>
-      <button class="modal-close" onclick="closeLesson()">✕</button>
-    </div>
-    <div class="lesson-content" id="lm-content"></div>
-    <div id="lm-quiz" style="margin-top:20px"></div>
-    <button class="btn-primary" id="lm-next" style="margin-top:16px;display:none" onclick="finishLesson()">✅ Dokončiť lekciu (+XP)</button>
-  </div>
-</div>
-
-<!-- BADGES MODAL -->
-<div class="modal-overlay" id="badges-modal">
-  <div class="modal-box">
-    <div class="modal-handle"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div class="modal-title">🏆 Odznaky</div>
-      <button class="modal-close" onclick="closeModal('badges-modal')">✕</button>
-    </div>
-    <div class="badges-grid" id="badges-grid"></div>
-  </div>
-</div>
-
-<!-- LEAGUE MODAL -->
-<div class="modal-overlay" id="league-modal">
-  <div class="modal-box">
-    <div class="modal-handle"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-      <div class="modal-title" id="lg-title">🥉 Bronzová liga</div>
-      <button class="modal-close" onclick="closeModal('league-modal')">✕</button>
-    </div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:14px" id="lg-sub">Týždenná súťaž</div>
-    <div id="lg-board"></div>
-    <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.15);border-radius:8px;padding:10px;margin-top:12px;font-size:11px;color:#a78bfa;text-align:center">
-      🏆 Top 3 postúpia vyššie · Posledných 5 zostupuje · Reset každú nedeľu
-    </div>
-  </div>
-</div>
-
-<!-- CHALLENGE MODAL -->
-<div class="modal-overlay" id="challenge-modal">
-  <div class="modal-box center">
-    <div style="text-align:center;margin-bottom:16px">
-      <div style="font-size:36px;margin-bottom:6px">🎯</div>
-      <div class="modal-title">Denná výzva</div>
-      <div id="dc-xp-badge" style="margin-top:4px"><span style="background:rgba(245,158,11,.15);color:#fbbf24;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px">+25 XP</span></div>
-    </div>
-    <div id="dc-q" style="font-size:15px;font-weight:700;text-align:center;margin-bottom:18px;line-height:1.5"></div>
-    <div id="dc-opts"></div>
-    <div id="dc-result" style="display:none;text-align:center;padding:12px;border-radius:10px;margin-top:12px"></div>
-    <button class="btn-ghost" onclick="closeModal('challenge-modal')" style="margin-top:12px">Zavrieť</button>
-  </div>
-</div>
-
-<!-- LEVELUP MODAL -->
-<div class="modal-overlay" id="levelup-modal">
-  <div class="modal-box center" style="text-align:center">
-    <div class="levelup-box">
-      <div class="levelup-emoji" id="lu-emoji" style="animation:bounceIn .5s ease">🎉</div>
-      <div style="font-size:12px;color:var(--muted);letter-spacing:2px;font-weight:700;margin-bottom:6px">NOVÝ LEVEL!</div>
-      <div style="font-size:28px;font-weight:900;margin-bottom:6px" id="lu-name"></div>
-      <div style="font-size:13px;color:var(--muted);margin-bottom:20px" id="lu-desc"></div>
-      <button class="btn-primary" onclick="closeModal('levelup-modal')">Pokračovať 🚀</button>
-    </div>
-  </div>
-</div>
-
-<!-- SHARE MODAL -->
-<div class="modal-overlay" id="share-modal">
-  <div class="modal-box center">
-    <div id="share-card" style="background:linear-gradient(135deg,#0f172a,#1a2744);border:1px solid rgba(124,58,237,.3);border-radius:14px;padding:22px;text-align:center;margin-bottom:16px">
-      <div style="font-size:10px;color:var(--purple);font-weight:700;letter-spacing:2px;margin-bottom:8px">FINADVISOR SK</div>
-      <div style="font-size:44px;margin-bottom:8px" id="sc-emoji">🏆</div>
-      <div style="font-size:17px;font-weight:900;margin-bottom:4px" id="sc-title"></div>
-      <div style="font-size:11px;color:var(--muted)" id="sc-sub"></div>
-      <div style="font-size:9px;color:#475569;margin-top:12px">finadvisor.sk</div>
-    </div>
-    <button class="btn-primary" onclick="doShare()" style="margin-bottom:8px">📤 Zdieľať</button>
-    <button class="btn-ghost" onclick="closeModal('share-modal')">Zavrieť</button>
-  </div>
-</div>
-
-<!-- XP TOAST -->
-<div class="xp-toast" id="xp-toast">+20 XP</div>
-
-<!-- BOTTOM NAV -->
-<div class="bottom-nav">
-  <button class="bn-item active" id="bn-home" onclick="switchPage('home')"><span class="bni">🏠</span>Domov</button>
-  <button class="bn-item" id="bn-path" onclick="switchPage('path')"><span class="bni">📍</span>Cesta</button>
-  <button class="bn-item" id="bn-invest" onclick="switchPage('invest')"><span class="bni">📈</span>Investície</button>
-  <button class="bn-item" id="bn-calc" onclick="switchPage('calc')"><span class="bni">🧮</span>Kalkulačky</button>
-  <button class="bn-item" id="bn-nbs" onclick="switchPage('nbs')"><span class="bni">📜</span>NBS</button>
-</div>
+</footer>
 
 <script>
-'use strict';
-// ═══════════════════════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════════════════════
-const LEVELS = [
-  {name:'Nováčik',emoji:'🌱',xp:0,desc:'Vitaj! Cesta začína.'},
-  {name:'Učeň',emoji:'📚',xp:100,desc:'Prvé kroky vo financiách.'},
-  {name:'Záujemca',emoji:'🔍',xp:300,desc:'Zaujímaš sa o peniaze.'},
-  {name:'Pozorovateľ',emoji:'👀',xp:600,desc:'Začínaš vidieť súvislosti.'},
-  {name:'Analytik',emoji:'📊',xp:1000,desc:'Analyzuješ, nie len čítaš.'},
-  {name:'Stratég',emoji:'♟️',xp:1500,desc:'Myslíš dlhodobo.'},
-  {name:'Expert',emoji:'🎯',xp:2200,desc:'Zvládaš komplexné témy.'},
-  {name:'Majster',emoji:'🏆',xp:3000,desc:'Finančná gramotnosť na vysokej úrovni.'},
-  {name:'Mentor',emoji:'🦉',xp:4000,desc:'Vieš vysvetliť aj zložité veci.'},
-  {name:'Legenda',emoji:'⚡',xp:6000,desc:'Si finančná legenda!'},
-];
+// ─── READING PROGRESS ──────────────────────────────
+const prog = document.getElementById('read-progress');
+const tocProg = document.getElementById('toc-progress');
+const tocPct = document.getElementById('toc-pct');
 
-const BADGES = [
-  {id:'l1',icon:'📖',name:'Prvá lekcia',cond:s=>s.lessons>=1},
-  {id:'s3',icon:'🔥',name:'3-dňový streak',cond:s=>s.streak>=3},
-  {id:'s7',icon:'🌟',name:'7-dňový streak',cond:s=>s.streak>=7},
-  {id:'s30',icon:'💎',name:'30 dní!',cond:s=>s.streak>=30},
-  {id:'x500',icon:'💡',name:'500 XP',cond:s=>s.xp>=500},
-  {id:'x1k',icon:'🚀',name:'1000 XP',cond:s=>s.xp>=1000},
-  {id:'x3k',icon:'🏅',name:'3000 XP',cond:s=>s.xp>=3000},
-  {id:'calc',icon:'🧮',name:'Kalkulátor',cond:s=>s.calcs>=1},
-  {id:'q5',icon:'🎓',name:'5 kvízov',cond:s=>s.quizzes>=5},
-  {id:'q20',icon:'🎯',name:'20 kvízov',cond:s=>s.quizzes>=20},
-  {id:'nbs10',icon:'📜',name:'NBS Ready',cond:s=>s.nbsCards>=10},
-  {id:'perf',icon:'✨',name:'Perfektný',cond:s=>s.perfect>=5},
-];
+window.addEventListener('scroll', ()=>{
+  const scrollTop = window.scrollY;
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docH > 0 ? Math.min(100, (scrollTop/docH)*100) : 0;
+  prog.style.width = pct+'%';
+  if(tocProg){tocProg.style.width=pct+'%'}
+  if(tocPct){tocPct.textContent=Math.round(pct)+'% prečítané'}
+  updateActiveToc();
+});
 
-const LEAGUES = [
-  {name:'Bronzová liga',emoji:'🥉',color:'#cd7f32',bg:'rgba(205,127,50,.12)',border:'rgba(205,127,50,.25)'},
-  {name:'Strieborná liga',emoji:'🥈',color:'#94a3b8',bg:'rgba(148,163,184,.1)',border:'rgba(148,163,184,.2)'},
-  {name:'Zlatá liga',emoji:'🥇',color:'#f59e0b',bg:'rgba(245,158,11,.1)',border:'rgba(245,158,11,.25)'},
-  {name:'Platinová liga',emoji:'💎',color:'#06b6d4',bg:'rgba(6,182,212,.1)',border:'rgba(6,182,212,.25)'},
-  {name:'Diamantová liga',emoji:'💠',color:'#7c3aed',bg:'rgba(124,58,237,.12)',border:'rgba(124,58,237,.3)'},
-];
+// ─── NAVBAR SCROLL EFFECT ───────────────────────────
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll',()=>{
+  navbar.classList.toggle('scrolled', window.scrollY>20);
+},{passive:true});
 
-const FAKE_PLAYERS = ['Martin K.','Jana H.','Tomáš B.','Zuzana P.','Miroslav D.','Katarína V.','Peter S.','Monika L.','Ján R.','Eva N.','Michal F.','Lucia O.','Rastislav M.','Barbora Č.'];
+// ─── TOC ACTIVE HIGHLIGHTING ────────────────────────
+const SECTIONS = ['sec-co-su','sec-sp500','sec-naklady','sec-porovnanie','sec-ako-zacat'];
 
-const DAILY_QS = [
-  {q:'Čo je ETF fond?',opts:['Termínovaný vklad','Fond obchodovaný na burze','Typ hypotéky','Bankový účet'],c:1,xp:25},
-  {q:'Max. daňový odpočet III. pilier/rok?',opts:['€100','€180','€250','€500'],c:1,xp:25},
-  {q:'Čo znamená RPMN pri hypotéke?',opts:['Ročná percentuálna miera nákladov','Reálne percento mesačnej normy','Regulačné percento','Ročná platba'],c:0,xp:30},
-  {q:'Koľko pilierov má dôchodkový systém SR?',opts:['1','2','3','4'],c:2,xp:20},
-  {q:'Čo je diverzifikácia portfólia?',opts:['Predaj akcií','Len zlato','Rozloženie do viacerých aktív','Jeden fond'],c:2,xp:25},
-  {q:'Inflačný cieľ ECB?',opts:['0%','1%','2%','5%'],c:2,xp:30},
-  {q:'P/E ratio akcie znamená?',opts:['Pomer ceny k zisku','Poistná expozícia','Preferenčné euro','Príjem k výdavkom'],c:0,xp:35},
-  {q:'Čo je to úrokový swap?',opts:['Výmena úrokových platieb','Typ sporenia','Bankový poplatok','Devízová operácia'],c:0,xp:40},
-  {q:'Koľko percent z hrubej mzdy ide do II. piliera?',opts:['2%','4%','6%','8%'],c:1,xp:30},
-  {q:'Čo je to likvidita aktíva?',opts:['Rýchlosť premeny na hotovosť','Výška zisku','Daňová sadzba','Úroková miera'],c:0,xp:30},
-  {q:'Čo je Emergency Fund?',opts:['Investičný fond','Núdzová finančná rezerva','Bankový úver','Poistenie'],c:1,xp:20},
-  {q:'Čo znamená DCA stratégia?',opts:['Daniar Capital Allocation','Dollar Cost Averaging — pravidelná investícia','Direct Currency Access','Debt Consolidation Agreement'],c:1,xp:35},
-  {q:'MSCI World ETF pokrýva koľko krajín?',opts:['10','23','50','85'],c:1,xp:35},
-  {q:'Čo je TER (Total Expense Ratio)?',opts:['Celkové ročné poplatky fondu','Typ cenného papiera','Daň z príjmu','Výplatný termín'],c:0,xp:30},
-];
-
-const LESSONS = [
-  // Chapter 1
-  {id:'l01',ch:1,icon:'💰',color:'#1e3a5f',title:'Čo sú peniaze a ako funguje ekonomika',meta:'5 min · +20 XP · Základy',xp:20,
-   content:`<h3>Čo sú peniaze?</h3><p>Peniaze sú všeobecne akceptovaný prostriedok výmeny. Vznikli ako náhrada za naturálny obchod.</p><div class="highlight">Funkcie peňazí: Platidlo · Uchovateľ hodnoty · Zúčtovacia jednotka</div><h3>Inflácia — nepriateľ sporiteľa</h3><p>Inflácia znižuje kúpnu silu peňazí. Ak máš €10 000 na bežnom účte a inflácia je 4%, reálna hodnota tvojich peňazí klesá o €400 ročne.</p><div class="number-box"><div class="big">4%</div><div>Priemerná inflácia v SR</div></div><div class="warning">Peniaze na bežnom účte strácajú hodnotu. Riešením je investovanie aspoň na úrovni inflácie.</div><h3>Čo s tým?</h3><ul><li>Núdzový fond: 3–6 mesiacov výdavkov na sporiaci účet</li><li>Zvyšok: investovanie do aktív prekonávajúcich infláciu</li></ul>`,
-   quiz:{q:'Čo spôsobuje inflácia tvojim úsporám na bežnom účte?',opts:['Zvyšuje ich hodnotu','Znižuje ich kúpnu silu','Nemá žiadny vplyv','Zdvojnásobuje ich'],c:1}},
-
-  {id:'l02',ch:1,icon:'📊',color:'#1a3a2a',title:'Finančná gramotnosť — test IQ',meta:'10 min · +30 XP · Základy',xp:30,
-   content:`<h3>Finančný IQ — kde si?</h3><p>Väčšina ľudí vie veľmi málo o osobných financiách. Štúdie ukazujú, že iba 33% dospelých SR dokáže správne odpovedať na základné finančné otázky.</p><div class="number-box"><div class="big">33%</div><div>dospelých má základnú fin. gramotnosť (SR)</div></div><h3>Kľúčové oblasti</h3><ul><li><strong>Úspory</strong> — núdzový fond, sporenie</li><li><strong>Investovanie</strong> — ETF, akcie, dlhopisy</li><li><strong>Dane</strong> — odpočty, optimalizácia</li><li><strong>Poistenie</strong> — životné, majetkové</li><li><strong>Dôchodok</strong> — II. a III. pilier</li></ul><div class="highlight">Finančná gramotnosť je schopnosť robiť informované rozhodnutia o peniazoch. Nedá sa naučiť za jeden deň — ale za mesiac áno.</div>`,
-   quiz:{q:'Koľko percent dospelých v SR má základnú finančnú gramotnosť?',opts:['10%','33%','67%','90%'],c:1}},
-
-  {id:'l03',ch:1,icon:'🛡️',color:'#3a1a1a',title:'Núdzový fond — prečo a koľko',meta:'7 min · +25 XP · Základy',xp:25,
-   content:`<h3>Prečo núdzový fond?</h3><p>Strata práce, oprava auta, lekársky výdavok — život prináša nečakané náklady. Bez núdzového fondu ľudia siahajú po úveroch s vysokými úrokmi.</p><div class="number-box"><div class="big">3–6×</div><div>mesačných výdavkov = optimálny núdzový fond</div></div><h3>Kde ho mať?</h3><ul><li>Sporiaci účet s vyšším úrokom (nie bežný účet)</li><li>Dostupný do 24 hodín — nie investícia</li><li>Oddelený od denných financií</li></ul><div class="highlight">Príklad: Výdavky €1 200/mes → Núdzový fond €3 600 – €7 200</div><h3>Ako naň sporiť?</h3><p>Pravidlo 50/30/20: 50% potreby, 30% želania, 20% sporenie/investovanie.</p>`,
-   quiz:{q:'Kde by mal byť uložený núdzový fond?',opts:['V hotovosti doma','Na sporiaci účet — dostupný do 24 h','V ETF fonde','V II. pilieri'],c:1}},
-
-  // Chapter 2
-  {id:'l04',ch:2,icon:'📈',color:'#1e2a4a',title:'ETF fondy — ako fungujú a prečo sú populárne',meta:'10 min · +35 XP · Investovanie',xp:35,
-   content:`<h3>Čo je ETF?</h3><p>ETF (Exchange Traded Fund) je fond obchodovaný na burze, ktorý sleduje index (napr. S&P 500 — top 500 amerických firiem).</p><div class="highlight">Kúpou 1 ETF získaš podiel v stovkách až tisíckach firiem naraz.</div><h3>Prečo ETF?</h3><ul><li><strong>Diverzifikácia</strong> — nevsádzaš na jednu firmu</li><li><strong>Nízke poplatky</strong> — TER 0.07–0.20% ročne</li><li><strong>Likvidita</strong> — predáš kedykoľvek počas burzy</li><li><strong>Transparentnosť</strong> — vieš čo obsahuje</li></ul><div class="number-box"><div class="big">~7–10%</div><div>historický ročný výnos S&P 500 (dlhodobý priemer)*</div></div><div class="warning">*Minulá výkonnosť nezaručuje budúce výnosy. Hodnota môže klesnúť. Investuj len peniaze, ktoré nepotrebuješ v krátkodobom horizonte.</div><h3>DCA — Dollar Cost Averaging</h3><p>Investuj pravidelne (napr. €100/mes) bez ohľadu na cenu. Tým priemeruješ nákupnú cenu a znižuješ riziko.</p>`,
-   quiz:{q:'Čo je DCA stratégia pri ETF investovaní?',opts:['Investovanie jednorazovo veľkej sumy','Pravidelná investícia rovnakej sumy bez ohľadu na cenu','Predaj keď cena klesne','Diverzifikácia do kryptomien'],c:1}},
-
-  {id:'l05',ch:2,icon:'🏦',color:'#1a2a3a',title:'II. a III. pilier — ako optimalizovať dôchodok',meta:'12 min · +40 XP · Dôchodok',xp:40,
-   content:`<h3>Dôchodkový systém SR</h3><p>Slovenský dôchodkový systém má 3 piliere:</p><ul><li><strong>I. pilier</strong> — povinný, štátny, PAYGO systém (18% mzdy)</li><li><strong>II. pilier</strong> — kapitalizácia (4% mzdy), vlastný účet</li><li><strong>III. pilier</strong> — dobrovoľný, daňové zvýhodnenie</li></ul><div class="highlight">Vstup do II. piliera je povinný pre nových pracovníkov. Výstup nie je možný — ale môžeš si vybrať fond (indexový odporúčaný pre mladých).</div><h3>III. pilier — daňová optimalizácia</h3><p>Príspevok nad €15/mes sa odpočíta zo základu dane, max €180 ročne.</p><div class="number-box"><div class="big">€34</div><div>ročná daňová úspora pri príspevku €30/mes (sadzba 19%)</div></div><div class="warning">Peniaze sú viazané do dôchodku (60 rokov). Predčasný výber sa zdaňuje.</div>`,
-   quiz:{q:'Aký je maximálny ročný daňový odpočet pre III. pilier?',opts:['€100','€180','€500','Bez limitu'],c:1}},
-
-  {id:'l06',ch:2,icon:'💹',color:'#1a3a1a',title:'Akcie, dlhopisy a diverzifikácia portfólia',meta:'10 min · +35 XP · Investovanie',xp:35,
-   content:`<h3>Akcie vs Dlhopisy</h3><ul><li><strong>Akcia</strong> = podiel vo firme, vyšší potenciálny výnos, vyššie riziko</li><li><strong>Dlhopis</strong> = pôžička firme/štátu, nižší výnos, nižšie riziko</li></ul><div class="highlight">Zlaté pravidlo alokácie: Vek = % v dlhopisoch. Vek 30 → 30% dlhopisy, 70% akcie.</div><h3>Diverzifikácia</h3><p>Nikdy neskladaj vajcia do jedného košíka. Diverzifikácia redukuje nesystematické riziko.</p><ul><li>Geografická: Európa, USA, Emerging markets</li><li>Sektorová: tech, zdravotníctvo, energia</li><li>Triedy aktív: akcie, dlhopisy, realitné fondy</li></ul><div class="number-box"><div class="big">2</div><div>ETF stačia na diverzifikované portfólio (napr. MSCI World + dlhopisy)</div></div>`,
-   quiz:{q:'Čo je systematické riziko portfólia?',opts:['Riziko jednej firmy','Trhové riziko postihujúce celý trh','Menové riziko','Likviditné riziko'],c:1}},
-
-  // Chapter 3
-  {id:'l07',ch:3,icon:'🧾',color:'#2a1a3a',title:'Dane v SR — čo každý zamestnanec musí vedieť',meta:'10 min · +35 XP · Dane',xp:35,
-   content:`<h3>Daňové sadzby v SR</h3><ul><li><strong>19%</strong> — základ dane do €38 553</li><li><strong>25%</strong> — základ dane nad €38 553</li></ul><div class="number-box"><div class="big">3 756€</div><div>Nezdaniteľná časť základu dane (2024)</div></div><h3>Odpočítateľné položky</h3><ul><li>Nezdaniteľná časť: €3 756/rok (uplatníš automaticky)</li><li>III. pilier: max €180/rok</li><li>Hypotéka: úroky do €400/rok (prvé roky)</li><li>Dary: max 2% dane</li></ul><div class="highlight">Daňové priznanie sa oplatí podať aj zamestnancom — môžeš získať preplatok od štátu.</div><h3>Dividendová daň</h3><p>Príjmy z dividend a predaja akcií: 7% (rezident) + zdravotné 15% (len povinné zdravotné z pasívnych príjmov).</p>`,
-   quiz:{q:'Aká je daňová sadzba z príjmu pod €38 553 v SR?',opts:['15%','19%','21%','25%'],c:1}},
-
-  // Chapter 4
-  {id:'l08',ch:4,icon:'🏠',color:'#2a2a1a',title:'Hypotéka — ako čítať zmluvu a vyrokovať lepšiu sadzbu',meta:'12 min · +40 XP · Hypotéky',xp:40,
-   content:`<h3>Kľúčové pojmy hypotéky</h3><ul><li><strong>RPMN</strong> — Ročná percentuálna miera nákladov (úrok + poplatky)</li><li><strong>Fixácia</strong> — Obdobie pevnej úrokovej sadzby (1–10 rokov)</li><li><strong>LTV</strong> — Loan-to-Value: výška hypotéky vs. hodnota nehnuteľnosti (max 80%)</li></ul><div class="number-box"><div class="big">80%</div><div>Maximálna výška hypotéky k hodnote nehnuteľnosti (SR)</div></div><h3>Ako vyrokovať lepšiu sadzbu?</h3><ul><li>Porovnaj aspoň 3 banky — rozdiel môže byť 0.5–1%</li><li>Vyššia záloha = nižší úrok</li><li>Dobrá bonita (história splácania) znižuje sadzbu</li><li>Refinancovanie pri konci fixácie</li></ul><div class="highlight">Rozdiel 0.5% na €150 000 hypotéke na 30 rokov = €15 000 v úrokoch!</div>`,
-   quiz:{q:'Čo je RPMN pri hypotéke?',opts:['Len úroková sadzba','Ročná percentuálna miera nákladov (úrok + poplatky)','Mesačná splátka','Výška hypotéky'],c:1}},
-
-  {id:'l09',ch:4,icon:'🛡️',color:'#3a1a2a',title:'Poistenie — čo potrebuješ a čo je zbytočné',meta:'10 min · +30 XP · Poistenie',xp:30,
-   content:`<h3>Typy poistenia</h3><ul><li><strong>Životné poistenie</strong> — Pri smrti alebo invalide. Potrebuješ ak máš hypotéku alebo rodinu.</li><li><strong>Poistenie nehnuteľnosti</strong> — Povinné pri hypotéke. Kryje škody.</li><li><strong>PZP</strong> — Povinné zmluvné poistenie vozidla. Zákonná povinnosť.</li><li><strong>Cestovné poistenie</strong> — Pri zahraničných cestách.</li></ul><div class="warning">Zbytočné: kapitálové životné poistenie ako investícia — vysoké poplatky, nízky výnos. Lepšie oddelene: čisté rizikové poistenie + ETF investovanie.</div><h3>Koľko na poistenie?</h3><div class="number-box"><div class="big">5–10%</div><div>príjmu na všetky poistenia (odporúčané)</div></div>`,
-   quiz:{q:'Prečo sa neodporúča kapitálové životné poistenie ako investícia?',opts:['Je príliš lacné','Má vysoké poplatky a nízky výnos','Je príliš rizikové','Štát ho zakazuje'],c:1}},
-
-  // Chapter 5
-  {id:'l10',ch:5,icon:'♟️',color:'#1a1a3a',title:'Budovanie portfólia od nuly — stratégia krok po kroku',meta:'15 min · +50 XP · Pro',xp:50,
-   content:`<h3>Tri-bucket stratégia</h3><ul><li><strong>Bucket 1 (Okamžitý)</strong> — 3–6 mes. výdavkov, sporiaci účet</li><li><strong>Bucket 2 (Krátkodobý)</strong> — 1–5 rokov, dlhopisy, ETF s nižším rizikom</li><li><strong>Bucket 3 (Dlhodobý)</strong> — 5+ rokov, akciové ETF</li></ul><div class="highlight">Pravidlo č. 1: Najprv núdzový fond. Potom investuj.</div><h3>Odporúčané portfólio pre začiatočníkov</h3><ul><li>80% MSCI World ETF (globálna diverzifikácia)</li><li>20% dlhopisy alebo II./III. pilier</li></ul><div class="number-box"><div class="big">€50–100</div><div>mesačne stačí na začiatok (DCA stratégia)</div></div><div class="warning">Toto je vzdelávací príklad, nie personalizované odporúčanie. Pred investovaním konzultujte licencovaného poradcu.</div>`,
-   quiz:{q:'Čo je "Tri-bucket stratégia" portfólia?',opts:['Investovanie do 3 akcií','Rozdelenie aktív podľa časového horizontu','Portfólio z 3 ETF','Investovanie do 3 pilierov'],c:1}},
-];
-
-const NBS_CARDS = [
-  {q:'Čo je IDD smernica?',a:'Insurance Distribution Directive — smernica EÚ o distribúcii poistenia. Upravuje povinnosti sprostredkovateľov: odborná spôsobilosť, transparentnosť, ochrana klienta.'},
-  {q:'Rozdiel: finančný agent vs finančný poradca (zákon 186/2009)?',a:'Finančný agent je viazaný na konkrétne fin. inštitúcie. Finančný poradca je nezávislý — môže posudzovať celý trh. Poradca má vyššie požiadavky na vzdelanie.'},
-  {q:'Čo musí obsahovať IPID pri neživotnom poistení?',a:'Insurance Product Information Document: názov, typ poistenia, riziká, výluky, územná platnosť, forma plnenia, trvanie zmluvy. Štandardizovaný formát EÚ.'},
-  {q:'Max. príspevok na III. pilier odpočítateľný od dane (ročne)?',a:'€180 ročne — platí pre príspevky nad €15/mes. Odpočet sa vzťahuje na sumu nad €15/mes, max €180/rok.'},
-  {q:'Čo je PRIIP?',a:'Packaged Retail and Insurance-based Investment Products — regulácia EÚ vyžadujúca KID (Key Information Document) pre retailových investorov pred kúpou investičného produktu.'},
-  {q:'Definujte "poistné plnenie" v životnom poistení',a:'Suma vyplácaná poistiteľom pri poistnej udalosti (smrť, invalidita, dožitie). Musí byť primerané zaplateným poistným s ohľadom na riziká a výšku krytia.'},
-  {q:'Čo je MiFID II a čoho sa týka?',a:'Markets in Financial Instruments Directive II — smernica EÚ regulujúca finančné trhy. Vyžaduje transparentnosť, kategorizáciu klientov (neprofesionálny/profesionálny/spôsobilá protistrana).'},
-  {q:'Čo je to DSTI (Debt Service-to-Income)?',a:'Pomer mesačných splátok dlhov k čistému príjmu. NBS limituje na max 60% — teda splátky všetkých úverov nesmú presiahnuť 60% čistého mesačného príjmu.'},
-  {q:'Čo je finančný agent viazaný?',a:'Sprostredkovateľ ktorý môže ponúkať produkty len jednej alebo viacerých zmluvne viazaných fin. inštitúcií. Nemá právo radiť o celom trhu.'},
-  {q:'Povinný obsah zmluvy o finančnom sprostredkovaní?',a:'Identifikácia strán, predmet zmluvy, rozsah oprávnenia, odmeňovanie, práva a povinnosti, konflikt záujmov, orgán dohľadu (NBS).'},
-  {q:'Čo je SOLVENCY II?',a:'Smernica EÚ o kapitálovej primeranosti poisťovní. Zavádza 3 piliere: kvantitatívne požiadavky, dohľad a transparentnosť.'},
-  {q:'Minimálne vzdelanie pre finančného agenta?',a:'Stredoškolské vzdelanie s maturitou + absolvovanie odborného skúšania podľa sektora a stupňa (základný/vyšší stupeň odbornej spôsobilosti).'},
-];
-
-// ═══════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════
-let GS = JSON.parse(localStorage.getItem('fa_gs2') || 'null') || {
-  xp:0,level:0,streak:0,lastDate:null,
-  lessons:0,quizzes:0,perfect:0,calcs:0,nbsCards:0,
-  earnedBadges:[],doneLessons:[],
-  dailyDate:null,totalCorrect:0,totalAnswers:0,
-};
-function save(){localStorage.setItem('fa_gs2',JSON.stringify(GS));}
-
-// League state
-function getWeekKey(){const d=new Date(),j=new Date(d.getFullYear(),0,1);return d.getFullYear()+'-W'+Math.ceil(((d-j)/864e5+j.getDay()+1)/7);}
-function getLeague(){
-  let ls=JSON.parse(localStorage.getItem('fa_lg2')||'null');
-  const wk=getWeekKey();
-  if(!ls||ls.wk!==wk){
-    const li=Math.min(ls?Math.min(ls.li+(ls.rank<=3?1:ls.rank>=11?-1:0),4):0,4);
-    const players=FAKE_PLAYERS.map(n=>({n,xp:Math.floor(Math.random()*600+80)}));
-    ls={wk,li,weekXP:0,players,rank:8};
-    localStorage.setItem('fa_lg2',JSON.stringify(ls));
-  }
-  return ls;
-}
-function saveLeague(ls){localStorage.setItem('fa_lg2',JSON.stringify(ls));}
-
-// ═══════════════════════════════════════════════════════
-// XP ENGINE
-// ═══════════════════════════════════════════════════════
-function addXP(amount,reason){
-  const old=GS.level;
-  GS.xp+=amount;
-  GS.level=LEVELS.filter(l=>GS.xp>=l.xp).length-1;
-  // league
-  const ls=getLeague();
-  ls.weekXP+=amount;
-  const all=[...ls.players,{n:'Ty',xp:ls.weekXP}].sort((a,b)=>b.xp-a.xp);
-  ls.rank=all.findIndex(p=>p.n==='Ty')+1;
-  saveLeague(ls);
-  save();
-  renderHUD();
-  renderHomeStats();
-  checkBadges();
-  showXPToast(amount,reason);
-  if(GS.level>old)setTimeout(()=>showLevelUp(GS.level),500);
-  // share milestones
-  if(GS.xp>=1000&&!localStorage.getItem('fa_s1k')){localStorage.setItem('fa_s1k','1');setTimeout(()=>openShare('🚀','1000 XP dosiahnutých!','Finančná cesta · finadvisor.sk'),700);}
-  if(GS.streak>=7&&!localStorage.getItem('fa_ss7')){localStorage.setItem('fa_ss7','1');setTimeout(()=>openShare('🔥','7-dňový streak!','Každý deň sa učím financie · finadvisor.sk'),700);}
-}
-
-// ═══════════════════════════════════════════════════════
-// STREAK
-// ═══════════════════════════════════════════════════════
-function checkStreak(){
-  const today=new Date().toDateString();
-  const yesterday=new Date(Date.now()-864e5).toDateString();
-  if(GS.lastDate===today)return;
-  if(GS.lastDate===yesterday)GS.streak++;
-  else GS.streak=1;
-  GS.lastDate=today;
-  save();
-}
-
-// ═══════════════════════════════════════════════════════
-// HUD
-// ═══════════════════════════════════════════════════════
-function renderHUD(){
-  const lv=LEVELS[GS.level],nx=LEVELS[GS.level+1];
-  document.getElementById('hud-level').textContent=lv.emoji+' Úr.'+(GS.level+1);
-  document.getElementById('xp-cur').textContent=GS.xp+' XP';
-  document.getElementById('xp-nxt').textContent=nx?nx.xp:'MAX';
-  const pct=nx?Math.min(100,((GS.xp-lv.xp)/(nx.xp-lv.xp))*100):100;
-  document.getElementById('xp-bar').style.width=pct+'%';
-  document.getElementById('hud-streak').textContent='🔥'+GS.streak;
-  renderHearts();
-  renderLeagueHUD();
-  // daily
-  const ch=document.getElementById('hud-challenge');
-  if(GS.dailyDate===new Date().toDateString()){ch.textContent='✅ Hotovo';ch.style.color='#4ade80';}
-}
-function renderHomeStats(){
-  const el=id=>document.getElementById(id);
-  if(el('home-xp'))el('home-xp').textContent=GS.xp;
-  if(el('home-streak'))el('home-streak').textContent=GS.streak+'🔥';
-  if(el('home-lessons'))el('home-lessons').textContent=GS.lessons;
-  const pct=GS.totalAnswers?Math.round(GS.totalCorrect/GS.totalAnswers*100):0;
-  if(el('home-quiz'))el('home-quiz').textContent=pct+'%';
-  // daily card
-  if(GS.dailyDate===new Date().toDateString()){
-    if(el('dc-status'))el('dc-status').textContent='✅ Výzva splnená!';
-    if(el('dc-sub'))el('dc-sub').textContent='Príď zajtra pre novú výzvu';
-  }
-}
-
-// HEARTS
-const MAX_H=5;
-function getHearts(){
-  const h=JSON.parse(localStorage.getItem('fa_h')||'null');
-  if(!h)return{n:MAX_H,t:null};
-  let{n,t}=h;
-  while(n<MAX_H&&t&&Date.now()>=t){n++;t=n<MAX_H?t+36e5:null;}
-  return{n,t};
-}
-function saveHearts(n,t){localStorage.setItem('fa_h',JSON.stringify({n,t}));}
-function loseHeart(){
-  const h=getHearts();
-  if(h.n<=0){showHeartsInfo();return false;}
-  const n=h.n-1,t=n<MAX_H?(h.t||Date.now()+36e5):null;
-  saveHearts(n,t);renderHearts();
-  if(n===0)showHeartsInfo();
-  return true;
-}
-function renderHearts(){
-  const el=document.getElementById('hud-hearts');
-  if(!el)return;
-  const{n}=getHearts();
-  el.innerHTML=Array.from({length:MAX_H},(_,i)=>`<span style="opacity:${i<n?1:.2}">❤️</span>`).join('');
-}
-function showHeartsInfo(){
-  const h=getHearts();
-  const mins=h.t?Math.max(0,Math.ceil((h.t-Date.now())/6e4)):60;
-  showXPToast(0,`❤️ ${h.n}/${MAX_H} · obnova za ${mins} min`);
-}
-
-// LEAGUE HUD
-function renderLeagueHUD(){
-  const ls=getLeague(),l=LEAGUES[ls.li];
-  const el=document.getElementById('hud-league');
-  if(!el)return;
-  el.textContent=l.emoji+'#'+ls.rank;
-  el.style.background=l.bg;el.style.border='1px solid '+l.border;el.style.color=l.color;
-  const he=document.getElementById('home-league-emoji');
-  const hn=document.getElementById('home-league-name');
-  if(he)he.textContent=l.emoji;
-  if(hn)hn.textContent=l.name;
-}
-
-// ═══════════════════════════════════════════════════════
-// XP TOAST
-// ═══════════════════════════════════════════════════════
-function showXPToast(n,reason){
-  const el=document.getElementById('xp-toast');
-  el.textContent=(n>0?'+'+n+' XP':'')+(reason?' · '+reason:'');
-  el.classList.remove('show');
-  void el.offsetWidth;
-  el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),1700);
-}
-
-// ═══════════════════════════════════════════════════════
-// LEVEL UP
-// ═══════════════════════════════════════════════════════
-function showLevelUp(i){
-  const l=LEVELS[i];
-  document.getElementById('lu-emoji').textContent=l.emoji;
-  document.getElementById('lu-name').textContent=l.name;
-  document.getElementById('lu-desc').textContent=l.desc;
-  document.getElementById('lu-emoji').style.animation='none';
-  void document.getElementById('lu-emoji').offsetWidth;
-  document.getElementById('lu-emoji').style.animation='bounceIn .5s ease';
-  openModal('levelup-modal');
-  confetti();
-}
-function confetti(){
-  const colors=['#7c3aed','#2563eb','#f59e0b','#16a34a','#ef4444','#06b6d4'];
-  for(let i=0;i<50;i++){
-    const el=document.createElement('div');
-    el.style.cssText=`position:fixed;top:-8px;left:${Math.random()*100}%;width:7px;height:7px;border-radius:${Math.random()>.5?'50%':'2px'};background:${colors[Math.floor(Math.random()*colors.length)]};z-index:10000;pointer-events:none;animation:confettiFall ${1.2+Math.random()}s ease-in forwards;animation-delay:${Math.random()*.4}s`;
-    document.body.appendChild(el);
-    setTimeout(()=>el.remove(),2000);
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-// BADGES
-// ═══════════════════════════════════════════════════════
-function checkBadges(){
-  let changed=false;
-  BADGES.forEach(b=>{
-    if(!GS.earnedBadges.includes(b.id)&&b.cond(GS)){
-      GS.earnedBadges.push(b.id);changed=true;
-      showXPToast(0,'🏅 '+b.name);
-    }
+function updateActiveToc(){
+  let current = SECTIONS[0];
+  SECTIONS.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && window.scrollY >= el.offsetTop - 110) current=id;
   });
-  if(changed)save();
-}
-function showBadgesPanel(){
-  const g=document.getElementById('badges-grid');
-  g.innerHTML=BADGES.map(b=>`
-    <div class="badge-cell ${GS.earnedBadges.includes(b.id)?'earned':''}">
-      <div class="bi">${b.icon}</div>
-      <div class="bn">${b.name}</div>
-    </div>`).join('');
-  openModal('badges-modal');
+  document.querySelectorAll('.toc-list a').forEach(a=>{
+    a.classList.toggle('active', a.getAttribute('href')==='#'+current);
+  });
 }
 
-// ═══════════════════════════════════════════════════════
-// LEAGUE PANEL
-// ═══════════════════════════════════════════════════════
-function showLeaguePanel(){
-  const ls=getLeague(),l=LEAGUES[ls.li];
-  document.getElementById('lg-title').textContent=l.emoji+' '+l.name;
-  document.getElementById('lg-sub').textContent='Týždeň '+ls.wk+' · Reset v nedeľu';
-  const all=[...ls.players,{n:'Ty ⭐',xp:ls.weekXP}].sort((a,b)=>b.xp-a.xp);
-  document.getElementById('lg-board').innerHTML=all.map((p,i)=>{
-    const isMe=p.n.startsWith('Ty');
-    const up=i<3,dn=i>=all.length-5;
-    return`<div class="league-row ${isMe?'me':''} ${up&&!isMe?'promote':''} ${dn&&!isMe&&!up?'demote':''}">
-      <div style="width:22px;text-align:center;font-weight:800;color:${i===0?'#f59e0b':i===1?'#94a3b8':i===2?'#cd7f32':'#475569'}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
-      <div style="flex:1;font-weight:${isMe?800:400}">${p.n}</div>
-      <div style="font-weight:700;color:${isMe?'#a78bfa':'#f1f5f9'}">${p.xp} XP</div>
-      ${up?'<div style="font-size:9px;color:#4ade80">↑</div>':''}
-      ${dn&&!up?'<div style="font-size:9px;color:#f87171">↓</div>':''}
-    </div>`;
-  }).join('');
-  openModal('league-modal');
+// ─── MOBILE TOC TOGGLE ──────────────────────────────
+function toggleToc(btn){
+  const dd = document.getElementById('toc-dropdown');
+  const arrow = document.getElementById('toc-arrow');
+  dd.classList.toggle('open');
+  arrow.textContent = dd.classList.contains('open') ? '▲' : '▼';
 }
 
-// ═══════════════════════════════════════════════════════
-// DAILY CHALLENGE
-// ═══════════════════════════════════════════════════════
-function showChallenge(){
-  const today=new Date().toDateString();
-  const ch=DAILY_QS[new Date().getDate()%DAILY_QS.length];
-  document.getElementById('dc-q').textContent=ch.q;
-  document.getElementById('dc-xp-badge').innerHTML=`<span style="background:rgba(245,158,11,.15);color:#fbbf24;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px">+${ch.xp} XP</span>`;
-  const done=GS.dailyDate===today;
-  document.getElementById('dc-opts').innerHTML=['A','B','C','D'].map((l,i)=>`
-    <button class="quiz-opt ${done?(i===ch.c?'correct disabled':'disabled'):''}" onclick="answerChallenge(${i},${ch.c},${ch.xp})">
-      <div class="quiz-letter">${l}</div>${ch.opts[i]}
-    </button>`).join('');
-  const res=document.getElementById('dc-result');
-  res.style.display=done?'block':'none';
-  if(done){res.innerHTML='✅ Dnes si už odpovedal!';res.style.background='rgba(22,163,74,.1)';}
-  openModal('challenge-modal');
-}
-function answerChallenge(idx,c,xp){
-  const today=new Date().toDateString();
-  if(GS.dailyDate===today)return;
-  document.querySelectorAll('#dc-opts .quiz-opt').forEach((b,i)=>{
-    b.classList.add('disabled');
-    if(i===c)b.classList.add('correct');
-    else if(i===idx)b.classList.add('wrong');
-  });
-  const res=document.getElementById('dc-result');
-  res.style.display='block';
-  GS.dailyDate=today;GS.quizzes++;GS.totalAnswers++;
-  if(idx===c){
-    res.innerHTML=`🎉 Správne! +${xp} XP`;res.style.background='rgba(22,163,74,.1)';
-    GS.totalCorrect++;GS.perfect++;
-    addXP(xp,'Denná výzva');
-  } else {
-    res.innerHTML=`❌ Správna: ${c===0?'A':c===1?'B':c===2?'C':'D'} · +5 XP za účasť`;
-    res.style.background='rgba(239,68,68,.1)';
-    loseHeart();addXP(5,'Účasť');
-  }
-  // update hud challenge btn
-  const btn=document.getElementById('hud-challenge');
-  btn.textContent='✅ Hotovo';btn.style.color='#4ade80';
-  save();
-}
-
-// ═══════════════════════════════════════════════════════
-// LESSONS
-// ═══════════════════════════════════════════════════════
-let _currentLesson=null;
-function renderLessons(){
-  [1,2,3,4,5].forEach(ch=>{
-    const el=document.getElementById('chapter-'+ch+'-lessons');
-    if(!el)return;
-    const lessons=LESSONS.filter(l=>l.ch===ch);
-    el.innerHTML=lessons.map((l,i)=>{
-      const done=GS.doneLessons.includes(l.id);
-      const locked=ch>=5&&!GS.doneLessons.includes('l06')&&!done;
-      return`<div class="lesson-item" onclick="${locked?'showProPaywall()':'openLesson(\''+l.id+'\')'}">
-        <div class="lesson-icon" style="background:${l.color}">${l.icon}</div>
-        <div class="lesson-body">
-          <div class="lesson-title">${l.title}</div>
-          <div class="lesson-meta">${l.meta}</div>
-        </div>
-        ${done?'<div class="lesson-done">✅</div>':`<div class="lesson-xp">+${l.xp} XP</div>`}
-        ${locked?'<div style="font-size:16px">🔒</div>':''}
-      </div>`;
-    }).join('');
-  });
-  // invest page lessons
-  const il=document.getElementById('invest-lessons');
-  if(il)il.innerHTML=LESSONS.filter(l=>l.ch===2).map(l=>{
-    const done=GS.doneLessons.includes(l.id);
-    return`<div class="lesson-item" onclick="openLesson('${l.id}')">
-      <div class="lesson-icon" style="background:${l.color}">${l.icon}</div>
-      <div class="lesson-body"><div class="lesson-title">${l.title}</div><div class="lesson-meta">${l.meta}</div></div>
-      ${done?'<div class="lesson-done">✅</div>':`<div class="lesson-xp">+${l.xp} XP</div>`}
-    </div>`;
-  }).join('');
-  // continue learning (home)
-  const next=LESSONS.filter(l=>!GS.doneLessons.includes(l.id)).slice(0,3);
-  const cl=document.getElementById('continue-lessons');
-  if(cl)cl.innerHTML=next.map(l=>`
-    <div class="lesson-item" onclick="openLesson('${l.id}')">
-      <div class="lesson-icon" style="background:${l.color}">${l.icon}</div>
-      <div class="lesson-body"><div class="lesson-title">${l.title}</div><div class="lesson-meta">${l.meta}</div></div>
-      <div class="lesson-xp">+${l.xp} XP</div>
-    </div>`).join('');
-}
-function openLesson(id){
-  const l=LESSONS.find(x=>x.id===id);
-  if(!l)return;
-  _currentLesson=l;
-  document.getElementById('lm-title').textContent=l.icon+' '+l.title;
-  document.getElementById('lm-meta').textContent=l.meta;
-  document.getElementById('lm-content').innerHTML=l.content;
-  const qz=document.getElementById('lm-quiz');
-  qz.innerHTML='';
-  if(l.quiz){
-    const done=GS.doneLessons.includes(l.id);
-    qz.innerHTML=`<div style="margin-bottom:10px;font-size:13px;font-weight:700;color:#a78bfa">❓ Otestuj sa</div>
-      <div class="quiz-q">${l.quiz.q}</div>
-      ${['A','B','C','D'].map((lt,i)=>`
-        <button class="quiz-opt ${done?(i===l.quiz.c?'correct disabled':'disabled'):''}" data-i="${i}" data-c="${l.quiz.c}" onclick="answerLessonQuiz(this,${i},${l.quiz.c})">
-          <div class="quiz-letter">${lt}</div>${l.quiz.opts[i]}
-        </button>`).join('')}
-      <div id="lm-qresult" style="display:${done?'block':'none'};padding:10px;border-radius:8px;margin-top:8px;background:rgba(22,163,74,.1);font-size:13px;color:#4ade80">${done?'✅ Správne!':''}</div>`;
-  }
-  const nb=document.getElementById('lm-next');
-  nb.style.display=GS.doneLessons.includes(l.id)?'none':'block';
-  openModal('lesson-modal');
-}
-function answerLessonQuiz(btn,idx,c){
-  if(btn.classList.contains('disabled'))return;
-  document.querySelectorAll('#lm-quiz .quiz-opt').forEach((b,i)=>{
-    b.classList.add('disabled');
-    if(i===c)b.classList.add('correct');
-    else if(i===idx)b.classList.add('wrong');
-  });
-  GS.quizzes++;GS.totalAnswers++;
-  const res=document.getElementById('lm-qresult');
-  if(res)res.style.display='block';
-  if(idx===c){
-    GS.totalCorrect++;GS.perfect++;
-    if(res){res.innerHTML='✅ Správne!';res.style.background='rgba(22,163,74,.1)';res.style.color='#4ade80';}
-    showXPToast(15,'Správna odpoveď');
-  } else {
-    loseHeart();
-    if(res){res.innerHTML='❌ Nesprávne. Správna odpoveď je označená zelenou.';res.style.background='rgba(239,68,68,.1)';res.style.color='#f87171';}
-  }
-  const nb=document.getElementById('lm-next');
-  if(nb&&!GS.doneLessons.includes(_currentLesson?.id||''))nb.style.display='block';
-  save();
-}
+// ─── FINISH LESSON ──────────────────────────────────
+let finished = false;
 function finishLesson(){
-  if(!_currentLesson)return;
-  if(!GS.doneLessons.includes(_currentLesson.id)){
-    GS.doneLessons.push(_currentLesson.id);
-    GS.lessons++;
-    addXP(_currentLesson.xp,'Lekcia dokončená');
-  }
-  document.getElementById('lm-next').style.display='none';
-  renderLessons();
-  closeLesson();
+  if(finished) return;
+  finished = true;
+  const btn = document.getElementById('finish-btn');
+  const pop = document.getElementById('xp-pop');
+  btn.textContent = '🎉 Lekcia dokončená!';
+  btn.classList.add('done');
+  pop.classList.add('show');
+  setTimeout(()=>pop.classList.remove('show'), 3000);
+  // scroll to top after small delay
+  setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}), 800);
 }
-function closeLesson(){closeModal('lesson-modal');}
-function showProPaywall(){
-  showXPToast(0,'🔒 Odomkni v Pro pláne');
-  setTimeout(()=>window.location='/app',800);
-}
-
-// ═══════════════════════════════════════════════════════
-// CALCULATORS
-// ═══════════════════════════════════════════════════════
-function fmt(n){return n.toLocaleString('sk-SK',{minimumFractionDigits:0,maximumFractionDigits:0});}
-function calcCompound(){
-  const m=+document.getElementById('c1-m').value||0;
-  const r=(+document.getElementById('c1-r').value||0)/100/12;
-  const n=(+document.getElementById('c1-y').value||0)*12;
-  const fv=r>0?m*(Math.pow(1+r,n)-1)/r:m*n;
-  const inv=m*n;
-  document.getElementById('c1-val').textContent='€'+fmt(fv);
-  document.getElementById('c1-sub').textContent=`Investované: €${fmt(inv)} · Zisk: €${fmt(fv-inv)}`;
-  GS.calcs++;save();checkBadges();
-}
-function calcMortgage(){
-  const a=+document.getElementById('c2-a').value||0;
-  const r=(+document.getElementById('c2-r').value||0)/100/12;
-  const n=(+document.getElementById('c2-y').value||0)*12;
-  const pmt=r>0?a*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):a/n;
-  const total=pmt*n;
-  document.getElementById('c2-val').textContent='€'+fmt(pmt);
-  document.getElementById('c2-sub').textContent=`Celkom: €${fmt(total)} · Úroky: €${fmt(total-a)}`;
-}
-function calcTax(){
-  const inc=+document.getElementById('c3-inc').value||0;
-  const con=+document.getElementById('c3-con').value||0;
-  const annual=Math.min(con*12,180);
-  const rate=inc>38553?0.25:0.19;
-  const saving=annual*rate;
-  document.getElementById('c3-val').textContent='€'+saving.toFixed(0);
-  document.getElementById('c3-sub').textContent=`Odpočítateľná suma: €${annual} · Sadzba: ${(rate*100).toFixed(0)}%`;
-}
-function calcSavings(){
-  const goal=+document.getElementById('c4-g').value||0;
-  const m=+document.getElementById('c4-m').value||1;
-  const r=(+document.getElementById('c4-r').value||0)/100/12;
-  let bal=0,months=0;
-  while(bal<goal&&months<600){bal=bal*(1+r)+m;months++;}
-  const y=Math.floor(months/12),mo=months%12;
-  document.getElementById('c4-val').textContent=(y>0?y+' rok'+(y>1?'y':'')+' ':'')+mo+' mes';
-}
-function calcEmergency(){
-  const e=+document.getElementById('c5-e').value||0;
-  const m=+document.getElementById('c5-m').value||6;
-  document.getElementById('c5-val').textContent='€'+fmt(e*m);
-}
-// init calcs
-calcCompound();calcMortgage();calcTax();calcSavings();calcEmergency();
-
-// ═══════════════════════════════════════════════════════
-// NBS FLASHCARDS
-// ═══════════════════════════════════════════════════════
-let nbsIdx=0,nbsFlipped=false;
-function renderNbsCard(){
-  const c=NBS_CARDS[nbsIdx];
-  document.getElementById('nbs-counter').textContent=(nbsIdx+1)+' / '+NBS_CARDS.length;
-  document.getElementById('nbs-q').textContent=c.q;
-  document.getElementById('nbs-a').textContent=c.a;
-  document.getElementById('nbs-front').style.display='block';
-  document.getElementById('nbs-back').style.display='none';
-  nbsFlipped=false;
-}
-function nbsFlip(){
-  nbsFlipped=!nbsFlipped;
-  document.getElementById('nbs-front').style.display=nbsFlipped?'none':'block';
-  document.getElementById('nbs-back').style.display=nbsFlipped?'block':'none';
-  if(nbsFlipped){GS.nbsCards++;save();if(GS.nbsCards%5===0)addXP(15,'NBS kartičky');checkBadges();}
-}
-function nbsNav(d){nbsIdx=(nbsIdx+d+NBS_CARDS.length)%NBS_CARDS.length;renderNbsCard();}
-renderNbsCard();
-
-// NBS QUIZ
-function loadNbsQuiz(){
-  const idx=Math.floor(Math.random()*NBS_CARDS.length);
-  const c=NBS_CARDS[idx];
-  // Build fake wrong answers from other cards
-  const wrongs=NBS_CARDS.filter((_,i)=>i!==idx).map(x=>x.a).sort(()=>Math.random()-.5).slice(0,3);
-  const opts=[c.a,...wrongs].sort(()=>Math.random()-.5);
-  const correct=opts.indexOf(c.a);
-  document.getElementById('nbs-quiz-area').innerHTML=`
-    <div class="quiz-q">${c.q}</div>
-    ${['A','B','C','D'].map((l,i)=>`
-      <button class="quiz-opt" onclick="answerNbs(this,${i},${correct})">
-        <div class="quiz-letter">${l}</div><div style="flex:1;font-size:12px;line-height:1.4">${opts[i]}</div>
-      </button>`).join('')}
-    <div id="nbs-q-result" style="display:none;padding:10px;border-radius:8px;margin-top:8px;font-size:13px"></div>`;
-}
-function answerNbs(btn,idx,c){
-  document.querySelectorAll('#nbs-quiz-area .quiz-opt').forEach((b,i)=>{
-    b.classList.add('disabled');
-    if(i===c)b.classList.add('correct');
-    else if(i===idx)b.classList.add('wrong');
-  });
-  GS.quizzes++;GS.totalAnswers++;
-  const res=document.getElementById('nbs-q-result');
-  if(res)res.style.display='block';
-  if(idx===c){
-    GS.totalCorrect++;GS.perfect++;
-    if(res){res.textContent='✅ Správne! +15 XP';res.style.background='rgba(22,163,74,.1)';res.style.color='#4ade80';}
-    addXP(15,'NBS otázka');
-  } else {
-    loseHeart();
-    if(res){res.textContent='❌ Nesprávne. Správna odpoveď je označená zelenou.';res.style.background='rgba(239,68,68,.1)';res.style.color='#f87171';}
-    addXP(3,'Účasť');
-  }
-  save();
-}
-loadNbsQuiz();
-
-// ═══════════════════════════════════════════════════════
-// MODAL HELPERS
-// ═══════════════════════════════════════════════════════
-function openModal(id){document.getElementById(id).classList.add('show');}
-function closeModal(id){document.getElementById(id).classList.remove('show');}
-// close on overlay click
-document.querySelectorAll('.modal-overlay').forEach(el=>{
-  el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('show');});
-});
-
-// ═══════════════════════════════════════════════════════
-// SHARE
-// ═══════════════════════════════════════════════════════
-function openShare(emoji,title,sub){
-  document.getElementById('sc-emoji').textContent=emoji;
-  document.getElementById('sc-title').textContent=title;
-  document.getElementById('sc-sub').textContent=sub;
-  openModal('share-modal');
-}
-async function doShare(){
-  const title=document.getElementById('sc-title').textContent;
-  const emoji=document.getElementById('sc-emoji').textContent;
-  const text=`${emoji} ${title}\nFinančné vzdelávanie: https://finadvisor.sk/learn`;
-  if(navigator.share){try{await navigator.share({title:'FinAdvisor SK',text});closeModal('share-modal');return;}catch(e){}}
-  try{await navigator.clipboard.writeText(text);showXPToast(0,'📋 Skopírované!');}catch(e){}
-  closeModal('share-modal');
-}
-
-// ═══════════════════════════════════════════════════════
-// PAGE NAVIGATION
-// ═══════════════════════════════════════════════════════
-const PAGES=['home','path','invest','calc','nbs'];
-function switchPage(name){
-  PAGES.forEach(p=>{
-    const pg=document.getElementById('page-'+p);
-    if(pg)pg.classList.toggle('active',p===name);
-    const t=document.querySelector(`.tabs .tab:nth-child(${PAGES.indexOf(p)+1})`);
-    const bn=document.getElementById('bn-'+p);
-    if(t)t.classList.toggle('active',p===name);
-    if(bn)bn.classList.toggle('active',p===name);
-  });
-}
-// sync tabs with bottom nav
-document.querySelectorAll('.tab').forEach((t,i)=>{
-  t.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');
-  });
-});
-
-// streak info
-function showStreakInfo(){
-  const next=GS.streak>=30?'Legenda!':GS.streak>=7?'30 dní':GS.streak>=3?'7 dní':'3 dni';
-  showXPToast(0,`🔥 ${GS.streak} dní · Cieľ: ${next}`);
-}
-
-// ═══════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════
-checkStreak();
-renderHUD();
-renderHomeStats();
-renderLessons();
-checkBadges();
-// Hearts regen check every 5 min
-setInterval(renderHearts,300000);
-console.log(`🎮 FinAdvisor SK loaded | XP:${GS.xp} | Level:${GS.level+1} | Streak:${GS.streak}`);
 </script>
-
-<!-- GDPR -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:80px;left:0;right:0;background:#1a1a2e;color:#fff;padding:12px 16px;z-index:9999;display:flex;align-items:center;flex-wrap:wrap;gap:10px;font-size:12px;border-top:1px solid #3b82f6;">
-  <span style="flex:1;min-width:200px">Technické cookies nevyhnutné pre funkčnosť. <a href="/privacy" style="color:#3b82f6">Info</a></span>
-  <button onclick="cookieOk()" style="background:#3b82f6;color:#fff;border:none;padding:6px 16px;border-radius:6px;cursor:pointer;font-weight:700">OK</button>
-</div>
-<script>(function(){var b=document.getElementById('cookie-banner');if(!localStorage.getItem('ck'))b.style.display='flex';window.cookieOk=function(){localStorage.setItem('ck','1');b.style.display='none';};})();</script>
 </body>
 </html>
