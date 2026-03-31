@@ -67,27 +67,30 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          # Find and delete existing custom domain
+          # Find existing custom domain via project services query (serviceInstances)
           OLD_DOMAIN_RESULT=$(curl -s -X POST "https://backboard.railway.com/graphql/v2" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $RAILWAY_TOKEN" \
-            -d "{\"query\":\"{ project(id: \\\"$PROJECT_ID\\\") { services { edges { node { id domains { customDomains { id domain } } } } } } }\"}")
-          echo "Services: $OLD_DOMAIN_RESULT"
+            -d "{\"query\":\"{ project(id: \\\"$PROJECT_ID\\\") { serviceInstances { edges { node { customDomains { id domain } } } } } }\"}")
+          echo "Domain query result: $OLD_DOMAIN_RESULT"
           OLD_DOMAIN_ID=$(echo "$OLD_DOMAIN_RESULT" | python3 -c "
           import sys,json
           d=json.load(sys.stdin)
-          svcs=d['data']['project']['services']['edges']
-          for s in svcs:
-              for cd in s['node']['domains']['customDomains']:
-                  if cd['domain']=='$CUSTOM_DOMAIN':
-                      print(cd['id'])
+          try:
+            instances=d['data']['project']['serviceInstances']['edges']
+            for s in instances:
+              for cd in s['node'].get('customDomains',[]):
+                if cd['domain']=='$CUSTOM_DOMAIN':
+                  print(cd['id'])
+          except: pass
           " 2>/dev/null)
+          echo "Old domain ID: '$OLD_DOMAIN_ID'"
           if [ -n "$OLD_DOMAIN_ID" ]; then
-            echo "Removing old domain $OLD_DOMAIN_ID"
+            echo "Removing old domain binding $OLD_DOMAIN_ID"
             curl -s -X POST "https://backboard.railway.com/graphql/v2" \
               -H "Content-Type: application/json" \
               -H "Authorization: Bearer $RAILWAY_TOKEN" \
-              -d "{\"query\":\"mutation { customDomainDelete(id: \\\"$OLD_DOMAIN_ID\\\") }\"}" > /dev/null
+              -d "{\"query\":\"mutation { customDomainDelete(id: \\\"$OLD_DOMAIN_ID\\\") }\"}"
             sleep 5
           fi
           # Add domain to new service
@@ -95,7 +98,7 @@ jobs:
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $RAILWAY_TOKEN" \
             -d "{\"query\":\"mutation { customDomainCreate(input: { domain: \\\"$CUSTOM_DOMAIN\\\", serviceId: \\\"$NEW_SERVICE_ID\\\", environmentId: \\\"$ENV_ID\\\" }) { id domain } }\"}")
-          echo "Domain add: $ADD_RESULT"
+          echo "Domain add result: $ADD_RESULT"
 
       - name: Create Railway domain
         env:
