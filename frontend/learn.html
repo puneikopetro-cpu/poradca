@@ -251,17 +251,17 @@ footer{
 
 <!-- ─── NAVBAR ─── -->
 <nav id="navbar">
-  <a href="index.html" class="nav-logo">
+  <a href="/" class="nav-logo">
     <div class="nav-logo-icon">💡</div>
     <div class="nav-logo-text">FinAdvisor<span>SK</span></div>
   </a>
   <div class="nav-links">
-    <a href="index.html">Domov</a>
-    <a href="app.html">Platforma</a>
-    <a href="hub.html">Kalkulačky</a>
-    <a href="app.html">Kurzy</a>
+    <a href="/">Domov</a>
+    <a href="/app">Platforma</a>
+    <a href="/hub">Kalkulačky</a>
+    <a href="/app">Kurzy</a>
   </div>
-  <a href="app.html" class="nav-cta">Pokračovať v učení</a>
+  <a href="/app" class="nav-cta">Pokračovať v učení</a>
 </nav>
 
 <!-- ─── CONTENT ─── -->
@@ -273,10 +273,10 @@ footer{
 
       <!-- Breadcrumb -->
       <nav class="breadcrumb" aria-label="breadcrumb">
-        <a href="index.html">Domov</a><span>›</span>
-        <a href="app.html">Kurzy</a><span>›</span>
-        <a href="app.html">Investície</a><span>›</span>
-        <span class="current">ETF</span>
+        <a href="/">Domov</a><span>›</span>
+        <a href="/app">Kurzy</a><span>›</span>
+        <span id="bc-cat">Investície</span><span>›</span>
+        <span class="current" id="bc-title">ETF</span>
       </nav>
 
       <!-- Mobile TOC -->
@@ -497,14 +497,14 @@ Aktívny fond (priemer):               TER 1.50%  →  Konečná hodnota: <span 
 
 <!-- ─── FOOTER ─── -->
 <footer>
-  <a href="index.html" class="footer-logo">
+  <a href="/" class="footer-logo">
     <div class="footer-logo-icon">💡</div>
     <div class="footer-logo-text">FinAdvisor SK</div>
   </a>
   <div class="footer-links">
-    <a href="privacy.html">Ochrana údajov</a>
-    <a href="terms.html">Podmienky</a>
-    <a href="index.html#contact">Kontakt</a>
+    <a href="/privacy">Ochrana údajov</a>
+    <a href="/terms">Podmienky</a>
+    <a href="/#contact">Kontakt</a>
   </div>
   <div class="footer-legal">
     Platforma slúži výlučne na vzdelávacie účely podľa §1 ods. 2 zákona č. 186/2009 Z.z. — Nie je finančným poradenstvom.
@@ -512,6 +512,44 @@ Aktívny fond (priemer):               TER 1.50%  →  Konečná hodnota: <span 
 </footer>
 
 <script>
+// ─── COURSE LOOKUP BY URL PARAM ─────────────────────
+const COURSES_META = {
+  1:{title:'Osobný rozpočet a cashflow',cat:'Základy',emoji:'📖',xp:80,mins:45},
+  2:{title:'Ako fungujú banky a úroky',cat:'Základy',emoji:'🏦',xp:70,mins:35},
+  3:{title:'Fond núdzových situácií',cat:'Základy',emoji:'🛡️',xp:60,mins:30},
+  4:{title:'Daňový systém Slovenska',cat:'Základy',emoji:'📊',xp:110,mins:55},
+  5:{title:'Hypotéka krok za krokom',cat:'Základy',emoji:'🏠',xp:130,mins:65},
+  6:{title:'ETF fondy pre začiatočníkov',cat:'Investície',emoji:'📈',xp:100,mins:60},
+  7:{title:'Diverzifikácia portfólia',cat:'Investície',emoji:'🌍',xp:90,mins:45},
+  8:{title:'Akcie a dividendy',cat:'Investície',emoji:'📉',xp:110,mins:55},
+  9:{title:'Dlhopisy a dlhové nástroje',cat:'Investície',emoji:'🏛️',xp:85,mins:40},
+  10:{title:'REITs a nehnuteľnosti',cat:'Investície',emoji:'🏢',xp:120,mins:50},
+  11:{title:'Komodity: zlato, ropa, striebro',cat:'Investície',emoji:'🥇',xp:95,mins:40},
+  12:{title:'Zákon č. 186/2009 Z.z.',cat:'NBS príprava',emoji:'⚖️',xp:150,mins:80},
+  13:{title:'Typy finančných produktov SR',cat:'NBS príprava',emoji:'📋',xp:130,mins:65},
+  14:{title:'Príprava na skúšku NBS',cat:'NBS príprava',emoji:'🎓',xp:200,mins:100},
+  15:{title:'Etika finančného poradcu',cat:'NBS príprava',emoji:'🤝',xp:90,mins:40},
+  16:{title:'Bitcoin a blockchain základy',cat:'Krypto & DeFi',emoji:'₿',xp:80,mins:50},
+  17:{title:'DeFi a stablecoiny',cat:'Krypto & DeFi',emoji:'🔷',xp:100,mins:40},
+  18:{title:'Regulácia krypta v EÚ (MiCA)',cat:'Krypto & DeFi',emoji:'📜',xp:90,mins:35},
+};
+const urlId = parseInt(new URLSearchParams(window.location.search).get('id'))||6;
+const course = COURSES_META[urlId] || COURSES_META[6];
+// Update page meta
+if(course){
+  document.title = course.title + ' — FinAdvisor SK';
+  const bcTitle = document.getElementById('bc-title');
+  const bcCat = document.getElementById('bc-cat');
+  if(bcTitle) bcTitle.textContent = course.title;
+  if(bcCat) bcCat.textContent = course.cat;
+  const xpBadge = document.querySelector('.badge-xp');
+  if(xpBadge) xpBadge.textContent = '⚡ +'+course.xp+' XP';
+  const timeBadge = document.querySelector('.badge-time');
+  if(timeBadge) timeBadge.textContent = '⏱ '+course.mins+' min';
+  const xpPop = document.getElementById('xp-pop');
+  if(xpPop) xpPop.textContent = '⚡ +'+course.xp+' XP Získané!';
+}
+
 // ─── READING PROGRESS ──────────────────────────────
 const prog = document.getElementById('read-progress');
 const tocProg = document.getElementById('toc-progress');
@@ -565,9 +603,8 @@ function finishLesson(){
   btn.textContent = '🎉 Lekcia dokončená!';
   btn.classList.add('done');
   pop.classList.add('show');
-  setTimeout(()=>pop.classList.remove('show'), 3000);
-  // scroll to top after small delay
-  setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}), 800);
+  setTimeout(()=>pop.classList.remove('show'), 2500);
+  setTimeout(()=>{ window.location.href = '/app'; }, 2800);
 }
 </script>
 </body>
