@@ -953,12 +953,30 @@ function sendMsg(){
   typing.className='msg ai'; typing.id='typing';
   typing.innerHTML=`<div class="msg-icon">🤖</div><div class="msg-bubble" style="padding:14px 18px"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
   box.appendChild(typing); box.scrollTop=box.scrollHeight;
-  setTimeout(()=>{
+
+  // Build history for context (last 6 messages)
+  const history = CHAT_HISTORY.slice(-7,-1).map(m=>({
+    role: m.role==='ai' ? 'assistant' : 'user',
+    content: m.msg.replace(/<[^>]+>/g,'')
+  }));
+
+  fetch(API+'/ai/chat', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({message:text, history})
+  })
+  .then(r=>r.json())
+  .then(data=>{
     typing.remove();
-    const reply=getAIReply(text);
+    const reply = data.reply || 'Prepáčte, nastala chyba. Skúste znova.';
     CHAT_HISTORY.push({role:'ai',msg:reply,time:new Date().toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'})});
     renderChat();
-  },1200);
+  })
+  .catch(()=>{
+    typing.remove();
+    CHAT_HISTORY.push({role:'ai',msg:'Prepáčte, AI je momentálne nedostupné. Skúste znova o chvíľu. ⚠️',time:new Date().toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'})});
+    renderChat();
+  });
 }
 document.getElementById('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}});
 

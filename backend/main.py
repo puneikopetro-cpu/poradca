@@ -15,6 +15,7 @@ from backend.financial_profile.router import router as profile_router
 from backend.recommendations.router import router as rec_router
 from backend.leads.router import router as leads_router
 from backend.quiz.router import router as quiz_router
+from backend.ai_chat import router as ai_router
 from backend.subscriptions.router import router as subscriptions_router
 
 # Register models
@@ -103,7 +104,7 @@ async def maintenance_gate(request: Request, call_next):
     path = request.url.path
 
     # Always allow API / internal paths
-    if path in _PUBLIC_PATHS or path.startswith(("/leads", "/auth", "/users", "/quiz", "/profile", "/rec", "/admin", "/static", "/subscribe", "/app", "/learn")):
+    if path in _PUBLIC_PATHS or path.startswith(("/leads", "/auth", "/users", "/ai", "/quiz", "/profile", "/rec", "/admin", "/static", "/subscribe", "/app", "/learn")):
         return await call_next(request)
 
     # Allow if secret token passed in query → set cookie and redirect
@@ -163,6 +164,7 @@ app.include_router(rec_router)
 app.include_router(leads_router)
 app.include_router(quiz_router)
 app.include_router(subscriptions_router)
+app.include_router(ai_router)
 
 
 @app.get("/health", tags=["health"])
