@@ -19,12 +19,13 @@
     /* ── LOGIN ── */
     #login {
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      background: radial-gradient(ellipse at 50% 0%, #1e3a8a22 0%, transparent 70%);
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 50%, #1e1b4b 100%);
     }
     .login-box {
-      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
-      padding: 48px 40px; width: 360px; text-align: center;
-      box-shadow: 0 0 60px rgba(59,130,246,.15);
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 20px; padding: 48px 40px; width: 360px; text-align: center;
+      box-shadow: 0 0 80px rgba(59,130,246,.3), 0 20px 60px rgba(0,0,0,.5);
+      backdrop-filter: blur(20px);
     }
     .login-box .logo { font-size: 48px; margin-bottom: 12px; }
     .login-box h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
