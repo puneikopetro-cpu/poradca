@@ -8,6 +8,7 @@ on:
 env:
   PROJECT_ID: "564a41ac-75f7-4be8-9ce2-e2dc57cfd8d0"
   ENV_ID: "a8bd17a5-fd7f-47b0-9fc4-08311e9632d1"
+  SERVICE_ID: "f8a774af-4d62-4d17-9941-90bcd0580646"
   TG_TOKEN: "8428211519:AAHkiiy7iZdkvc-CMQY97zT5ERGbKoa3eh4"
 
 jobs:
@@ -16,68 +17,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Detect active service ID
-        id: detect
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: |
-          # Try different queries to find the service
-          echo "=== Querying project services ==="
-          Q1=$(curl -s -X POST "https://backboard.railway.com/graphql/v2" \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer $RAILWAY_TOKEN" \
-            -d "{\"query\":\"{ project(id: \\\"$PROJECT_ID\\\") { services { edges { node { id name } } } } }\"}")
-          echo "Services: $Q1"
-
-          echo "=== Querying service instances ==="
-          Q2=$(curl -s -X POST "https://backboard.railway.com/graphql/v2" \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer $RAILWAY_TOKEN" \
-            -d "{\"query\":\"{ project(id: \\\"$PROJECT_ID\\\") { serviceInstances { edges { node { serviceId customDomains { domain } } } } } }\"}")
-          echo "ServiceInstances: $Q2"
-
-          # Parse service with finadvisor.sk
-          TARGET=$(echo "$Q2" | python3 -c "
-          import sys, json
-          try:
-            d = json.load(sys.stdin)
-            instances = d['data']['project']['serviceInstances']['edges']
-            for e in instances:
-              n = e['node']
-              for cd in n.get('customDomains', []):
-                if 'finadvisor' in cd.get('domain', ''):
-                  print(n['serviceId'])
-          except Exception as ex:
-            print('PARSE_ERROR:', ex, file=sys.stderr)
-          " 2>&1)
-          echo "Target service: '$TARGET'"
-          echo "SERVICE_ID=$TARGET" >> $GITHUB_OUTPUT
-
       - name: Install Railway CLI
         run: curl -fsSL https://railway.app/install.sh | sh
 
-      - name: Deploy via Railway CLI
+      - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          SERVICE_ID: ${{ steps.detect.outputs.SERVICE_ID }}
         run: |
-          echo "Deploying to service: '$SERVICE_ID'"
-          if [ -n "$SERVICE_ID" ] && [[ "$SERVICE_ID" != PARSE_ERROR* ]]; then
-            RAILWAY_TOKEN=$RAILWAY_TOKEN \
-            RAILWAY_PROJECT_ID=$PROJECT_ID \
-            RAILWAY_SERVICE_ID=$SERVICE_ID \
-            RAILWAY_ENVIRONMENT_ID=$ENV_ID \
-            railway up --detach
-            echo "Deploy triggered for existing service $SERVICE_ID"
-          else
-            echo "Could not find service — creating new via githubRepoDeploy"
-            curl -s -X POST "https://backboard.railway.com/graphql/v2" \
-              -H "Content-Type: application/json" \
-              -H "Authorization: Bearer $RAILWAY_TOKEN" \
-              -d "{\"query\":\"mutation { githubRepoDeploy(input: { projectId: \\\"$PROJECT_ID\\\", repo: \\\"puneikopetro-cpu/poradca\\\", branch: \\\"main\\\" }) }\"}"
-          fi
+          RAILWAY_TOKEN=$RAILWAY_TOKEN \
+          RAILWAY_PROJECT_ID=$PROJECT_ID \
+          RAILWAY_SERVICE_ID=$SERVICE_ID \
+          RAILWAY_ENVIRONMENT_ID=$ENV_ID \
+          railway up --detach
+          echo "Deployed to service $SERVICE_ID (intuitive-illumination / finadvisor.sk)"
 
       - name: Update Telegram webhook
         run: |
           curl -s "https://api.telegram.org/bot$TG_TOKEN/setWebhook?url=https://finadvisor.sk/telegram/webhook"
-          echo "Webhook: https://finadvisor.sk/telegram/webhook"
+          echo "Webhook updated: https://finadvisor.sk/telegram/webhook"
