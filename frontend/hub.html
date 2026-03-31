@@ -227,6 +227,9 @@
         <div class="s-item" onclick="go('crypto')"><span class="ic">₿</span> Крипто біржі</div>
         <div class="s-item" onclick="go('insurance')"><span class="ic">🛡️</span> Страхові компанії</div>
 
+        <div class="s-section">Система мислення</div>
+        <div class="s-item" onclick="go('roadmap')"><span class="ic">🗺️</span> Фін. система 0→Капітал</div>
+
         <div class="s-section">Інструменти</div>
         <div class="s-item" onclick="go('calculator')"><span class="ic">🧮</span> Калькулятори</div>
         <div class="s-item" onclick="go('rates')"><span class="ic">💱</span> Курси валют LIVE</div>
@@ -623,6 +626,346 @@
           </div>
         </div>
 
+        <!-- ROADMAP -->
+        <div class="page" id="page-roadmap">
+          <style>
+            .rm-level{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
+            .rm-hd{padding:16px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:background .15s;user-select:none}
+            .rm-hd:hover{background:var(--card2)}
+            .rm-badge{font-size:22px;flex-shrink:0}
+            .rm-title{font-size:15px;font-weight:800;flex:1}
+            .rm-tag{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+            .rm-body{padding:0 20px 20px;display:none;border-top:1px solid var(--border)}
+            .rm-body.open{display:block}
+            .rm-body h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:16px 0 8px}
+            .rm-body p{font-size:13px;line-height:1.7;color:#cbd5e1;margin-bottom:8px}
+            .rm-body ul{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+            .rm-body ul li{font-size:13px;color:#cbd5e1;padding-left:16px;position:relative;line-height:1.5}
+            .rm-body ul li::before{content:'→';position:absolute;left:0;color:var(--blue);font-weight:700}
+            .rm-body .truth{background:rgba(245,158,11,.1);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:#fde68a;margin:12px 0;font-style:italic}
+            .rm-body .tasks{background:rgba(16,185,129,.08);border-radius:8px;padding:12px 16px}
+            .rm-body .tasks li::before{content:'✅';left:0}
+            .rm-progress{width:100%;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;margin-top:6px}
+            .rm-progress-fill{height:100%;border-radius:2px;transition:width .5s}
+            .rm-chevron{color:var(--muted);font-size:12px;transition:transform .2s}
+            .rm-hd.open .rm-chevron{transform:rotate(180deg)}
+          </style>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+            <div>
+              <h2 style="margin:0;font-size:20px">🗺️ Фінансова система: 0 → Капітал → Свобода</h2>
+              <p style="color:var(--muted);font-size:13px;margin-top:4px">Багаторівневий план — від нуля до фінансової незалежності</p>
+            </div>
+          </div>
+
+          <!-- Progress overview -->
+          <div class="grid" style="margin-bottom:24px">
+            <div class="stat-card"><span class="stat-ic">🧠</span><div><div class="stat-v">8</div><div class="stat-l">Рівнів системи</div></div></div>
+            <div class="stat-card"><span class="stat-ic">📅</span><div><div class="stat-v">3–12 міс</div><div class="stat-l">Строк реалізації</div></div></div>
+            <div class="stat-card"><span class="stat-ic">💡</span><div><div class="stat-v">Інформаційна</div><div class="stat-l">асиметрія = перевага</div></div></div>
+            <div class="stat-card"><span class="stat-ic">⚡</span><div><div class="stat-v">Системність</div><div class="stat-l">— єдиний метод</div></div></div>
+          </div>
+
+          <!-- LEVEL 0 -->
+          <div class="rm-level">
+            <div class="rm-hd" onclick="toggleLevel(this)">
+              <span class="rm-badge">🧠</span>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span class="rm-title">Рівень 0 — ПРОБУДЖЕННЯ</span>
+                  <span class="rm-tag" style="background:rgba(139,92,246,.15);color:var(--purple)">0–7 днів</span>
+                </div>
+                <div class="rm-progress"><div class="rm-progress-fill" style="width:100%;background:var(--purple)"></div></div>
+              </div>
+              <span class="rm-chevron">▼</span>
+            </div>
+            <div class="rm-body">
+              <h4>🎯 Ціль</h4>
+              <p>Зрозуміти, як влаштований світ грошей насправді.</p>
+              <h4>🔑 Ключові істини</h4>
+              <ul>
+                <li>💸 Гроші = інструмент контролю ресурсів</li>
+                <li>🏦 Банки заробляють на твоїй неграмотності</li>
+                <li>📉 Інфляція = прихований податок на незнання</li>
+                <li>🧠 Більшість людей фінансово "сліпі" — це твоя перевага</li>
+              </ul>
+              <div class="truth">⚠️ "Система створена так, щоб ти працював, а не володів"</div>
+              <h4>✅ Завдання</h4>
+              <ul class="tasks">
+                <li>Записати всі свої доходи і витрати</li>
+                <li>Зрозуміти: ти зараз створюєш чи споживаєш?</li>
+                <li>Прочитати 1 книгу про гроші (Rich Dad Poor Dad / Kiyosaki)</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- LEVEL 1 -->
+          <div class="rm-level">
+            <div class="rm-hd" onclick="toggleLevel(this)">
+              <span class="rm-badge">💰</span>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span class="rm-title">Рівень 1 — КОНТРОЛЬ</span>
+                  <span class="rm-tag" style="background:rgba(16,185,129,.15);color:var(--green)">1–3 тижні</span>
+                </div>
+                <div class="rm-progress"><div class="rm-progress-fill" style="width:80%;background:var(--green)"></div></div>
+              </div>
+              <span class="rm-chevron">▼</span>
+            </div>
+            <div class="rm-body">
+              <h4>🎯 Ціль</h4>
+              <p>Взяти під повний контроль рух грошей.</p>
+              <h4>🔧 Система</h4>
+              <ul>
+                <li>100% бюджет — кожен євро має призначення</li>
+                <li>Фінансова дисципліна без винятків</li>
+                <li>Перші заощадження (мінімум 10–20% доходу)</li>
+              </ul>
+              <div class="truth">💡 Багаті не економлять — вони керують потоками. Різниця критична.</div>
+              <h4>✅ Завдання</h4>
+              <ul class="tasks">
+                <li>Вести облік кожного € щодня (без винятків)</li>
+                <li>Відкладати мінімум 10–20% з будь-якого надходження</li>
+                <li>Прибрати 3 найбільших "дурних витрати"</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- LEVEL 2 -->
+          <div class="rm-level">
+            <div class="rm-hd" onclick="toggleLevel(this)">
+              <span class="rm-badge">📈</span>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span class="rm-title">Рівень 2 — РОЗУМІННЯ ГРОШЕЙ</span>
+                  <span class="rm-tag" style="background:rgba(59,130,246,.15);color:var(--blue)">1 місяць</span>
+                </div>
+                <div class="rm-progress"><div class="rm-progress-fill" style="width:65%;background:var(--blue)"></div></div>
+              </div>
+              <span class="rm-chevron">▼</span>
+            </div>
+            <div class="rm-body">
+              <h4>🎯 Ціль</h4>
+              <p>Навчитися бачити, де і як створюються гроші в системі.</p>
+              <h4>🧠 Що вивчити</h4>
+              <ul>
+                <li><b>Макроекономіка:</b> центральні банки, ставки, інфляція, M2</li>
+                <li><b>Ринки:</b> попит/пропозиція, економічні цикли (кризи = можливості)</li>
+                <li><b>5 типів активів:</b> акції, нерухомість, бізнес, крипта, сировина</li>
+                <li><b>ETF:</b> найпростіший інструмент входу на ринок</li>
+              </ul>
+              <div class="truth">⚠️ Найбільші гроші в історії зроблені під час криз. Підготовлені — купують, непідготовлені — продають в паніці.</div>
+              <h4>✅ Завдання</h4>
+              <ul class="tasks">
+                <li>Зрозуміти 5 типів активів і як вони працюють</li>
+                <li>Вивчити ETF — що таке SPY, QQQ, VTI</li>
+                <li>Відкрити брокерський акаунт (Interactive Brokers / Degiro)</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- LEVEL 3 -->
+          <div class="rm-level">
+            <div class="rm-hd" onclick="toggleLevel(this)">
+              <span class="rm-badge">💸</span>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span class="rm-title">Рівень 3 — ПЕРШІ ІНВЕСТИЦІЇ</span>
+                  <span class="rm-tag" style="background:rgba(59,130,246,.15);color:var(--blue)">1–3 місяці</span>
+                </div>
+                <div class="rm-progress"><div class="rm-progress-fill" style="width:50%;background:var(--blue)"></div></div>
+              </div>
+              <span class="rm-chevron">▼</span>
+            </div>
+            <div class="rm-body">
+              <h4>🎯 Ціль</h4>
+              <p>Змусити гроші працювати — перший пасивний дохід.</p>
+              <h4>🔑 Стратегія (від простого до складного)</h4>
+              <ul>
+                <li><b>База:</b> ETF S&P 500 (SPY/IVV) — довгострок, DCA щомісяця</li>
+                <li><b>Далі:</b> дивідендні акції — регулярний cashflow</li>
+                <li><b>Опціонально:</b> крипта — не більше 5–10% портфелю</li>
+              </ul>
+              <div class="truth">💡 Багатство = нудні, регулярні інвестиції. НЕ трейдинг, НЕ "швидкі схеми". Час + складний відсоток = результат.</div>
+              <h4>✅ Завдання</h4>
+              <ul class="tasks">
+                <li>Інвестувати перші 50–500€ в ETF</li>
+                <li>Створити портфель і записати стратегію</li>
+                <li>Налаштувати автоматичний щомісячний внесок</li>
+                <li>Не панікувати при -20% — це нормально</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- LEVEL 4 -->
+          <div class="rm-level">
+            <div class="rm-hd" onclick="toggleLevel(this)">
+              <span class="rm-badge">🚀</span>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span class="rm-title">Рівень 4 — ЗБІЛЬШЕННЯ ДОХОДУ</span>
+                  <span class="rm-tag" style="background:rgba(245,158,11,.15);color:var(--gold)">Паралельно</span>
+                </div>
+                <div class="rm-progress"><div class="rm-progress-fill" style="width:40%;background:var(--gold)"></div></div>
+              </div>
+              <span class="rm-chevron">▼</span>
+            </div>
+            <div class="rm-body">
+              <h4>🎯 Ціль</h4>
+              <p>Підняти дохід — це критичний множник всього іншого.</p>
+              <div class="truth">🔥 Інвестиції не врятують, якщо ти мало заробляєш. €100/міс × 8% = сміх. €2000/міс × 8% = результат.</div>
+              <h4>🧩 Варіанти додаткового доходу</h4>
+              <ul>
+                <li>Фріланс (skills: код, дизайн, маркетинг, фінанси)</li>
+                <li>Онлайн-бізнес (SaaS, контент, освіта)</li>
+                <li>Продаж послуг (consulting, coaching)</li>
+                <li>Контент (YouTube, newsletters, курси)</li>
+              </ul>
+              <div class="truth">🧠 Гроші = там, де є увага людей. Знайди де увага — знайди де гроші.</div>
+              <h4>✅ Завдання</h4>
+              <ul class="tasks">
+                <li>Визначити 1 навичку з ринковою вартістю</li>
+                <li>Вийти на +300€/міс додатково протягом 3 місяців</li>
+                <li>100% додаткового доходу → в інвестиції</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- LEVEL 5 -->
+          <div class="rm-level">
+            <div class="rm-hd" onclick="toggleLevel(this)">
+              <span class="rm-badge">🏗️</span>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span class="rm-title">Рівень 5 — СИСТЕМА КАПІТАЛУ</span>
+                  <span class="rm-tag" style="background:rgba(239,68,68,.15);color:var(--red)">6–12 місяців</span>
+                </div>
+                <div class="rm-progress"><div class="rm-progress-fill" style="width:30%;background:var(--red)"></div></div>
+              </div>
+              <span class="rm-chevron">▼</span>
+            </div>
+            <div class="rm-body">
+              <h4>🎯 Ціль</h4>
+              <p>Створити машину грошей — активи, що генерують cashflow самостійно.</p>
+              <h4>💼 Формула</h4>
+              <div style="background:rgba(59,130,246,.1);border-radius:8px;padding:12px 16px;margin-bottom:12px;font-size:14px;font-weight:700;text-align:center;color:var(--blue)">
+                Дохід → Інвестиції → Активи → Cashflow → Реінвест → ↑
+              </div>
+              <h4>📊 Джерела доходу (ціль: мінімум 3)</h4>
+              <ul>
+                <li>Активи (акції, ETF, облігації)</li>
+                <li>Бізнес або фріланс</li>
+                <li>Дивіденди і рента</li>
+                <li>Цифрові продукти (масштаб без границь)</li>
+              </ul>
+              <div class="truth">⚠️ Багаті живуть не на зарплату. Вони живуть на структури — холдинги, фонди, компанії, що платять їм навіть поки вони сплять.</div>
+              <h4>✅ Завдання</h4>
+              <ul class="tasks">
+                <li>Мати 2–3 незалежних джерела доходу</li>
+                <li>Автоматизувати інвестиції (direct debit)</li>
+                <li>100% прибутку від активів → реінвестувати</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- LEVEL 6 -->
+          <div class="rm-level">
+            <div class="rm-hd" onclick="toggleLevel(this)">
+              <span class="rm-badge">🌍</span>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span class="rm-title">Рівень 6 — ДЕ РЕАЛЬНО КРУТЯТЬСЯ ГРОШІ</span>
+                  <span class="rm-tag" style="background:rgba(245,158,11,.15);color:var(--gold)">Стратегічний</span>
+                </div>
+                <div class="rm-progress"><div class="rm-progress-fill" style="width:20%;background:var(--gold)"></div></div>
+              </div>
+              <span class="rm-chevron">▼</span>
+            </div>
+            <div class="rm-body">
+              <h4>💰 1. Фінансові ринки</h4>
+              <ul>
+                <li>Фондовий ринок — $100+ трлн, основа всього</li>
+                <li>Деривативи — найбільші гроші у світі ($600 трлн notional)</li>
+                <li>Банки і фонди (BlackRock, Vanguard) тут заробляють основне</li>
+              </ul>
+              <h4>🏢 2. Бізнес</h4>
+              <ul>
+                <li>SaaS — recurring revenue, висока маржа</li>
+                <li>E-commerce — масштаб, глобальний ринок</li>
+                <li>Сервіси — консалтинг, B2B</li>
+              </ul>
+              <h4>🌐 3. Увага людей = гроші</h4>
+              <ul>
+                <li>Google, Meta продають твою увагу рекламодавцям</li>
+                <li>Хто контролює увагу — контролює гроші</li>
+              </ul>
+              <h4>🏠 4. Нерухомість</h4>
+              <ul><li>Оренда + кредитне плече = ROE 15–25%</li></ul>
+              <h4>🪙 5. Крипта</h4>
+              <ul><li>Нова фінансова система. Високий ризик = висока потенційна нагорода. DeFi, стейкінг.</li></ul>
+              <div class="truth">🧠 Найбільший секрет: Дані = нова нафта. Хто має дані про поведінку людей — має владу і гроші.</div>
+            </div>
+          </div>
+
+          <!-- LEVEL 7 -->
+          <div class="rm-level">
+            <div class="rm-hd" onclick="toggleLevel(this)">
+              <span class="rm-badge">🧠</span>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span class="rm-title">Рівень 7 — МИСЛЕННЯ БАГАТИХ</span>
+                  <span class="rm-tag" style="background:rgba(139,92,246,.15);color:var(--purple)">Постійно</span>
+                </div>
+                <div class="rm-progress"><div class="rm-progress-fill" style="width:10%;background:var(--purple)"></div></div>
+              </div>
+              <span class="rm-chevron">▼</span>
+            </div>
+            <div class="rm-body">
+              <h4>🔑 Вони думають так</h4>
+              <ul>
+                <li>"Як це масштабувати без мене?"</li>
+                <li>"Як побудувати систему?"</li>
+                <li>"Як зробити так, щоб гроші приходили поки я сплю?"</li>
+                <li>"Яка моя годинна ставка і чи можу я її делегувати?"</li>
+              </ul>
+              <h4>❌ Вони НЕ думають</h4>
+              <ul>
+                <li>"Де зекономити 5€"</li>
+                <li>"Яку зарплату просити у роботодавця"</li>
+                <li>"Чи варто ризикувати 100€"</li>
+              </ul>
+              <div class="truth">⚡ Найглибша істина: Гроші — це гра зі своїми правилами. Більшість навіть не знає цих правил. Ти вже на кроці попереду більшості лише тим, що це читаєш.</div>
+            </div>
+          </div>
+
+          <!-- Daily system -->
+          <div class="card" style="margin-top:8px">
+            <div class="card-hd"><h3>📅 Щоденна система — 30 хвилин, які змінюють все</h3></div>
+            <div class="card-body" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+              <div style="background:rgba(59,130,246,.08);border-radius:10px;padding:16px">
+                <div style="font-size:18px;margin-bottom:8px">📚</div>
+                <div style="font-weight:700;font-size:13px;margin-bottom:4px">30 хв навчання</div>
+                <div style="font-size:12px;color:var(--muted)">Книга, подкаст, аналітика</div>
+              </div>
+              <div style="background:rgba(16,185,129,.08);border-radius:10px;padding:16px">
+                <div style="font-size:18px;margin-bottom:8px">📊</div>
+                <div style="font-weight:700;font-size:13px;margin-bottom:4px">Контроль витрат</div>
+                <div style="font-size:12px;color:var(--muted)">Кожен € записаний</div>
+              </div>
+              <div style="background:rgba(245,158,11,.08);border-radius:10px;padding:16px">
+                <div style="font-size:18px;margin-bottom:8px">🛠️</div>
+                <div style="font-weight:700;font-size:13px;margin-bottom:4px">Розвиток навички</div>
+                <div style="font-size:12px;color:var(--muted)">Що збільшує твій дохід</div>
+              </div>
+              <div style="background:rgba(139,92,246,.08);border-radius:10px;padding:16px">
+                <div style="font-size:18px;margin-bottom:8px">🔍</div>
+                <div style="font-weight:700;font-size:13px;margin-bottom:4px">Аналіз доходів</div>
+                <div style="font-size:12px;color:var(--muted)">Де зростаємо, де стагнація</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- CALCULATOR -->
         <div class="page" id="page-calculator">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
@@ -744,8 +1087,15 @@
     fortune500: '🏢 Fortune 500', 'tech-corps': '💻 Tech гіганти', energy: '⚡ Енергетика',
     fintech: '🚀 Fintech компанії', offshore: '🏝️ Офшори та юрисдикції',
     leasing: '🚗 Лізинг компанії', crypto: '₿ Крипто біржі', insurance: '🛡️ Страхові',
-    calculator: '🧮 Калькулятори', rates: '💱 Курси валют', notes: '📝 Нотатки', links: '🔗 Всі посилання'
+    calculator: '🧮 Калькулятори', rates: '💱 Курси валют', notes: '📝 Нотатки', links: '🔗 Всі посилання',
+    roadmap: '🗺️ Фінансова система: 0 → Капітал → Свобода'
   };
+
+  function toggleLevel(hd) {
+    hd.classList.toggle('open');
+    const body = hd.nextElementSibling;
+    if (body) body.classList.toggle('open');
+  }
 
   function go(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
