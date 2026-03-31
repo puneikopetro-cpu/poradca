@@ -62,11 +62,12 @@ jobs:
           SERVICE_ID: ${{ steps.detect.outputs.SERVICE_ID }}
         run: |
           echo "Deploying to service: '$SERVICE_ID'"
-          if [ -n "$SERVICE_ID" ] && [ "$SERVICE_ID" != "PARSE_ERROR:"* ]; then
-            railway up \
-              --service "$SERVICE_ID" \
-              --environment "$ENV_ID" \
-              --detach
+          if [ -n "$SERVICE_ID" ] && [[ "$SERVICE_ID" != PARSE_ERROR* ]]; then
+            RAILWAY_TOKEN=$RAILWAY_TOKEN \
+            RAILWAY_PROJECT_ID=$PROJECT_ID \
+            RAILWAY_SERVICE_ID=$SERVICE_ID \
+            RAILWAY_ENVIRONMENT_ID=$ENV_ID \
+            railway up --detach
             echo "Deploy triggered for existing service $SERVICE_ID"
           else
             echo "Could not find service — creating new via githubRepoDeploy"
