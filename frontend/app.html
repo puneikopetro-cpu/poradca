@@ -635,7 +635,7 @@ async function doRegister(e){
   const pwd=document.getElementById('r-pwd').value;
   const full=(first+' '+last).trim()||first;
   try{
-    const res=await fetch(API+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:full,email,password:pwd})});
+    const res=await fetch(API+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({full_name:full,email,password:pwd})});
     const data=await res.json();
     if(!res.ok){err.textContent=data.detail||'Registrácia zlyhala.';return;}
     ok.textContent='✅ Účet vytvorený! Prihlasovanie...';
@@ -681,7 +681,7 @@ async function initApp(){
   const xp = user.xp || Math.floor(Math.random()*200)+50; // fallback demo xp
   const level = Math.floor(xp/200)+1;
   const xpInLevel = xp % 200;
-  const firstName = (user.name||user.email||'Používateľ').split(' ')[0];
+  const firstName = (user.full_name||user.name||user.email||'Používateľ').split(' ')[0];
   const initials = firstName.charAt(0).toUpperCase();
 
   // Sidebar
@@ -703,9 +703,9 @@ async function initApp(){
   document.getElementById('st-xp').textContent=xp;
 
   // Profile
-  const parts=(user.name||'').split(' ');
+  const parts=(user.full_name||user.name||'').split(' ');
   document.getElementById('p-avatar').textContent=initials;
-  document.getElementById('p-name').textContent=user.name||user.email;
+  document.getElementById('p-name').textContent=user.full_name||user.name||user.email;
   document.getElementById('p-email').textContent=user.email;
   document.getElementById('prof-first').value=parts[0]||'';
   document.getElementById('prof-last').value=parts.slice(1).join(' ')||'';
@@ -733,7 +733,7 @@ async function saveProfile(){
   const name=(first+' '+last).trim()||first;
   btn.disabled=true; msg.textContent='';
   try{
-    const res=await fetch(API+'/users/me',{method:'PATCH',headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('fa_token')},body:JSON.stringify({name})});
+    const res=await fetch(API+'/auth/me',{method:'PATCH',headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('fa_token')},body:JSON.stringify({full_name:name})});
     if(res.ok){
       msg.textContent='✅ Uložené!'; msg.className='save-msg ok';
       document.getElementById('sb-name').textContent=first;
@@ -755,7 +755,7 @@ async function changePassword(){
   if(nw.length<8){msg.textContent='❌ Min. 8 znakov'; msg.className='save-msg err'; return;}
   btn.disabled=true; msg.textContent='';
   try{
-    const res=await fetch(API+'/users/me',{method:'PATCH',headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('fa_token')},body:JSON.stringify({current_password:cur,new_password:nw})});
+    const res=await fetch(API+'/auth/me',{method:'PATCH',headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('fa_token')},body:JSON.stringify({current_password:cur,new_password:nw})});
     if(res.ok){
       msg.textContent='✅ Heslo zmenené!'; msg.className='save-msg ok';
       document.getElementById('pwd-current').value='';

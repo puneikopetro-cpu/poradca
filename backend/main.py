@@ -103,7 +103,7 @@ async def maintenance_gate(request: Request, call_next):
     path = request.url.path
 
     # Always allow API / internal paths
-    if path in _PUBLIC_PATHS or path.startswith(("/leads", "/auth", "/quiz", "/profile", "/rec", "/admin", "/static", "/subscribe", "/app", "/learn")):
+    if path in _PUBLIC_PATHS or path.startswith(("/leads", "/auth", "/users", "/quiz", "/profile", "/rec", "/admin", "/static", "/subscribe", "/app", "/learn")):
         return await call_next(request)
 
     # Allow if secret token passed in query → set cookie and redirect
