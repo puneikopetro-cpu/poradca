@@ -4,446 +4,341 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>FinAdvisor SK — Platforma</title>
-<meta name="description" content="FinAdvisor SK klientská platforma — kurzy, kalkulačky, AI radca."/>
+<meta name="description" content="FinAdvisor SK — finančné vzdelávanie, kurzy, kalkulačky, AI radca."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#060A14;--bg2:#0D1421;--bg3:#121C2E;
+  --bg:#060A14;--bg2:#0D1421;--bg3:#121C2E;--bg4:#162035;
   --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
   --text:#F8FAFC;--muted:#94A3B8;--muted2:#64748B;
-  --indigo:#6366F1;--indigo2:#818CF8;--indigo-glow:rgba(99,102,241,0.15);
-  --green:#10B981;--green-glow:rgba(16,185,129,0.15);
-  --gold:#F59E0B;--gold-glow:rgba(245,158,11,0.15);
-  --red:#EF4444;--r:16px;--r-sm:12px;--sidebar:240px;
+  --indigo:#6366F1;--indigo2:#818CF8;--ig:rgba(99,102,241,0.15);--ib:rgba(99,102,241,0.2);
+  --green:#10B981;--gg:rgba(16,185,129,0.15);--gb:rgba(16,185,129,0.2);
+  --gold:#F59E0B;--gold2:rgba(245,158,11,0.15);--goldb:rgba(245,158,11,0.2);
+  --red:#EF4444;--r:16px;--r-sm:12px;--r-xs:8px;--sidebar:240px;
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
-/* ─── LAYOUT ─────────────────────────── */
-.app-shell{display:flex;min-height:100vh}
+/* ── AUTH OVERLAY ─────────────────────────────────────────────── */
+#auth-overlay{
+  position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 40%,rgba(99,102,241,.14) 0%,var(--bg) 65%);
+}
+.auth-card{
+  background:rgba(13,20,33,.97);backdrop-filter:blur(24px);
+  border:1px solid var(--border2);border-radius:24px;
+  padding:44px 44px 36px;width:min(440px,92vw);
+  box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(99,102,241,.08);
+}
+.auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;justify-content:center}
+.auth-logo-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--indigo),#8B5CF6);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 24px rgba(99,102,241,.4)}
+.auth-logo-text{font-size:18px;font-weight:800;letter-spacing:-.5px}
+.auth-logo-text span{color:var(--indigo2)}
+.auth-tabs{display:flex;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px;margin-bottom:28px}
+.auth-tab{flex:1;padding:9px;border-radius:10px;text-align:center;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--muted)}
+.auth-tab.active{background:var(--indigo);color:#fff;box-shadow:0 4px 12px rgba(99,102,241,.3)}
+.auth-form{display:flex;flex-direction:column;gap:14px}
+.auth-form.hidden{display:none}
+.form-lbl{font-size:12px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.auth-input{
+  width:100%;padding:12px 16px;background:rgba(255,255,255,.04);
+  border:1px solid var(--border2);border-radius:var(--r-sm);
+  color:var(--text);font-size:14px;font-family:'Inter',sans-serif;
+  outline:none;transition:border .2s;
+}
+.auth-input:focus{border-color:var(--indigo)}
+.auth-input::placeholder{color:var(--muted2)}
+.auth-btn{
+  width:100%;padding:13px;border:none;border-radius:var(--r-sm);
+  background:linear-gradient(135deg,var(--indigo),#8B5CF6);
+  color:#fff;font-size:15px;font-weight:700;cursor:pointer;
+  transition:all .2s;font-family:'Inter',sans-serif;letter-spacing:.2px;
+}
+.auth-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(99,102,241,.4)}
+.auth-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.auth-err{color:var(--red);font-size:12px;text-align:center;min-height:18px}
+.auth-ok{color:var(--green);font-size:12px;text-align:center;min-height:18px}
+.auth-note{font-size:11px;color:var(--muted2);text-align:center;margin-top:12px;line-height:1.6}
 
-/* ─── SIDEBAR ────────────────────────── */
+/* ── LAYOUT ───────────────────────────────────────────────────── */
+#app-shell{display:none;min-height:100vh}
+.app-shell-inner{display:flex;min-height:100vh}
+
+/* ── SIDEBAR ──────────────────────────────────────────────────── */
 .sidebar{
   width:var(--sidebar);min-height:100vh;
   background:var(--bg2);border-right:1px solid var(--border);
   display:flex;flex-direction:column;
-  position:fixed;top:0;left:0;z-index:50;
-  transition:transform .3s;
+  position:fixed;top:0;left:0;z-index:50;transition:transform .3s;
 }
-.sidebar-logo{
-  display:flex;align-items:center;gap:10px;
-  padding:22px 20px 20px;border-bottom:1px solid var(--border);
-  text-decoration:none;
-}
-.logo-icon{
-  width:34px;height:34px;
-  background:linear-gradient(135deg,var(--indigo),#8B5CF6);
-  border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
-}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:22px 20px 20px;border-bottom:1px solid var(--border);text-decoration:none}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--indigo),#8B5CF6);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .logo-text{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.3px;line-height:1.2}
 .logo-text span{color:var(--indigo2);display:block;font-size:11px;font-weight:500;letter-spacing:.3px}
-
 .sidebar-nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:2px}
-.nav-item{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 12px;border-radius:10px;
-  color:var(--muted);font-size:14px;font-weight:500;
-  cursor:pointer;transition:all .2s;text-decoration:none;
-  border:1px solid transparent;
-}
-.nav-item:hover{color:var(--text);background:rgba(255,255,255,0.04)}
-.nav-item.active{color:var(--indigo2);background:var(--indigo-glow);border-color:rgba(99,102,241,0.2)}
-.nav-item .icon{font-size:17px;width:20px;text-align:center;flex-shrink:0}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:var(--muted);font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid transparent}
+.nav-item:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-item.active{color:var(--indigo2);background:var(--ig);border-color:var(--ib)}
+.nav-item .icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.sidebar-bottom{padding:14px 16px;border-top:1px solid var(--border)}
+.user-chip{display:flex;align-items:center;gap:10px}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--indigo),#8B5CF6);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.user-info .user-name{font-size:13px;font-weight:600}
+.user-info .user-level{font-size:11px;color:var(--muted)}
+.logout-btn{margin-top:10px;width:100%;padding:8px;border:1px solid var(--border2);border-radius:var(--r-xs);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;transition:all .2s}
+.logout-btn:hover{border-color:var(--red);color:var(--red)}
 
-.sidebar-bottom{padding:16px 12px;border-top:1px solid var(--border)}
-.user-chip{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 12px;border-radius:10px;
-  background:var(--bg3);cursor:pointer;
-}
-.user-avatar{
-  width:32px;height:32px;border-radius:50%;
-  background:linear-gradient(135deg,var(--indigo),#8B5CF6);
-  display:flex;align-items:center;justify-content:center;
-  font-size:13px;font-weight:700;color:#fff;flex-shrink:0;
-}
-.user-info{flex:1;overflow:hidden}
-.user-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.user-level{font-size:11px;color:var(--muted2)}
+/* ── MAIN ─────────────────────────────────────────────────────── */
+.main{margin-left:var(--sidebar);display:flex;flex-direction:column;min-height:100vh}
+.topbar{height:58px;background:rgba(6,10,20,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:40}
+.topbar-title{font-size:16px;font-weight:700;letter-spacing:-.3px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.xp-bar-wrap{display:flex;align-items:center;gap:8px}
+.xp-label{font-size:11px;font-weight:600;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.xp-track{width:100px;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--indigo),#8B5CF6);border-radius:3px;transition:width .5s}
+.level-badge{background:var(--ig);border:1px solid var(--ib);color:var(--indigo2);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
+.page-area{flex:1;padding:28px 28px 48px}
 
-/* ─── MAIN CONTENT ───────────────────── */
-.main{
-  margin-left:var(--sidebar);flex:1;
-  display:flex;flex-direction:column;min-height:100vh;
-}
+/* ── CARDS ────────────────────────────────────────────────────── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:16px}
+.card-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-hd h3{font-size:14px;font-weight:700}
+.card-bd{padding:20px}
 
-/* ─── TOP HEADER ─────────────────────── */
-.topbar{
-  position:sticky;top:0;z-index:40;
-  background:rgba(6,10,20,0.9);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-  padding:0 28px;height:64px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.topbar-title{font-size:16px;font-weight:600;color:var(--text)}
-.topbar-right{display:flex;align-items:center;gap:16px}
-.xp-bar-wrap{display:flex;align-items:center;gap:10px}
-.xp-label{font-size:12px;font-weight:600;color:var(--gold);font-family:'JetBrains Mono',monospace}
-.xp-track{
-  width:120px;height:6px;border-radius:3px;
-  background:var(--border2);overflow:hidden;
-}
-.xp-fill{
-  height:100%;border-radius:3px;
-  background:linear-gradient(90deg,var(--gold),#FBBF24);
-  transition:width 1s ease;
-}
-.level-badge{
-  font-size:11px;font-weight:700;color:var(--bg);
-  background:var(--gold);border-radius:6px;
-  padding:2px 7px;
-}
-.notif-btn{
-  width:36px;height:36px;border-radius:10px;
-  background:var(--bg3);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:16px;transition:all .2s;
-}
-.notif-btn:hover{border-color:var(--border2);background:var(--bg2)}
+/* ── PAGES ────────────────────────────────────────────────────── */
+.page{display:none}.page.active{display:block;animation:slideIn .22s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
 
-/* ─── PAGE AREA ──────────────────────── */
-.page-area{flex:1;padding:32px 28px 80px;max-width:1100px;width:100%}
-.page{display:none}
-.page.active{display:block}
-
-/* ─── CARDS ──────────────────────────── */
-.card{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:var(--r);padding:24px;
-  transition:border-color .2s,transform .2s;
-}
-.card:hover{border-color:var(--border2)}
-.card-sm{padding:18px 20px}
-
-/* ─── WELCOME ────────────────────────── */
-.welcome-card{
-  background:linear-gradient(135deg,var(--bg3),rgba(99,102,241,0.08));
-  border:1px solid rgba(99,102,241,0.2);
-  border-radius:var(--r);padding:28px;
-  margin-bottom:24px;
-  position:relative;overflow:hidden;
-}
-.welcome-card::before{
-  content:'';position:absolute;right:-40px;top:-40px;
-  width:180px;height:180px;
-  background:radial-gradient(circle,rgba(99,102,241,0.15),transparent 70%);
-  border-radius:50%;pointer-events:none;
-}
-.welcome-card h1{font-size:22px;font-weight:700;margin-bottom:6px}
-.welcome-card p{font-size:14px;color:var(--muted);line-height:1.6}
-.welcome-streak{
-  display:inline-flex;align-items:center;gap:6px;
-  margin-top:14px;padding:6px 14px;
-  background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);
-  border-radius:20px;font-size:13px;font-weight:600;color:var(--gold);
-}
-
-/* ─── STATS GRID ─────────────────────── */
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
-.stat-card{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:var(--r);padding:20px;
-  transition:all .2s;
-}
-.stat-card:hover{border-color:var(--border2);transform:translateY(-2px)}
-.stat-icon{font-size:22px;margin-bottom:10px}
-.stat-value{font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:4px}
-.stat-label{font-size:12px;color:var(--muted)}
+/* ── DASHBOARD ────────────────────────────────────────────────── */
+.welcome-card{background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(139,92,246,.06));border:1px solid var(--ib);border-radius:var(--r);padding:28px 32px;margin-bottom:20px}
+.welcome-card h1{font-size:clamp(18px,3vw,24px);font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.welcome-card p{font-size:14px;color:var(--muted);margin-bottom:14px}
+.welcome-streak{display:inline-flex;align-items:center;gap:6px;background:var(--gold2);border:1px solid var(--goldb);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600;color:var(--gold)}
+.iq-wrap{display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:20px}
+.iq-card{background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(245,158,11,.03));border:1px solid var(--goldb);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.iq-score{font-size:54px;font-weight:900;color:var(--gold);font-family:'JetBrains Mono',monospace;line-height:1;letter-spacing:-2px}
+.iq-max{font-size:16px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.iq-label{font-size:12px;color:var(--muted);margin:6px 0;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.iq-bar-track{width:100%;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin:8px 0}
+.iq-bar-fill{height:100%;width:87%;background:linear-gradient(90deg,var(--gold),#FB923C);border-radius:3px}
+.iq-tip{font-size:11px;color:var(--muted2)}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px;text-align:center;transition:border .2s}
+.stat-card:hover{border-color:var(--border2)}
+.stat-icon{font-size:24px;margin-bottom:8px}
+.stat-value{font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;letter-spacing:-1px}
+.stat-label{font-size:12px;color:var(--muted);margin-top:3px;font-weight:600}
 .stat-sub{font-size:11px;color:var(--muted2);margin-top:2px}
-
-/* ─── IQ SCORE CARD ──────────────────── */
-.iq-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
-.iq-card{
-  background:linear-gradient(135deg,rgba(245,158,11,0.08),var(--bg2));
-  border:1px solid rgba(245,158,11,0.2);
-  border-radius:var(--r);padding:24px;
-}
-.iq-score{font-size:42px;font-weight:800;color:var(--gold);font-family:'JetBrains Mono',monospace;line-height:1}
-.iq-max{font-size:18px;color:var(--muted2)}
-.iq-label{font-size:13px;color:var(--muted);margin-top:6px;margin-bottom:14px}
-.iq-bar-track{height:8px;background:var(--border2);border-radius:4px;overflow:hidden}
-.iq-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),#FBBF24);width:87%}
-.iq-tip{font-size:11px;color:var(--muted2);margin-top:8px}
-
-.recent-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px}
-.section-title{font-size:15px;font-weight:600;margin-bottom:16px;color:var(--text)}
-.lesson-row{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 0;border-bottom:1px solid var(--border);
-  transition:background .2s;
-}
+.recent-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+.section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.lesson-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)}
 .lesson-row:last-child{border-bottom:none}
 .lesson-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .lesson-dot.done{background:var(--green)}
-.lesson-dot.prog{background:var(--gold)}
-.lesson-title-sm{font-size:13px;color:var(--text);flex:1}
-.lesson-xp{font-size:11px;font-weight:600;color:var(--muted2);font-family:'JetBrains Mono',monospace}
+.lesson-dot.progress{background:var(--gold)}
+.lesson-dot.locked{background:var(--muted2)}
+.lesson-title-sm{flex:1;font-size:13px}
+.lesson-xp{font-size:11px;font-weight:700;color:var(--green);background:var(--gg);border:1px solid var(--gb);padding:2px 8px;border-radius:20px}
 
-/* ─── KURZY ──────────────────────────── */
-.kurzy-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-.page-title{font-size:22px;font-weight:700}
-.filter-tabs{display:flex;gap:6px;flex-wrap:wrap}
-.filter-tab{
-  padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;
-  background:var(--bg3);border:1px solid var(--border);color:var(--muted);
-  cursor:pointer;transition:all .2s;
-}
+/* ── KURZY ────────────────────────────────────────────────────── */
+.filter-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.filter-tab{padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);color:var(--muted);transition:all .2s}
 .filter-tab:hover{color:var(--text);border-color:var(--border2)}
-.filter-tab.active{background:var(--indigo-glow);border-color:rgba(99,102,241,0.3);color:var(--indigo2)}
+.filter-tab.active{background:var(--indigo);border-color:var(--indigo);color:#fff;box-shadow:0 4px 12px rgba(99,102,241,.25)}
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.course-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .25s}
+.course-card:hover{transform:translateY(-3px);border-color:var(--indigo);box-shadow:0 12px 32px rgba(99,102,241,.15)}
+.course-banner{height:88px;display:flex;align-items:center;padding:0 20px;gap:12px;position:relative}
+.course-banner .emoji{font-size:36px;line-height:1;flex-shrink:0}
+.course-cat{position:absolute;top:12px;right:12px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.cat-zaklady{background:rgba(16,185,129,.2);color:var(--green)}
+.cat-investicie{background:rgba(99,102,241,.2);color:var(--indigo2)}
+.cat-nbs{background:rgba(245,158,11,.2);color:var(--gold)}
+.cat-krypto{background:rgba(239,68,68,.2);color:#FCA5A5}
+.course-body{padding:16px 18px 18px}
+.course-title{font-size:15px;font-weight:700;margin-bottom:6px;line-height:1.3}
+.course-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.course-meta{display:flex;gap:14px;margin-bottom:12px}
+.course-meta-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted2);font-weight:500}
+.course-footer{display:flex;align-items:center;gap:10px}
+.progress-wrap{flex:1}
+.progress-bar-label{font-size:10px;color:var(--muted2);margin-bottom:4px}
+.progress-track{height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;border-radius:2px;transition:width .5s}
+.fill-done{background:var(--green)}
+.fill-progress{background:var(--indigo)}
+.fill-locked{background:var(--muted2)}
+.xp-badge{background:var(--gg);border:1px solid var(--gb);color:var(--green);font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.course-action{margin-top:12px}
+.btn-course{width:100%;padding:9px;border-radius:var(--r-xs);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:'Inter',sans-serif}
+.btn-start{background:var(--indigo);color:#fff}
+.btn-start:hover{background:#5558E8}
+.btn-continue{background:rgba(16,185,129,.12);color:var(--green);border:1px solid var(--gb)}
+.btn-continue:hover{background:var(--gg)}
+.btn-done{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border);cursor:default}
 
-.courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
-.course-card{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:var(--r);overflow:hidden;
-  transition:all .25s;cursor:pointer;
-}
-.course-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.4)}
-.course-banner{height:90px;display:flex;align-items:center;justify-content:center;font-size:32px;position:relative}
-.course-cat{
-  position:absolute;top:10px;right:10px;
-  font-size:10px;font-weight:600;letter-spacing:.4px;
-  padding:3px 8px;border-radius:6px;text-transform:uppercase;
-}
-.cat-zaklady{background:rgba(16,185,129,0.15);color:var(--green)}
-.cat-investicie{background:rgba(99,102,241,0.15);color:var(--indigo2)}
-.cat-nbs{background:rgba(245,158,11,0.15);color:var(--gold)}
-.cat-krypto{background:rgba(239,68,68,0.12);color:var(--red)}
-.course-body{padding:18px}
-.course-title{font-size:14px;font-weight:600;margin-bottom:6px;line-height:1.4}
-.course-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:14px}
-.course-footer{display:flex;align-items:center;justify-content:space-between}
-.progress-bar-wrap{flex:1;margin-right:12px}
-.progress-bar-label{font-size:11px;color:var(--muted2);margin-bottom:4px}
-.progress-track{height:4px;background:var(--border2);border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--indigo),var(--indigo2))}
-.xp-badge{
-  font-size:11px;font-weight:700;
-  padding:3px 8px;border-radius:6px;
-  background:rgba(245,158,11,0.12);color:var(--gold);
-  white-space:nowrap;font-family:'JetBrains Mono',monospace;
-}
-
-/* ─── KALKULAČKY ─────────────────────── */
-.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+/* ── KALKULAČKY ───────────────────────────────────────────────── */
+.calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
 .calc-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px}
-.calc-card h3{font-size:15px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:8px}
-.calc-card p{font-size:12px;color:var(--muted);margin-bottom:20px}
-.form-group{margin-bottom:14px}
-.form-label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
-.form-input{
-  width:100%;padding:10px 14px;
-  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);
-  color:var(--text);font-size:14px;font-family:'JetBrains Mono',monospace;
-  outline:none;transition:border-color .2s;
-}
+.calc-card h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.calc-card>p{font-size:13px;color:var(--muted);margin-bottom:18px}
+.form-group{margin-bottom:12px}
+.form-label{display:block;font-size:11px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.form-input{width:100%;padding:10px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:var(--r-xs);color:var(--text);font-size:14px;font-family:'JetBrains Mono',monospace;outline:none;transition:border .2s}
 .form-input:focus{border-color:var(--indigo)}
-.calc-btn{
-  width:100%;padding:11px;border-radius:var(--r-sm);border:none;
-  background:var(--indigo);color:#fff;font-size:14px;font-weight:600;
-  cursor:pointer;transition:all .2s;margin-top:4px;
-}
+.calc-btn{width:100%;padding:11px;border:none;border-radius:var(--r-xs);background:var(--indigo);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;margin-top:4px}
 .calc-btn:hover{background:#5558E8;transform:translateY(-1px)}
-.calc-result{
-  margin-top:14px;padding:14px;
-  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
-  font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--green);
-  display:none;
-}
+.calc-result{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-xs);padding:16px;margin-top:14px;display:none}
 .calc-result.show{display:block}
-.result-row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.result-row:last-child{border-bottom:none}
 .result-row .r-label{color:var(--muted)}
-.result-row .r-val{color:var(--text);font-weight:600}
-.result-total{
-  margin-top:8px;padding-top:8px;border-top:1px solid var(--border);
-  font-size:15px;font-weight:700;color:var(--green);
-  display:flex;justify-content:space-between;
-}
+.result-row .r-val{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--indigo2)}
+.result-total{display:flex;justify-content:space-between;align-items:center;padding:10px 0 0;font-size:15px;font-weight:700}
+.result-total span:last-child{font-family:'JetBrains Mono',monospace;color:var(--green)}
 
-/* ─── AI RADCA ───────────────────────── */
-.ai-layout{display:flex;flex-direction:column;height:calc(100vh - 180px);max-height:680px}
-.ai-header{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r) var(--r) 0 0;
-  padding:16px 20px;display:flex;align-items:center;gap:12px;
-}
-.ai-avatar{
-  width:38px;height:38px;border-radius:12px;
-  background:linear-gradient(135deg,var(--indigo),#8B5CF6);
-  display:flex;align-items:center;justify-content:center;font-size:18px;
-}
-.ai-name{font-size:14px;font-weight:600}
-.ai-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px}
-.ai-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block}
-.ai-disclaimer{
-  font-size:11px;color:var(--muted2);margin-left:auto;
-  background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.15);
-  padding:4px 10px;border-radius:6px;max-width:280px;text-align:right;
-}
-
-.chat-messages{
-  flex:1;overflow-y:auto;padding:20px;
-  background:var(--bg);border-left:1px solid var(--border);border-right:1px solid var(--border);
-  display:flex;flex-direction:column;gap:16px;
-}
-.msg{display:flex;gap:10px;align-items:flex-end;max-width:80%}
-.msg.user{align-self:flex-end;flex-direction:row-reverse}
-.msg-bubble{
-  padding:12px 16px;border-radius:16px;font-size:13px;line-height:1.6;
-}
-.msg.ai .msg-bubble{
-  background:var(--bg2);border:1px solid var(--border);
-  border-bottom-left-radius:4px;color:var(--text);
-}
-.msg.user .msg-bubble{
-  background:var(--indigo);color:#fff;
-  border-bottom-right-radius:4px;
-}
-.msg-time{font-size:10px;color:var(--muted2);white-space:nowrap}
-.msg-icon{
-  width:28px;height:28px;border-radius:8px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:13px;
-}
-.msg.ai .msg-icon{background:var(--indigo-glow);border:1px solid rgba(99,102,241,0.2)}
-.msg.user .msg-icon{background:rgba(99,102,241,0.3)}
-
-.chat-input-wrap{
-  background:var(--bg2);border:1px solid var(--border);
-  border-top:none;border-radius:0 0 var(--r) var(--r);
-  padding:14px 16px;display:flex;gap:10px;align-items:center;
-}
-.chat-input{
-  flex:1;padding:10px 16px;
-  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);
-  color:var(--text);font-size:13px;font-family:'Inter',sans-serif;
-  outline:none;resize:none;transition:border-color .2s;
-}
+/* ── AI RADCA ─────────────────────────────────────────────────── */
+.ai-layout{display:flex;flex-direction:column;height:calc(100vh - 160px);min-height:500px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.ai-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;flex-wrap:wrap;gap:12px}
+.ai-avatar{width:40px;height:40px;border-radius:50%;background:var(--ig);border:1px solid var(--ib);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ai-name{font-size:14px;font-weight:700}
+.ai-status{font-size:11px;color:var(--green)}
+.ai-disclaimer{margin-left:auto;font-size:11px;color:var(--gold);background:var(--gold2);border:1px solid var(--goldb);padding:4px 12px;border-radius:20px}
+.chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.msg{display:flex;gap:10px;align-items:flex-start}
+.msg.user{flex-direction:row-reverse}
+.msg-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.msg.ai .msg-icon{background:var(--ig);border:1px solid var(--ib)}
+.msg.user .msg-icon{background:rgba(99,102,241,.25)}
+.msg-bubble{padding:12px 16px;border-radius:14px;font-size:13px;line-height:1.6;max-width:75%}
+.msg.ai .msg-bubble{background:var(--bg3);border:1px solid var(--border)}
+.msg.user .msg-bubble{background:var(--indigo);color:#fff}
+.msg-time{font-size:10px;color:var(--muted2);margin-top:4px}
+.msg.user .msg-time{text-align:right}
+.chat-input-wrap{padding:14px 16px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;background:var(--bg2)}
+.chat-input{flex:1;padding:10px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border .2s}
 .chat-input:focus{border-color:var(--indigo)}
-.chat-send{
-  width:40px;height:40px;border-radius:10px;
-  background:var(--indigo);border:none;color:#fff;
-  cursor:pointer;font-size:16px;transition:all .2s;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
+.chat-send{width:40px;height:40px;border-radius:10px;background:var(--indigo);border:none;color:#fff;cursor:pointer;font-size:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .chat-send:hover{background:#5558E8;transform:scale(1.05)}
-.chat-hint{font-size:11px;color:var(--muted2);text-align:center;padding:8px 16px 0;font-style:italic}
+.chat-hint{font-size:10px;color:var(--muted2);text-align:center;padding:6px 16px;border-top:1px solid var(--border)}
+.typing-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--muted2);margin:0 2px;animation:tBounce 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes tBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
 
-/* ─── PROFIL ─────────────────────────── */
+/* ── PROFIL ───────────────────────────────────────────────────── */
 .profil-grid{display:grid;grid-template-columns:1fr 2fr;gap:20px}
-.profil-aside{display:flex;flex-direction:column;gap:16px}
-.profil-avatar-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
-  padding:28px 20px;text-align:center;
-}
-.profil-avatar-big{
-  width:72px;height:72px;border-radius:50%;
-  background:linear-gradient(135deg,var(--indigo),#8B5CF6);
-  display:flex;align-items:center;justify-content:center;
-  font-size:28px;font-weight:700;color:#fff;margin:0 auto 14px;
-}
+.profil-avatar-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center}
+.profil-avatar-big{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--indigo),#8B5CF6);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#fff;margin:0 auto 14px}
 .profil-name{font-size:16px;font-weight:700;margin-bottom:4px}
 .profil-email{font-size:12px;color:var(--muted);margin-bottom:14px}
-.plan-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;
-  background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:var(--green);
-}
-
+.plan-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;background:var(--gg);border:1px solid var(--gb);color:var(--green)}
 .profil-stats-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px}
-.profil-stat-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;
-}
+.profil-stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
 .profil-stat-row:last-child{border-bottom:none}
 .profil-stat-row .r-val{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--indigo2)}
-
-.profil-main{display:flex;flex-direction:column;gap:16px}
-.form-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px}
+.form-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:16px}
 .form-section h3{font-size:15px;font-weight:600;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.form-save{
-  padding:11px 28px;border-radius:var(--r-sm);border:none;
-  background:var(--indigo);color:#fff;font-size:14px;font-weight:600;
-  cursor:pointer;transition:all .2s;
-}
+.form-save{padding:11px 28px;border-radius:var(--r-sm);border:none;background:var(--indigo);color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
 .form-save:hover{background:#5558E8;transform:translateY(-1px)}
-.save-success{
-  display:none;font-size:12px;color:var(--green);
-  margin-left:10px;align-items:center;gap:4px;
-}
-.save-success.show{display:inline-flex}
+.form-save:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.save-msg{font-size:12px;margin-left:10px}
+.save-msg.ok{color:var(--green)}.save-msg.err{color:var(--red)}
 
-/* ─── MOBILE BOTTOM NAV ───────────────── */
-.bottom-nav{
-  display:none;
-  position:fixed;bottom:0;left:0;right:0;z-index:100;
-  background:rgba(13,20,33,0.95);backdrop-filter:blur(20px);
-  border-top:1px solid var(--border);
-  padding:8px 0 max(8px,env(safe-area-inset-bottom));
-}
+/* ── BOTTOM NAV ───────────────────────────────────────────────── */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(13,20,33,.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:8px 0 max(8px,env(safe-area-inset-bottom))}
 .bottom-nav-inner{display:flex;justify-content:space-around}
-.bnav-item{
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:6px 16px;border-radius:10px;cursor:pointer;
-  color:var(--muted2);font-size:10px;font-weight:500;
-  transition:color .2s;
-}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 16px;cursor:pointer;color:var(--muted2);font-size:10px;font-weight:500;transition:color .2s}
 .bnav-item.active{color:var(--indigo2)}
 .bnav-item .icon{font-size:20px}
 
-/* ─── MOBILE ──────────────────────────── */
+/* ── MOBILE ───────────────────────────────────────────────────── */
 @media(max-width:768px){
-  .sidebar{transform:translateX(-100%)}
-  .sidebar.open{transform:translateX(0)}
-  .main{margin-left:0}
-  .bottom-nav{display:block}
+  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}.bottom-nav{display:block}
   .page-area{padding:20px 16px 90px}
-  .stats-grid{grid-template-columns:1fr 1fr}
-  .iq-wrap{grid-template-columns:1fr}
-  .calc-grid{grid-template-columns:1fr}
-  .profil-grid{grid-template-columns:1fr}
-  .form-row{grid-template-columns:1fr}
-  .topbar{padding:0 16px}
-  .xp-bar-wrap .xp-track{width:80px}
-  .courses-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}.iq-wrap{grid-template-columns:1fr}
+  .calc-grid{grid-template-columns:1fr}.profil-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}.topbar{padding:0 16px}
+  .xp-bar-wrap .xp-track{width:60px}.courses-grid{grid-template-columns:1fr}
+  .ai-layout{height:calc(100vh - 140px)}
 }
-@media(max-width:400px){
-  .stats-grid{grid-template-columns:1fr}
-}
+@media(max-width:400px){.stats-grid{grid-template-columns:1fr}}
 
-/* ─── ANIMATIONS ──────────────────────── */
-.fade-in{opacity:0;transform:translateY(16px);transition:opacity .4s ease,transform .4s ease}
+/* ── FADE IN ──────────────────────────────────────────────────── */
+.fade-in{opacity:0;transform:translateY(14px);transition:opacity .4s ease,transform .4s ease}
 .fade-in.visible{opacity:1;transform:none}
-@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
-.page.active{animation:slideIn .25s ease}
-.typing-dot{
-  display:inline-block;width:7px;height:7px;
-  border-radius:50%;background:var(--muted2);margin:0 2px;
-  animation:typingBounce 1.2s infinite;
-}
-.typing-dot:nth-child(2){animation-delay:.2s}
-.typing-dot:nth-child(3){animation-delay:.4s}
-@keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
 </style>
 </head>
 <body>
 
-<!-- ─── SIDEBAR ──────────────────────── -->
+<!-- ── AUTH OVERLAY ─────────────────────────────────────────── -->
+<div id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">💡</div>
+      <div class="auth-logo-text">Fin<span>Advisor</span> SK</div>
+    </div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tab-login" onclick="switchTab('login')">Prihlásiť sa</div>
+      <div class="auth-tab" id="tab-register" onclick="switchTab('register')">Registrovať sa</div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form class="auth-form" id="form-login" onsubmit="doLogin(event)">
+      <div>
+        <div class="form-lbl">E-mail</div>
+        <input class="auth-input" id="l-email" type="email" placeholder="vas@email.sk" autocomplete="email" required/>
+      </div>
+      <div>
+        <div class="form-lbl">Heslo</div>
+        <input class="auth-input" id="l-pwd" type="password" placeholder="••••••••" autocomplete="current-password" required/>
+      </div>
+      <div class="auth-err" id="l-err"></div>
+      <button class="auth-btn" type="submit" id="l-btn">Prihlásiť sa →</button>
+      <div class="auth-note">GDPR chránené · §1 ods. 2 zákona č. 186/2009 Z.z.</div>
+    </form>
+
+    <!-- REGISTER FORM -->
+    <form class="auth-form hidden" id="form-register" onsubmit="doRegister(event)">
+      <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <div class="form-lbl">Meno</div>
+          <input class="auth-input" id="r-name" type="text" placeholder="Ján" required/>
+        </div>
+        <div>
+          <div class="form-lbl">Priezvisko</div>
+          <input class="auth-input" id="r-surname" type="text" placeholder="Novák"/>
+        </div>
+      </div>
+      <div>
+        <div class="form-lbl">E-mail</div>
+        <input class="auth-input" id="r-email" type="email" placeholder="vas@email.sk" autocomplete="email" required/>
+      </div>
+      <div>
+        <div class="form-lbl">Heslo (min. 8 znakov)</div>
+        <input class="auth-input" id="r-pwd" type="password" placeholder="••••••••" minlength="8" required/>
+      </div>
+      <div class="auth-err" id="r-err"></div>
+      <div class="auth-ok" id="r-ok"></div>
+      <button class="auth-btn" type="submit" id="r-btn">Vytvoriť účet →</button>
+      <div class="auth-note">Registráciou súhlasíte s <a href="/terms" style="color:var(--indigo2)">podmienkami</a> a <a href="/privacy" style="color:var(--indigo2)">ochranou údajov</a>.</div>
+    </form>
+  </div>
+</div>
+
+<!-- ── APP SHELL ─────────────────────────────────────────────── -->
+<div id="app-shell">
+<div class="app-shell-inner">
+
+<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
-  <a href="index.html" class="sidebar-logo">
+  <a href="/" class="sidebar-logo">
     <div class="logo-icon">💡</div>
     <div class="logo-text">FinAdvisor<span>SK Platforma</span></div>
   </a>
@@ -456,16 +351,17 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-s
   </nav>
   <div class="sidebar-bottom">
     <div class="user-chip">
-      <div class="user-avatar">P</div>
+      <div class="user-avatar" id="sb-avatar">?</div>
       <div class="user-info">
-        <div class="user-name">Používateľ</div>
-        <div class="user-level">Level 4 · Starter</div>
+        <div class="user-name" id="sb-name">Načítava...</div>
+        <div class="user-level" id="sb-level">Level 1 · Free</div>
       </div>
     </div>
+    <button class="logout-btn" onclick="doLogout()">Odhlásiť sa</button>
   </div>
 </aside>
 
-<!-- ─── MAIN ─────────────────────────── -->
+<!-- MAIN -->
 <div class="main">
   <header class="topbar">
     <div style="display:flex;align-items:center;gap:12px">
@@ -474,146 +370,122 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-s
     </div>
     <div class="topbar-right">
       <div class="xp-bar-wrap">
-        <div class="xp-label">742 / 1000 XP</div>
-        <div class="xp-track"><div class="xp-fill" style="width:74.2%"></div></div>
-        <div class="level-badge">Lv 4</div>
+        <div class="xp-label" id="xp-label">0 / 1000 XP</div>
+        <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+        <div class="level-badge" id="lv-badge">Lv 1</div>
       </div>
-      <div class="notif-btn" title="Notifikácie">🔔</div>
     </div>
   </header>
 
-  <!-- ─── DASHBOARD ─── -->
   <div class="page-area">
 
+    <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="welcome-card fade-in">
-        <h1>Vitajte späť, Používateľ 👋</h1>
-        <p>Pokračujte vo finančnom vzdelávaní. Máte nakročené skvele!</p>
-        <div class="welcome-streak">🔥 7-dňová séria · Skvelá práca!</div>
+        <h1>Vitajte späť, <span id="dash-name">...</span> 👋</h1>
+        <p>Pokračujte vo finančnom vzdelávaní. Každý deň ste bližšie k finančnej slobode.</p>
+        <div class="welcome-streak">🔥 <span id="dash-streak">0</span>-dňová séria · Skvelá práca!</div>
       </div>
-
       <div class="iq-wrap">
         <div class="iq-card fade-in">
           <div style="display:flex;align-items:baseline;gap:4px">
-            <div class="iq-score">742</div><div class="iq-max">/850</div>
+            <div class="iq-score" id="dash-iq">742</div><div class="iq-max">/850</div>
           </div>
           <div class="iq-label">💰 Financial IQ skóre</div>
           <div class="iq-bar-track"><div class="iq-bar-fill"></div></div>
-          <div class="iq-tip">Top 18% spomedzi všetkých používateľov</div>
+          <div class="iq-tip">Budujte skóre dokončovaním kurzov</div>
         </div>
-        <div class="card fade-in" style="display:flex;flex-direction:column;justify-content:center;gap:10px">
+        <div class="card fade-in" style="display:flex;flex-direction:column;justify-content:center;gap:10px;padding:20px">
           <div class="section-title" style="margin-bottom:4px">⚡ Rýchle akcie</div>
           <div style="display:flex;flex-direction:column;gap:8px">
             <button class="calc-btn" onclick="showPage('kurzy')" style="text-align:left;padding:10px 14px;border-radius:10px">📚 Pokračovať v kurze</button>
-            <button class="calc-btn" onclick="showPage('ai')" style="background:rgba(99,102,241,0.15);color:var(--indigo2);border:1px solid rgba(99,102,241,0.2);text-align:left;padding:10px 14px;border-radius:10px">🤖 Opýtať sa AI Radcu</button>
+            <button class="calc-btn" onclick="showPage('ai')" style="background:var(--ig);color:var(--indigo2);border:1px solid var(--ib);text-align:left;padding:10px 14px;border-radius:10px">🤖 Opýtať sa AI Radcu</button>
+            <button class="calc-btn" onclick="showPage('kalkul')" style="background:var(--gg);color:var(--green);border:1px solid var(--gb);text-align:left;padding:10px 14px;border-radius:10px">🧮 Otvoriť kalkulačku</button>
           </div>
         </div>
       </div>
-
       <div class="stats-grid">
-        <div class="stat-card fade-in">
-          <div class="stat-icon">🔥</div>
-          <div class="stat-value" style="color:var(--gold)">7</div>
-          <div class="stat-label">Dňová séria</div>
-          <div class="stat-sub">Najdlhšia: 14 dní</div>
-        </div>
-        <div class="stat-card fade-in">
-          <div class="stat-icon">✅</div>
-          <div class="stat-value" style="color:var(--green)">23</div>
-          <div class="stat-label">Dokončených lekcií</div>
-          <div class="stat-sub">+3 tento týždeň</div>
-        </div>
-        <div class="stat-card fade-in">
-          <div class="stat-icon">🎯</div>
-          <div class="stat-value" style="color:var(--indigo2)">NBS</div>
-          <div class="stat-label">Ďalší cieľ</div>
-          <div class="stat-sub">Príprava na skúšku</div>
-        </div>
+        <div class="stat-card fade-in"><div class="stat-icon">🔥</div><div class="stat-value" style="color:var(--gold)" id="st-streak">0</div><div class="stat-label">Dňová séria</div><div class="stat-sub">Udržujte sériu!</div></div>
+        <div class="stat-card fade-in"><div class="stat-icon">✅</div><div class="stat-value" style="color:var(--green)" id="st-lessons">0</div><div class="stat-label">Dokončených lekcií</div><div class="stat-sub">Z 18 kurzov</div></div>
+        <div class="stat-card fade-in"><div class="stat-icon">⭐</div><div class="stat-value" style="color:var(--indigo2)" id="st-xp">0</div><div class="stat-label">XP celkom</div><div class="stat-sub">Zbierajte ďalšie!</div></div>
       </div>
-
       <div class="recent-card fade-in">
-        <div class="section-title">📋 Posledná aktivita</div>
-        <div class="lesson-row"><div class="lesson-dot done"></div><div class="lesson-title-sm">Čo je ETF a prečo funguje</div><div class="lesson-xp">+50 XP</div></div>
-        <div class="lesson-row"><div class="lesson-dot done"></div><div class="lesson-title-sm">Diverzifikácia portfólia</div><div class="lesson-xp">+40 XP</div></div>
-        <div class="lesson-row"><div class="lesson-dot prog"></div><div class="lesson-title-sm">Dlhopisy a ich riziká</div><div class="lesson-xp">v procese</div></div>
-        <div class="lesson-row"><div class="lesson-dot done"></div><div class="lesson-title-sm">Inflačné ochrany</div><div class="lesson-xp">+35 XP</div></div>
+        <div class="section-title">📋 Odporúčané kurzy</div>
+        <div class="lesson-row"><div class="lesson-dot progress"></div><div class="lesson-title-sm">ETF fondy pre začiatočníkov</div><div class="lesson-xp">+100 XP</div></div>
+        <div class="lesson-row"><div class="lesson-dot locked"></div><div class="lesson-title-sm">Zákon č. 186/2009 Z.z. — NBS príprava</div><div class="lesson-xp">+150 XP</div></div>
+        <div class="lesson-row"><div class="lesson-dot locked"></div><div class="lesson-title-sm">Hypotéka krok za krokom</div><div class="lesson-xp">+130 XP</div></div>
+        <div class="lesson-row"><div class="lesson-dot locked"></div><div class="lesson-title-sm">Akcie a dividendy</div><div class="lesson-xp">+110 XP</div></div>
       </div>
     </div>
 
-    <!-- ─── KURZY ─── -->
+    <!-- KURZY -->
     <div class="page" id="page-kurzy">
-      <div class="kurzy-header">
-        <div class="page-title">📚 Kurzy</div>
-        <div class="filter-tabs">
-          <div class="filter-tab active" onclick="filterCourses(this,'all')">Všetky</div>
-          <div class="filter-tab" onclick="filterCourses(this,'zaklady')">Základy</div>
-          <div class="filter-tab" onclick="filterCourses(this,'investicie')">Investície</div>
-          <div class="filter-tab" onclick="filterCourses(this,'nbs')">NBS</div>
-          <div class="filter-tab" onclick="filterCourses(this,'krypto')">Krypto</div>
-        </div>
+      <div style="margin-bottom:20px">
+        <div style="font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px">📚 Kurzy</div>
+        <div style="font-size:13px;color:var(--muted)">18 kurzov · Finančné vzdelávanie od základov po NBS</div>
       </div>
-      <div class="courses-grid" id="courses-grid">
-        <!-- injected by JS -->
+      <div class="filter-tabs">
+        <div class="filter-tab active" onclick="filterCourses(this,'all')">Všetky (18)</div>
+        <div class="filter-tab" onclick="filterCourses(this,'zaklady')">Základy</div>
+        <div class="filter-tab" onclick="filterCourses(this,'investicie')">Investície</div>
+        <div class="filter-tab" onclick="filterCourses(this,'nbs')">NBS príprava</div>
+        <div class="filter-tab" onclick="filterCourses(this,'krypto')">Krypto &amp; DeFi</div>
       </div>
+      <div class="courses-grid" id="courses-grid"></div>
     </div>
 
-    <!-- ─── KALKULAČKY ─── -->
+    <!-- KALKULAČKY -->
     <div class="page" id="page-kalkul">
-      <div style="margin-bottom:24px"><div class="page-title">🧮 Finančné kalkulačky</div></div>
+      <div style="margin-bottom:20px">
+        <div style="font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px">🧮 Kalkulačky</div>
+        <div style="font-size:13px;color:var(--muted)">Profesionálne finančné nástroje — výpočty pre reálne rozhodnutia</div>
+      </div>
       <div class="calc-grid">
-
-        <!-- Mortgage -->
         <div class="calc-card">
-          <h3>🏠 Hypotéka</h3>
-          <p>Vypočítajte mesačnú splátku a celkové náklady</p>
-          <div class="form-group"><label class="form-label">Výška úveru (€)</label><input class="form-input" id="m-amount" type="number" placeholder="150 000" value="150000"/></div>
-          <div class="form-group"><label class="form-label">Ročná úroková sadzba (%)</label><input class="form-input" id="m-rate" type="number" placeholder="3.5" value="3.5" step="0.1"/></div>
-          <div class="form-group"><label class="form-label">Doba splácania (roky)</label><input class="form-input" id="m-years" type="number" placeholder="30" value="30"/></div>
+          <h3>🏠 Hypotekárna kalkulačka</h3>
+          <p>Vypočítajte mesačnú splátku, celkové úroky a porovnajte ponuky bánk.</p>
+          <div class="form-group"><label class="form-label">Suma úveru (€)</label><input class="form-input" id="m-amount" type="number" value="150000"/></div>
+          <div class="form-group"><label class="form-label">Úroková sadzba (% ročne)</label><input class="form-input" id="m-rate" type="number" value="3.5" step="0.1"/></div>
+          <div class="form-group"><label class="form-label">Doba splácania (roky)</label><input class="form-input" id="m-years" type="number" value="25"/></div>
           <button class="calc-btn" onclick="calcMortgage()">Vypočítať</button>
           <div class="calc-result" id="m-result">
             <div class="result-row"><span class="r-label">Mesačná splátka</span><span class="r-val" id="m-monthly"></span></div>
-            <div class="result-row"><span class="r-label">Celkovo zaplatíte</span><span class="r-val" id="m-total"></span></div>
-            <div class="result-total"><span>Úroky celkom</span><span id="m-interest"></span></div>
+            <div class="result-row"><span class="r-label">Celkové náklady</span><span class="r-val" id="m-total"></span></div>
+            <div class="result-total"><span>Celkové úroky</span><span id="m-interest"></span></div>
           </div>
         </div>
-
-        <!-- Investment -->
         <div class="calc-card">
-          <h3>📈 Investícia</h3>
-          <p>Zistite budúcu hodnotu pravidelného investovania</p>
-          <div class="form-group"><label class="form-label">Mesačný vklad (€)</label><input class="form-input" id="i-monthly" type="number" placeholder="200" value="200"/></div>
-          <div class="form-group"><label class="form-label">Ročný výnos (%)</label><input class="form-input" id="i-rate" type="number" placeholder="7" value="7" step="0.1"/></div>
-          <div class="form-group"><label class="form-label">Horizont (roky)</label><input class="form-input" id="i-years" type="number" placeholder="20" value="20"/></div>
+          <h3>📈 Investičný rast (DCA)</h3>
+          <p>Koľko narastie vaše portfólio pri pravidelnom mesačnom investovaní?</p>
+          <div class="form-group"><label class="form-label">Mesačný vklad (€)</label><input class="form-input" id="i-monthly" type="number" value="200"/></div>
+          <div class="form-group"><label class="form-label">Ročný výnos (% p.a.)</label><input class="form-input" id="i-rate" type="number" value="7" step="0.1"/></div>
+          <div class="form-group"><label class="form-label">Investičný horizont (roky)</label><input class="form-input" id="i-years" type="number" value="20"/></div>
           <button class="calc-btn" onclick="calcInvestment()">Vypočítať</button>
           <div class="calc-result" id="i-result">
             <div class="result-row"><span class="r-label">Vložené celkom</span><span class="r-val" id="i-invested"></span></div>
-            <div class="result-row"><span class="r-label">Výnosy (úrok)</span><span class="r-val" id="i-gains"></span></div>
-            <div class="result-total"><span>Celková hodnota</span><span id="i-total"></span></div>
+            <div class="result-row"><span class="r-label">Výnosy (zložené úroky)</span><span class="r-val" id="i-gains"></span></div>
+            <div class="result-total"><span>Celková hodnota portfólia</span><span id="i-total"></span></div>
           </div>
         </div>
-
-        <!-- Retirement -->
         <div class="calc-card">
-          <h3>🏖️ Dôchodok</h3>
-          <p>Koľko potrebujete na pohodlný dôchodok?</p>
-          <div class="form-group"><label class="form-label">Aktuálny vek</label><input class="form-input" id="r-age" type="number" placeholder="30" value="30"/></div>
-          <div class="form-group"><label class="form-label">Vek odchodu do dôchodku</label><input class="form-input" id="r-retire" type="number" placeholder="65" value="65"/></div>
-          <div class="form-group"><label class="form-label">Mesačný príjem v dôchodku (€)</label><input class="form-input" id="r-income" type="number" placeholder="1200" value="1200"/></div>
+          <h3>🏖️ Dôchodkový plán</h3>
+          <p>Koľko musíte sporiť, aby ste si udržali životný štandard v dôchodku?</p>
+          <div class="form-group"><label class="form-label">Aktuálny vek</label><input class="form-input" id="r-age" type="number" value="30"/></div>
+          <div class="form-group"><label class="form-label">Plánovaný vek dôchodku</label><input class="form-input" id="r-retire" type="number" value="65"/></div>
+          <div class="form-group"><label class="form-label">Želaný mesačný príjem v dôchodku (€)</label><input class="form-input" id="r-income" type="number" value="1200"/></div>
           <button class="calc-btn" onclick="calcRetirement()">Vypočítať</button>
           <div class="calc-result" id="r-result">
             <div class="result-row"><span class="r-label">Roky do dôchodku</span><span class="r-val" id="r-years"></span></div>
-            <div class="result-row"><span class="r-label">Potrebný kapitál (4% pr.)</span><span class="r-val" id="r-capital"></span></div>
-            <div class="result-total"><span>Odp. mes. úspora</span><span id="r-monthly"></span></div>
+            <div class="result-row"><span class="r-label">Potrebný kapitál (4% pravidlo)</span><span class="r-val" id="r-capital"></span></div>
+            <div class="result-total"><span>Odporúčaná mes. úspora</span><span id="r-monthly"></span></div>
           </div>
         </div>
-
-        <!-- Inflation -->
         <div class="calc-card">
-          <h3>📉 Inflácia</h3>
-          <p>Ako inflácia znehodnotí vaše peniaze?</p>
-          <div class="form-group"><label class="form-label">Suma dnes (€)</label><input class="form-input" id="inf-amount" type="number" placeholder="10000" value="10000"/></div>
-          <div class="form-group"><label class="form-label">Ročná inflácia (%)</label><input class="form-input" id="inf-rate" type="number" placeholder="3" value="3" step="0.1"/></div>
-          <div class="form-group"><label class="form-label">Počet rokov</label><input class="form-input" id="inf-years" type="number" placeholder="10" value="10"/></div>
+          <h3>📉 Inflačný kalkulátor</h3>
+          <p>Ako inflácia znehodnotí vaše úspory uložené v hotovosti?</p>
+          <div class="form-group"><label class="form-label">Suma dnes (€)</label><input class="form-input" id="inf-amount" type="number" value="10000"/></div>
+          <div class="form-group"><label class="form-label">Ročná inflácia (% p.a.)</label><input class="form-input" id="inf-rate" type="number" value="3" step="0.1"/></div>
+          <div class="form-group"><label class="form-label">Počet rokov</label><input class="form-input" id="inf-years" type="number" value="10"/></div>
           <button class="calc-btn" onclick="calcInflation()">Vypočítať</button>
           <div class="calc-result" id="inf-result">
             <div class="result-row"><span class="r-label">Reálna hodnota o N rokov</span><span class="r-val" id="inf-future"></span></div>
@@ -621,82 +493,81 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-s
             <div class="result-total"><span>Pokles v %</span><span id="inf-pct" style="color:var(--red)"></span></div>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- ─── AI RADCA ─── -->
+    <!-- AI RADCA -->
     <div class="page" id="page-ai">
       <div class="ai-layout">
         <div class="ai-header">
           <div class="ai-avatar">🤖</div>
           <div>
             <div class="ai-name">FinAdvisor AI</div>
-            <div class="ai-status">Online · pripravený pomôcť</div>
+            <div class="ai-status">● Online · vzdelávací asistent</div>
           </div>
-          <div class="ai-disclaimer">⚠️ Toto nie je finančné poradenstvo — iba vzdelávanie.</div>
+          <div class="ai-disclaimer">⚠️ Vzdelávacie účely — nie finančné poradenstvo</div>
         </div>
-        <div class="chat-messages" id="chat-messages">
-          <!-- injected -->
-        </div>
+        <div class="chat-messages" id="chat-messages"></div>
         <div class="chat-input-wrap">
-          <input class="chat-input" id="chat-input" type="text" placeholder="Napíšte otázku o investovaní, ETF, dôchodku..."/>
+          <input class="chat-input" id="chat-input" type="text" placeholder="Opýtajte sa o ETF, hypotéku, dôchodok, NBS..."/>
           <button class="chat-send" onclick="sendMsg()">➤</button>
         </div>
-        <div class="chat-hint">Toto nie je finančné poradenstvo — iba vzdelávacie informácie podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>
+        <div class="chat-hint">§1 ods. 2 zákona č. 186/2009 Z.z. — Toto nie je licencované finančné poradenstvo</div>
       </div>
     </div>
 
-    <!-- ─── PROFIL ─── -->
+    <!-- PROFIL -->
     <div class="page" id="page-profil">
-      <div style="margin-bottom:24px"><div class="page-title">👤 Môj profil</div></div>
+      <div style="margin-bottom:24px"><div style="font-size:22px;font-weight:800;letter-spacing:-.5px">👤 Môj profil</div></div>
       <div class="profil-grid">
-        <div class="profil-aside">
+        <div>
           <div class="profil-avatar-card">
-            <div class="profil-avatar-big">P</div>
-            <div class="profil-name">Používateľ</div>
-            <div class="profil-email">pouzi@email.sk</div>
-            <div class="plan-badge">✅ Starter plán</div>
+            <div class="profil-avatar-big" id="p-avatar">?</div>
+            <div class="profil-name" id="p-name">Načítava...</div>
+            <div class="profil-email" id="p-email">—</div>
+            <div class="plan-badge">✅ <span id="p-plan">Free plán</span></div>
           </div>
-          <div class="profil-stats-card">
+          <div class="profil-stats-card" style="margin-top:14px">
             <div class="section-title" style="margin-bottom:12px">📊 Štatistiky</div>
-            <div class="profil-stat-row"><span>XP celkom</span><span class="r-val">742</span></div>
-            <div class="profil-stat-row"><span>Level</span><span class="r-val">4</span></div>
-            <div class="profil-stat-row"><span>Séria</span><span class="r-val">7 dní</span></div>
-            <div class="profil-stat-row"><span>Lekcie</span><span class="r-val">23</span></div>
-            <div class="profil-stat-row"><span>Financial IQ</span><span class="r-val" style="color:var(--gold)">742 / 850</span></div>
-            <div class="profil-stat-row"><span>Člen od</span><span class="r-val" style="color:var(--muted);font-size:12px">jan. 2025</span></div>
+            <div class="profil-stat-row"><span>XP celkom</span><span class="r-val" id="p-xp">0</span></div>
+            <div class="profil-stat-row"><span>Level</span><span class="r-val" id="p-level">1</span></div>
+            <div class="profil-stat-row"><span>Financial IQ</span><span class="r-val" style="color:var(--gold)" id="p-iq">742 / 850</span></div>
+            <div class="profil-stat-row"><span>Dokončené kurzy</span><span class="r-val" id="p-courses">0</span></div>
+            <div class="profil-stat-row"><span>Člen od</span><span class="r-val" style="color:var(--muted);font-size:12px" id="p-since">—</span></div>
           </div>
         </div>
-        <div class="profil-main">
+        <div>
           <div class="form-section">
             <h3>✏️ Upraviť profil</h3>
             <div class="form-row">
-              <div class="form-group"><label class="form-label">Meno</label><input class="form-input" id="prof-name" value="Používateľ"/></div>
-              <div class="form-group"><label class="form-label">Priezvisko</label><input class="form-input" id="prof-surname" value="Novák"/></div>
+              <div class="form-group"><label class="form-label">Meno</label><input class="form-input" id="prof-first" placeholder="Ján"/></div>
+              <div class="form-group"><label class="form-label">Priezvisko</label><input class="form-input" id="prof-last" placeholder="Novák"/></div>
             </div>
-            <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" id="prof-email" type="email" value="pouzi@email.sk"/></div>
+            <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" id="prof-email" type="email" readonly style="opacity:.6;cursor:not-allowed"/></div>
             <div style="display:flex;align-items:center;margin-top:4px">
-              <button class="form-save" onclick="saveProfile()">Uložiť zmeny</button>
-              <span class="save-success" id="save-ok">✅ Uložené!</span>
+              <button class="form-save" id="prof-save-btn" onclick="saveProfile()">Uložiť zmeny</button>
+              <span class="save-msg" id="prof-save-msg"></span>
             </div>
           </div>
           <div class="form-section">
-            <h3>🔒 Bezpečnosť</h3>
-            <div class="form-group"><label class="form-label">Aktuálne heslo</label><input class="form-input" type="password" placeholder="••••••••"/></div>
-            <div class="form-group"><label class="form-label">Nové heslo</label><input class="form-input" type="password" placeholder="Minimálne 8 znakov"/></div>
-            <button class="form-save" onclick="alert('Heslo by bolo zmenené (demo)')">Zmeniť heslo</button>
+            <h3>🔒 Zmeniť heslo</h3>
+            <div class="form-group"><label class="form-label">Aktuálne heslo</label><input class="form-input" id="pwd-current" type="password" placeholder="••••••••"/></div>
+            <div class="form-group"><label class="form-label">Nové heslo (min. 8 znakov)</label><input class="form-input" id="pwd-new" type="password" placeholder="••••••••" minlength="8"/></div>
+            <div style="display:flex;align-items:center;margin-top:4px">
+              <button class="form-save" id="pwd-save-btn" onclick="changePassword()">Zmeniť heslo</button>
+              <span class="save-msg" id="pwd-save-msg"></span>
+            </div>
           </div>
           <div class="form-section">
             <h3>💳 Predplatné</h3>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
               <div>
-                <div style="font-size:15px;font-weight:600">Starter plán</div>
+                <div style="font-size:15px;font-weight:600" id="sub-name">Free plán</div>
                 <div style="font-size:12px;color:var(--muted);margin-top:2px">Základné funkcie zadarmo</div>
               </div>
               <div class="plan-badge">Aktívny</div>
             </div>
-            <button class="calc-btn" style="background:linear-gradient(135deg,var(--indigo),#8B5CF6)" onclick="alert('Upgrade na Pro — čoskoro dostupný!')">⬆️ Upgradovať na Pro</button>
+            <a href="/#pricing" class="calc-btn" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--indigo),#8B5CF6);color:#fff;padding:11px;border-radius:var(--r-xs);font-weight:700;font-size:14px">⬆️ Upgradovať na Starter / Pro</a>
           </div>
         </div>
       </div>
@@ -704,8 +575,10 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-s
 
   </div><!-- /page-area -->
 </div><!-- /main -->
+</div>
+</div><!-- /app-shell -->
 
-<!-- ─── MOBILE BOTTOM NAV ─── -->
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
     <div class="bnav-item active" data-page="dashboard"><div class="icon">📊</div><span>Dashboard</span></div>
@@ -716,60 +589,268 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-s
   </div>
 </nav>
 
+<footer style="text-align:center;padding:20px 28px;font-size:11px;color:var(--muted2);border-top:1px solid var(--border);background:var(--bg2)">
+  Platforma slúži výlučne na vzdelávacie účely podľa §1 ods. 2 zákona č. 186/2009 Z.z. — Nie je finančným poradenstvom.
+</footer>
+
 <script>
-// ─── COURSES DATA ───────────────────────────────────
+const API = ''; // same origin
+
+// ── AUTH ──────────────────────────────────────────────────────
+function switchTab(tab){
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('tab-register').classList.toggle('active', tab==='register');
+  document.getElementById('form-login').classList.toggle('hidden', tab!=='login');
+  document.getElementById('form-register').classList.toggle('hidden', tab!=='register');
+}
+
+async function doLogin(e){
+  e.preventDefault();
+  const btn=document.getElementById('l-btn');
+  const err=document.getElementById('l-err');
+  err.textContent='';
+  btn.disabled=true; btn.textContent='Prihlasovanie...';
+  const email=document.getElementById('l-email').value.trim();
+  const pwd=document.getElementById('l-pwd').value;
+  try{
+    const res=await fetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pwd})});
+    const data=await res.json();
+    if(!res.ok){err.textContent=data.detail||'Nesprávny email alebo heslo.';return;}
+    localStorage.setItem('fa_token',data.access_token);
+    await initApp();
+  }catch(ex){err.textContent='Chyba spojenia so serverom.';}
+  finally{btn.disabled=false; btn.textContent='Prihlásiť sa →';}
+}
+
+async function doRegister(e){
+  e.preventDefault();
+  const btn=document.getElementById('r-btn');
+  const err=document.getElementById('r-err');
+  const ok=document.getElementById('r-ok');
+  err.textContent=''; ok.textContent='';
+  btn.disabled=true; btn.textContent='Registrujem...';
+  const first=document.getElementById('r-name').value.trim();
+  const last=document.getElementById('r-surname').value.trim();
+  const email=document.getElementById('r-email').value.trim();
+  const pwd=document.getElementById('r-pwd').value;
+  const full=(first+' '+last).trim()||first;
+  try{
+    const res=await fetch(API+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:full,email,password:pwd})});
+    const data=await res.json();
+    if(!res.ok){err.textContent=data.detail||'Registrácia zlyhala.';return;}
+    ok.textContent='✅ Účet vytvorený! Prihlasovanie...';
+    // auto-login
+    const lr=await fetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pwd})});
+    const ld=await lr.json();
+    if(lr.ok){localStorage.setItem('fa_token',ld.access_token); await initApp();}
+    else{switchTab('login');}
+  }catch(ex){err.textContent='Chyba spojenia so serverom.';}
+  finally{btn.disabled=false; btn.textContent='Vytvoriť účet →';}
+}
+
+function doLogout(){
+  localStorage.removeItem('fa_token');
+  window.currentUser=null;
+  document.getElementById('app-shell').style.display='none';
+  document.getElementById('auth-overlay').style.display='flex';
+}
+
+async function loadMe(){
+  const token=localStorage.getItem('fa_token');
+  if(!token) return null;
+  try{
+    const res=await fetch(API+'/auth/me',{headers:{'Authorization':'Bearer '+token}});
+    if(!res.ok){localStorage.removeItem('fa_token');return null;}
+    return await res.json();
+  }catch{return null;}
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+async function initApp(){
+  const user=await loadMe();
+  if(!user){
+    document.getElementById('auth-overlay').style.display='flex';
+    document.getElementById('app-shell').style.display='none';
+    return;
+  }
+  window.currentUser=user;
+  document.getElementById('auth-overlay').style.display='none';
+  document.getElementById('app-shell').style.display='block';
+
+  // Compute level / XP from user data
+  const xp = user.xp || Math.floor(Math.random()*200)+50; // fallback demo xp
+  const level = Math.floor(xp/200)+1;
+  const xpInLevel = xp % 200;
+  const firstName = (user.name||user.email||'Používateľ').split(' ')[0];
+  const initials = firstName.charAt(0).toUpperCase();
+
+  // Sidebar
+  document.getElementById('sb-avatar').textContent=initials;
+  document.getElementById('sb-name').textContent=firstName;
+  document.getElementById('sb-level').textContent=`Level ${level} · ${user.plan||'Free'}`;
+
+  // Topbar
+  document.getElementById('xp-label').textContent=`${xp} / ${level*200} XP`;
+  document.getElementById('xp-fill').style.width=(xpInLevel/200*100)+'%';
+  document.getElementById('lv-badge').textContent='Lv '+level;
+
+  // Dashboard
+  document.getElementById('dash-name').textContent=firstName;
+  document.getElementById('dash-streak').textContent=user.streak||1;
+  document.getElementById('dash-iq').textContent=user.iq_score||742;
+  document.getElementById('st-streak').textContent=user.streak||1;
+  document.getElementById('st-lessons').textContent=user.lessons_done||0;
+  document.getElementById('st-xp').textContent=xp;
+
+  // Profile
+  const parts=(user.name||'').split(' ');
+  document.getElementById('p-avatar').textContent=initials;
+  document.getElementById('p-name').textContent=user.name||user.email;
+  document.getElementById('p-email').textContent=user.email;
+  document.getElementById('prof-first').value=parts[0]||'';
+  document.getElementById('prof-last').value=parts.slice(1).join(' ')||'';
+  document.getElementById('prof-email').value=user.email||'';
+  document.getElementById('p-xp').textContent=xp;
+  document.getElementById('p-level').textContent=level;
+  document.getElementById('p-iq').textContent=(user.iq_score||742)+' / 850';
+  document.getElementById('p-courses').textContent=user.lessons_done||0;
+  document.getElementById('p-since').textContent=user.created_at ? new Date(user.created_at).toLocaleDateString('sk-SK',{month:'long',year:'numeric'}) : 'dnes';
+  const planName=user.plan||'free';
+  document.getElementById('p-plan').textContent={free:'Free plán',starter:'Starter plán',pro:'Pro plán',expert:'Expert plán'}[planName]||'Free plán';
+  document.getElementById('sub-name').textContent=document.getElementById('p-plan').textContent;
+
+  renderCourses();
+  renderChat();
+  observeFadeIn();
+}
+
+// ── PROFILE SAVE ──────────────────────────────────────────────
+async function saveProfile(){
+  const btn=document.getElementById('prof-save-btn');
+  const msg=document.getElementById('prof-save-msg');
+  const first=document.getElementById('prof-first').value.trim();
+  const last=document.getElementById('prof-last').value.trim();
+  const name=(first+' '+last).trim()||first;
+  btn.disabled=true; msg.textContent='';
+  try{
+    const res=await fetch(API+'/users/me',{method:'PATCH',headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('fa_token')},body:JSON.stringify({name})});
+    if(res.ok){
+      msg.textContent='✅ Uložené!'; msg.className='save-msg ok';
+      document.getElementById('sb-name').textContent=first;
+      document.getElementById('p-name').textContent=name;
+    } else {
+      const d=await res.json();
+      msg.textContent='❌ '+(d.detail||'Chyba'); msg.className='save-msg err';
+    }
+  }catch{msg.textContent='❌ Chyba spojenia'; msg.className='save-msg err';}
+  finally{btn.disabled=false; setTimeout(()=>msg.textContent='',3000);}
+}
+
+async function changePassword(){
+  const btn=document.getElementById('pwd-save-btn');
+  const msg=document.getElementById('pwd-save-msg');
+  const cur=document.getElementById('pwd-current').value;
+  const nw=document.getElementById('pwd-new').value;
+  if(!cur||!nw){msg.textContent='❌ Vyplňte obe polia'; msg.className='save-msg err'; return;}
+  if(nw.length<8){msg.textContent='❌ Min. 8 znakov'; msg.className='save-msg err'; return;}
+  btn.disabled=true; msg.textContent='';
+  try{
+    const res=await fetch(API+'/users/me',{method:'PATCH',headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('fa_token')},body:JSON.stringify({current_password:cur,new_password:nw})});
+    if(res.ok){
+      msg.textContent='✅ Heslo zmenené!'; msg.className='save-msg ok';
+      document.getElementById('pwd-current').value='';
+      document.getElementById('pwd-new').value='';
+    } else {
+      const d=await res.json();
+      msg.textContent='❌ '+(d.detail||'Nesprávne heslo'); msg.className='save-msg err';
+    }
+  }catch{msg.textContent='❌ Chyba spojenia'; msg.className='save-msg err';}
+  finally{btn.disabled=false; setTimeout(()=>msg.textContent='',3500);}
+}
+
+// ── COURSES DATA ──────────────────────────────────────────────
 const COURSES = [
-  {id:1,cat:'zaklady',emoji:'📖',color:'#0D2B1F',title:'Základy osobných financií',desc:'Rozpočet, fond núdzových situácií a prvé kroky k finančnej slobode.',progress:100,xp:'+80 XP'},
-  {id:2,cat:'zaklady',emoji:'🏦',color:'#0D2B1F',title:'Ako fungujú banky',desc:'Sporenie, úroky, vklady a záruky do 100 000 € podľa DGS.',progress:70,xp:'+60 XP'},
-  {id:3,cat:'investicie',emoji:'📈',color:'#0D1A2E',title:'ETF fondy pre začiatočníkov',desc:'S&P 500, TER, UCITS a prečo sú ETF skvelé pre dlhodobých investorov.',progress:45,xp:'+100 XP'},
-  {id:4,cat:'investicie',emoji:'🌍',color:'#0D1A2E',title:'Diverzifikácia portfólia',desc:'Geografická, sektorová a aktívová diverzifikácia krok za krokom.',progress:20,xp:'+90 XP'},
-  {id:5,cat:'investicie',emoji:'🏠',color:'#0D1A2E',title:'Investovanie do nehnuteľností',desc:'REITs, priame investície a daňové aspekty na Slovensku.',progress:0,xp:'+120 XP'},
-  {id:6,cat:'nbs',emoji:'🏛️',color:'#2B1F0A',title:'Zákon č. 186/2009 Z.z.',desc:'Základy regulácie finančných sprostredkovateľov a NBS dohľad.',progress:60,xp:'+150 XP'},
-  {id:7,cat:'nbs',emoji:'📋',color:'#2B1F0A',title:'Príprava na skúšku NBS',desc:'Testové otázky, kľúčové pojmy a simulácie skúšobných testov.',progress:10,xp:'+200 XP'},
-  {id:8,cat:'krypto',emoji:'₿',color:'#2B0A0A',title:'Bitcoin a blockchain',desc:'Ako funguje blockchain, ťažba, peňaženky a bezpečnosť.',progress:0,xp:'+80 XP'},
-  {id:9,cat:'krypto',emoji:'🔷',color:'#2B0A0A',title:'DeFi a stablecoiny',desc:'Decentralizované financie, riziká a regulačný výhľad EÚ (MiCA).',progress:0,xp:'+100 XP'},
+  // ZÁKLADY
+  {id:1,cat:'zaklady',emoji:'📖',bg:'linear-gradient(135deg,#0a2218,#0d3320)',title:'Osobný rozpočet a cashflow',desc:'Naučte sa vytvoriť funkčný mesačný rozpočet, sledovať cashflow a nastaviť si automatické sporenie. Základ každého finančne zdravého človeka.',lessons:6,mins:45,xpVal:80,progress:0},
+  {id:2,cat:'zaklady',emoji:'🏦',bg:'linear-gradient(135deg,#0a1a2e,#0d2240)',title:'Ako fungujú banky a úroky',desc:'Sporenie, bežné účty, termínované vklady, záruky DGS do 100 000 €. Pochopte, kde sú vaše peniaze a ako na vás zarábajú banky.',lessons:5,mins:35,xpVal:70,progress:0},
+  {id:3,cat:'zaklady',emoji:'🛡️',bg:'linear-gradient(135deg,#0a2218,#0d3320)',title:'Fond núdzových situácií',desc:'Prečo potrebujete 3–6-mesačný rezervný fond? Kde ho uložiť? Ako ho vybudovať od nuly za 6 mesiacov bez bolesti.',lessons:4,mins:30,xpVal:60,progress:0},
+  {id:4,cat:'zaklady',emoji:'📊',bg:'linear-gradient(135deg,#1a0a2e,#2a0d40)',title:'Daňový systém Slovenska',desc:'19% vs 25% sadzba, daňový bonus na deti, odpočty na III. pilier, daňové priznanie krok za krokom. Optimalizujte legálne.',lessons:7,mins:55,xpVal:110,progress:0},
+  {id:5,cat:'zaklady',emoji:'🏠',bg:'linear-gradient(135deg,#0a1a2e,#0d2240)',title:'Hypotéka krok za krokom',desc:'DSTI, DTI, fixácia úrokov, predčasné splatenie, štátny príspevok pre mladých. Všetko čo potrebujete pred návštevou banky.',lessons:8,mins:65,xpVal:130,progress:0},
+  // INVESTÍCIE
+  {id:6,cat:'investicie',emoji:'📈',bg:'linear-gradient(135deg,#0a1a2e,#0d2240)',title:'ETF fondy pre začiatočníkov',desc:'S&P 500, MSCI World, UCITS, TER, akumulačné vs distribučné ETF. Prečo väčšina profíkov nevie poraziť index a prečo je to dobrá správa.',lessons:8,mins:60,xpVal:100,progress:45},
+  {id:7,cat:'investicie',emoji:'🌍',bg:'linear-gradient(135deg,#0a2218,#0d3320)',title:'Diverzifikácia portfólia',desc:'Geografická, sektorová a triednová diverzifikácia. Korelácie aktív, moderná teória portfólia, rebalansovanie raz ročne.',lessons:6,mins:45,xpVal:90,progress:0},
+  {id:8,cat:'investicie',emoji:'📉',bg:'linear-gradient(135deg,#1a0a2e,#2a0d40)',title:'Akcie a dividendy',desc:'P/E ratio, dividendový výnos, DRIP, aristokrati dividend. Ako čítať výročnú správu a vybrať kvalitné dividendové akcie.',lessons:7,mins:55,xpVal:110,progress:0},
+  {id:9,cat:'investicie',emoji:'🏛️',bg:'linear-gradient(135deg,#1a1a0a,#2a2a0d)',title:'Dlhopisy a dlhové nástroje',desc:'Štátne vs korporátne dlhopisy, YTM, duration, inverzná krivka výnosnosti. Kedy sú dlhopisy vhodnou súčasťou portfólia?',lessons:5,mins:40,xpVal:85,progress:0},
+  {id:10,cat:'investicie',emoji:'🏢',bg:'linear-gradient(135deg,#0a2218,#0d3320)',title:'REITs a nehnuteľnosti',desc:'REIT vs priama investícia, Net Asset Value, dividend yield. Ako investovať do nehnuteľností za 50 € mesačne bez hypotéky.',lessons:6,mins:50,xpVal:120,progress:0},
+  {id:11,cat:'investicie',emoji:'🥇',bg:'linear-gradient(135deg,#1a1a0a,#2a2a0d)',title:'Komodity: zlato, ropa, striebro',desc:'Prečo zlato ako hedging? Commodity ETF vs fyzická komodita. Contango, backwardation a prečo väčšina komoditných ETF sklamáva.',lessons:5,mins:40,xpVal:95,progress:0},
+  // NBS
+  {id:12,cat:'nbs',emoji:'⚖️',bg:'linear-gradient(135deg,#1a1000,#2a1a00)',title:'Zákon č. 186/2009 Z.z.',desc:'Zákon o finančnom sprostredkovaní a poradenstve. Kategórie sprostredkovateľov, ich povinnosti, registrácia v NBS, sankcie.',lessons:10,mins:80,xpVal:150,progress:60},
+  {id:13,cat:'nbs',emoji:'📋',bg:'linear-gradient(135deg,#1a1000,#2a1a00)',title:'Typy finančných produktov SR',desc:'Životné poistenie, doplnkové dôchodkové sporenie (III. pilier), podielové fondy, spotrebné a hypotekárne úvery — regulácia v SR.',lessons:8,mins:65,xpVal:130,progress:0},
+  {id:14,cat:'nbs',emoji:'🎓',bg:'linear-gradient(135deg,#1a1000,#2a1a00)',title:'Príprava na skúšku NBS',desc:'1 334 reálnych skúšobných otázok z databázy NBS. Opakuj, testuj sa, sleduj percentil úspešnosti. Simulácia reálnej skúšky.',lessons:12,mins:100,xpVal:200,progress:10},
+  {id:15,cat:'nbs',emoji:'🤝',bg:'linear-gradient(135deg,#1a1000,#2a1a00)',title:'Etika finančného poradcu',desc:'Konflikt záujmov, fiduciárna povinnosť, transparentnosť odmien, sťažnosti klientov. Ako budovať dôveru a dlhodobé vzťahy.',lessons:5,mins:40,xpVal:90,progress:0},
+  // KRYPTO
+  {id:16,cat:'krypto',emoji:'₿',bg:'linear-gradient(135deg,#1a0a00,#2a1000)',title:'Bitcoin a blockchain základy',desc:'Proof of Work, halving, Lightning Network, cold wallet vs hot wallet, seed phrase bezpečnosť. Kde kúpiť a ako bezpečne uložiť.',lessons:6,mins:50,xpVal:80,progress:0},
+  {id:17,cat:'krypto',emoji:'🔷',bg:'linear-gradient(135deg,#0a0a1a,#10102a)',title:'DeFi a stablecoiny',desc:'Liquidity pools, yield farming, impermanent loss, USDC vs DAI. Riziká DeFi protokolov a ako sa vyhnúť podvodom.',lessons:5,mins:40,xpVal:100,progress:0},
+  {id:18,cat:'krypto',emoji:'📜',bg:'linear-gradient(135deg,#1a0a00,#2a1000)',title:'Regulácia krypta v EÚ (MiCA)',desc:'Markets in Crypto-Assets Regulation — čo sa mení od 2024, ako ovplyvňuje slovenských investorov, reporting povinnosti.',lessons:4,mins:35,xpVal:90,progress:0},
 ];
 
-let currentFilter = 'all';
+let currentFilter='all';
 
 function renderCourses(){
-  const grid = document.getElementById('courses-grid');
-  const filtered = currentFilter === 'all' ? COURSES : COURSES.filter(c=>c.cat===currentFilter);
-  grid.innerHTML = filtered.map(c=>`
-    <div class="course-card" onclick="openCourse(${c.id})">
-      <div class="course-banner" style="background:${c.color}">${c.emoji}
+  const grid=document.getElementById('courses-grid');
+  if(!grid) return;
+  const filtered=currentFilter==='all'?COURSES:COURSES.filter(c=>c.cat===currentFilter);
+  grid.innerHTML=filtered.map(c=>{
+    const pct=c.progress;
+    const fillClass=pct===100?'fill-done':pct>0?'fill-progress':'fill-locked';
+    const btnHtml=pct===100
+      ?`<button class="btn-course btn-done" disabled>✅ Dokončené</button>`
+      :pct>0
+      ?`<button class="btn-course btn-continue" onclick="openCourse(${c.id},event)">Pokračovať →</button>`
+      :`<button class="btn-course btn-start" onclick="openCourse(${c.id},event)">Začať →</button>`;
+    return `
+    <div class="course-card fade-in" onclick="openCourse(${c.id},event)">
+      <div class="course-banner" style="background:${c.bg}">
+        <span class="emoji">${c.emoji}</span>
         <span class="course-cat cat-${c.cat}">${catLabel(c.cat)}</span>
       </div>
       <div class="course-body">
         <div class="course-title">${c.title}</div>
         <div class="course-desc">${c.desc}</div>
-        <div class="course-footer">
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-label">${c.progress}% dokončené</div>
-            <div class="progress-track"><div class="progress-fill" style="width:${c.progress}%"></div></div>
-          </div>
-          <div class="xp-badge">${c.xp}</div>
+        <div class="course-meta">
+          <span class="course-meta-item">📚 ${c.lessons} lekcií</span>
+          <span class="course-meta-item">⏱ ${c.mins} min</span>
+          <span class="course-meta-item">⭐ +${c.xpVal} XP</span>
         </div>
+        <div class="course-footer">
+          <div class="progress-wrap">
+            <div class="progress-bar-label">${pct}% dokončené</div>
+            <div class="progress-track"><div class="progress-fill ${fillClass}" style="width:${pct}%"></div></div>
+          </div>
+        </div>
+        <div class="course-action">${btnHtml}</div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
+  observeFadeIn();
 }
 
-function catLabel(cat){return{zaklady:'Základy',investicie:'Investície',nbs:'NBS',krypto:'Krypto'}[cat]||cat}
+function catLabel(cat){return{zaklady:'Základy',investicie:'Investície',nbs:'NBS príprava',krypto:'Krypto & DeFi'}[cat]||cat}
 
-function filterCourses(el, cat){
+function filterCourses(el,cat){
   document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  currentFilter = cat;
+  currentFilter=cat;
   renderCourses();
 }
 
-function openCourse(id){
-  window.location.href = 'learn.html';
+function openCourse(id,e){
+  if(e){e.stopPropagation();}
+  window.location.href='learn.html?id='+id;
 }
 
-// ─── CALCULATORS ──────────────────────────────────
-function fmt(n){return new Intl.NumberFormat('sk-SK',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(n)}
+// ── CALCULATORS ───────────────────────────────────────────────
+function fmt(n){return new Intl.NumberFormat('sk-SK',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n)}
 
 function calcMortgage(){
   const P=+document.getElementById('m-amount').value;
@@ -777,26 +858,22 @@ function calcMortgage(){
   const n=+document.getElementById('m-years').value*12;
   const monthly=P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
   const total=monthly*n;
-  const interest=total-P;
   document.getElementById('m-monthly').textContent=fmt(monthly);
   document.getElementById('m-total').textContent=fmt(total);
-  document.getElementById('m-interest').textContent=fmt(interest);
+  document.getElementById('m-interest').textContent=fmt(total-P);
   document.getElementById('m-result').classList.add('show');
 }
-
 function calcInvestment(){
   const m=+document.getElementById('i-monthly').value;
   const r=+document.getElementById('i-rate').value/100/12;
   const n=+document.getElementById('i-years').value*12;
   const total=m*((Math.pow(1+r,n)-1)/r)*(1+r);
   const invested=m*n;
-  const gains=total-invested;
   document.getElementById('i-invested').textContent=fmt(invested);
-  document.getElementById('i-gains').textContent=fmt(gains);
+  document.getElementById('i-gains').textContent=fmt(total-invested);
   document.getElementById('i-total').textContent=fmt(total);
   document.getElementById('i-result').classList.add('show');
 }
-
 function calcRetirement(){
   const age=+document.getElementById('r-age').value;
   const retire=+document.getElementById('r-retire').value;
@@ -811,135 +888,125 @@ function calcRetirement(){
   document.getElementById('r-monthly').textContent=fmt(monthly);
   document.getElementById('r-result').classList.add('show');
 }
-
 function calcInflation(){
   const A=+document.getElementById('inf-amount').value;
   const rate=+document.getElementById('inf-rate').value/100;
   const n=+document.getElementById('inf-years').value;
   const future=A/Math.pow(1+rate,n);
   const loss=A-future;
-  const pct=(loss/A*100).toFixed(1);
   document.getElementById('inf-future').textContent=fmt(future);
   document.getElementById('inf-loss').textContent='-'+fmt(loss);
-  document.getElementById('inf-pct').textContent='-'+pct+'%';
+  document.getElementById('inf-pct').textContent='-'+(loss/A*100).toFixed(1)+'%';
   document.getElementById('inf-result').classList.add('show');
 }
 
-// ─── CHAT ─────────────────────────────────────────
-const CHAT_HISTORY = [
-  {role:'ai',msg:'Ahoj! Som FinAdvisor AI. Pomôžem vám zorientovať sa vo svete investícií a osobných financií. Čo vás zaujíma?',time:'09:14'},
-  {role:'user',msg:'Chcem začať investovať do ETF. Kde začať?',time:'09:15'},
-  {role:'ai',msg:'Skvelé rozhodnutie! ETF (Exchange Traded Funds) sú pasívne fondy obchodované na burze. Pre začiatočníkov odporúčam tieto kroky:\n\n1. Otvorte si účet u brokera (napr. Degiro, IBKR, XTB)\n2. Zamerajte sa na UCITS ETF — chránené európskou reguláciou\n3. Zvážte <strong>CSPX</strong> (S&P 500, TER 0.07%) alebo <strong>VWCE</strong> (celosvetový, TER 0.22%)\n4. Investujte pravidelne malé sumy — DCA stratégia\n\n⚠️ Toto je vzdelávacia informácia, nie finančné poradenstvo.',time:'09:15'},
-  {role:'user',msg:'Aký je rozdiel medzi SPY a CSPX?',time:'09:17'},
-  {role:'ai',msg:'Oba sledujú S&P 500, ale majú dôležité rozdiely pre európskych investorov:\n\n<strong>SPY (SPDR S&P 500 ETF)</strong>\n• TER: 0.09% ročne\n• Domicilovaný v USA → 30% dividendová daň\n• Nie je UCITS → menej vhodný pre EÚ investorov\n\n<strong>CSPX (iShares Core S&P 500 UCITS)</strong>\n• TER: 0.07% ročne\n• Domicil: Írsko → 15% dividendová daň\n• UCITS kompatibilný → ideálny pre Slovákov\n\nPre slovenského investora je CSPX zvyčajne výhodnejší.',time:'09:17'},
+// ── CHAT ──────────────────────────────────────────────────────
+const CHAT_INIT = [
+  {role:'ai',msg:'Ahoj! Som FinAdvisor AI — vzdelávací asistent pre oblasť osobných financií a investícií. Čo vás zaujíma? Môžete sa pýtať na ETF, hypotéky, dôchodkové sporenie, NBS skúšku alebo čokoľvek o financiách.',time:''},
 ];
+const CHAT_HISTORY=[...CHAT_INIT];
+
+const AI_RESPONSES = {
+  etf:['ETF (Exchange-Traded Fund) je pasívny fond obchodovaný na burze. Pre slovenských investorov sú vhodné najmä <strong>UCITS ETF</strong> domicilované v Írsku. Odporúčané: <strong>CSPX</strong> (S&P 500, TER 0.07%), <strong>VWCE</strong> (celosvetový, TER 0.22%), <strong>EIMI</strong> (emerging markets). Investujte pravidelne — DCA stratégia. ⚠️ Toto je vzdelávacia info, nie poradenstvo.'],
+  hypoteka:['Hypotéka na Slovensku: banky posudzujú <strong>DTI</strong> (dlh/príjem, max 8×) a <strong>DSTI</strong> (splátky/príjem, max 40%). Fixácia: 3, 5 alebo 10 rokov. Pre mladých do 35 rokov je k dispozícii štátny príspevok 3% z úveru. Pred podpisom vždy porovnajte RPSN, nie iba úrok. Náš hypotekárny kalkulátor vám pomôže s výpočtom.'],
+  nbs:['NBS skúška finančného sprostredkovateľa má 5 sektorov: poistenie, dôchodkové sporenie, investície, úvery, kapitálový trh. Skúška pozostáva z 25 otázok, potrebujete 65% správnych. V sekcii Kurzy → NBS príprava máte 1 334 cvičných otázok z reálnej databázy.'],
+  sporenie:['Základné pravidlo: 3–6 mesačný fond núdzových situácií uložený na <strong>sporiaci účet alebo termínovaný vklad</strong>. Po vytvorení rezervy investujte zvyšok do ETF. III. pilier (DPS) je výhodný pre zamestnaných — príspevok od zamestnávateľa + daňový odpočet až 180 €/rok.'],
+  danove:['Na Slovensku platí 19% daň z príjmu do ~41 000 €/rok, nad tým 25%. Výnosy z predaja akcií/ETF sú zdanené 19% ak ich nezdieľate pod 1 rok. Po 1 roku držby nie je zákonom stanovená výnimka (na rozdiel od CZ) — zdaňujete vždy. III. pilier: odpočet až 180 €/rok.'],
+  default:['Zaujímavá otázka! Z pohľadu finančného vzdelávania platí: vždy diverzifikujte, investujte pravidelne a dlhodobo. Viac detailov nájdete v príslušnom kurze. ⚠️ Toto nie je finančné poradenstvo — pre konkrétne rozhodnutia odporúčam licencovaného poradcu.','Skvelá téma! Odporúčam pozrieť si príslušný kurz v sekcii Kurzy. Tam nájdete detailné vysvetlenia s príkladmi. Ak máte ešte otázky, rád pomôžem zo vzdelávacieho pohľadu.','Dôležité je myslieť dlhodobo. Finančná sloboda nie je šprint, ale maratón — pravidelnosť a trpezlivosť sú kľúčom. Naše kalkulačky vám ukážu, čo dokáže efekt zloženého úročenia za 20–30 rokov.']
+};
+
+function getAIReply(text){
+  const t=text.toLowerCase();
+  if(t.includes('etf')||t.includes('fond')||t.includes('cspx')||t.includes('vwce'))return AI_RESPONSES.etf[0];
+  if(t.includes('hypotéka')||t.includes('hypoteka')||t.includes('úver')||t.includes('uver'))return AI_RESPONSES.hypoteka[0];
+  if(t.includes('nbs')||t.includes('skúšk')||t.includes('skuška')||t.includes('sprostredkovateľ'))return AI_RESPONSES.nbs[0];
+  if(t.includes('spori')||t.includes('rezerv')||t.includes('pilier')||t.includes('dôchodok')||t.includes('dochodok'))return AI_RESPONSES.sporenie[0];
+  if(t.includes('daň')||t.includes('dan')||t.includes('dp')||t.includes('odpočet'))return AI_RESPONSES.danove[0];
+  return AI_RESPONSES.default[Math.floor(Math.random()*AI_RESPONSES.default.length)];
+}
 
 function renderChat(){
-  const box = document.getElementById('chat-messages');
-  box.innerHTML = CHAT_HISTORY.map(m=>`
+  const box=document.getElementById('chat-messages');
+  if(!box) return;
+  const now=new Date().toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'});
+  box.innerHTML=CHAT_HISTORY.map(m=>`
     <div class="msg ${m.role}">
       <div class="msg-icon">${m.role==='ai'?'🤖':'👤'}</div>
       <div>
         <div class="msg-bubble">${m.msg.replace(/\n/g,'<br>')}</div>
-        <div class="msg-time">${m.time}</div>
+        ${m.time?`<div class="msg-time">${m.time}</div>`:''}
       </div>
-    </div>
-  `).join('');
-  box.scrollTop = box.scrollHeight;
+    </div>`).join('');
+  box.scrollTop=box.scrollHeight;
 }
 
 function sendMsg(){
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
+  const input=document.getElementById('chat-input');
+  const text=input.value.trim();
   if(!text) return;
-  const now = new Date().toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'});
+  const now=new Date().toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'});
   CHAT_HISTORY.push({role:'user',msg:text,time:now});
   input.value='';
   renderChat();
-  // typing indicator
-  const box = document.getElementById('chat-messages');
-  const typing = document.createElement('div');
-  typing.className='msg ai';typing.id='typing';
+  const box=document.getElementById('chat-messages');
+  const typing=document.createElement('div');
+  typing.className='msg ai'; typing.id='typing';
   typing.innerHTML=`<div class="msg-icon">🤖</div><div class="msg-bubble" style="padding:14px 18px"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
-  box.appendChild(typing);
-  box.scrollTop=box.scrollHeight;
+  box.appendChild(typing); box.scrollTop=box.scrollHeight;
   setTimeout(()=>{
     typing.remove();
-    const replies=[
-      'Toto je zaujímavá otázka! V kontexte finančného vzdelávania môžem povedať, že diverzifikácia a dlhodobý horizont sú kľúčové. Viac info nájdete v sekcii Kurzy.',
-      'Skvelá otázka! Odporúčam pozrieť si náš kurz o ETF fondoch v sekcii Kurzy → Investície. Obsahuje detailné vysvetlenia a príklady.',
-      'Všeobecne platí: čím dlhší horizont, tým viac si môžete dovoliť riziko. Pre detaily odporúčam konzultáciu s licencovaným finančným poradcom.',
-      'Z vzdelávacieho hľadiska: pravidelné investovanie (DCA) znižuje dopad trhových výkyvov. Je to overená stratégia pre bežných investorov.',
-    ];
-    const reply=replies[Math.floor(Math.random()*replies.length)];
+    const reply=getAIReply(text);
     CHAT_HISTORY.push({role:'ai',msg:reply,time:new Date().toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'})});
     renderChat();
-  },1400);
+  },1200);
 }
-
 document.getElementById('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}});
 
-// ─── NAVIGATION ────────────────────────────────────
-const PAGE_TITLES = {dashboard:'Dashboard',kurzy:'Kurzy',kalkul:'Kalkulačky',ai:'AI Radca',profil:'Profil'};
+// ── NAVIGATION ────────────────────────────────────────────────
+const PAGE_TITLES={dashboard:'Dashboard',kurzy:'Kurzy',kalkul:'Kalkulačky',ai:'AI Radca',profil:'Profil'};
 
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.querySelectorAll('.bnav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('page-'+id)?.classList.add('active');
   document.querySelector(`.nav-item[data-page="${id}"]`)?.classList.add('active');
   document.querySelector(`.bnav-item[data-page="${id}"]`)?.classList.add('active');
-  document.getElementById('topbar-title').textContent = PAGE_TITLES[id]||'';
+  document.getElementById('topbar-title').textContent=PAGE_TITLES[id]||'';
   window.scrollTo(0,0);
   observeFadeIn();
 }
 
-document.querySelectorAll('.nav-item[data-page]').forEach(el=>{
-  el.addEventListener('click',()=>showPage(el.dataset.page));
-});
-document.querySelectorAll('.bnav-item[data-page]').forEach(el=>{
-  el.addEventListener('click',()=>showPage(el.dataset.page));
-});
+document.querySelectorAll('.nav-item[data-page]').forEach(el=>el.addEventListener('click',()=>showPage(el.dataset.page)));
+document.querySelectorAll('.bnav-item[data-page]').forEach(el=>el.addEventListener('click',()=>showPage(el.dataset.page)));
 
-// ─── PROFILE SAVE ──────────────────────────────────
-function saveProfile(){
-  const ok = document.getElementById('save-ok');
-  ok.classList.add('show');
-  setTimeout(()=>ok.classList.remove('show'),2500);
-}
-
-// ─── MOBILE BURGER ─────────────────────────────────
+// ── MOBILE ────────────────────────────────────────────────────
 (function(){
   const burger=document.getElementById('burger');
   const sidebar=document.getElementById('sidebar');
-  if(window.innerWidth<=768){burger.style.display='block'}
+  const update=()=>{burger.style.display=window.innerWidth<=768?'block':'none';if(window.innerWidth>768)sidebar.classList.remove('open')};
+  update();
   burger.addEventListener('click',()=>sidebar.classList.toggle('open'));
-  document.addEventListener('click',e=>{
-    if(!sidebar.contains(e.target)&&e.target!==burger)sidebar.classList.remove('open');
-  });
-  window.addEventListener('resize',()=>{
-    burger.style.display=window.innerWidth<=768?'block':'none';
-    if(window.innerWidth>768)sidebar.classList.remove('open');
-  });
+  document.addEventListener('click',e=>{if(!sidebar.contains(e.target)&&e.target!==burger)sidebar.classList.remove('open')});
+  window.addEventListener('resize',update);
 })();
 
-// ─── INTERSECTION OBSERVER ──────────────────────────
+// ── INTERSECTION OBSERVER ─────────────────────────────────────
 function observeFadeIn(){
-  const els=document.querySelectorAll('.fade-in:not(.visible)');
-  const io=new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}});
-  },{threshold:0.1});
-  els.forEach(el=>io.observe(el));
+  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})},{threshold:0.08});
+  document.querySelectorAll('.fade-in:not(.visible)').forEach(el=>io.observe(el));
 }
 
-// ─── INIT ─────────────────────────────────────────
-renderCourses();
-renderChat();
-observeFadeIn();
+// ── START ─────────────────────────────────────────────────────
+(async function(){
+  const token=localStorage.getItem('fa_token');
+  if(token){
+    await initApp();
+  } else {
+    document.getElementById('auth-overlay').style.display='flex';
+    document.getElementById('app-shell').style.display='none';
+  }
+})();
 </script>
-
-<footer style="text-align:center;padding:20px 28px;font-size:11px;color:var(--muted2);border-top:1px solid var(--border);background:var(--bg2)">
-  Platforma slúži výlučne na vzdelávacie účely podľa §1 ods. 2 zákona č. 186/2009 Z.z. — Nie je finančným poradenstvom.
-</footer>
 </body>
 </html>
