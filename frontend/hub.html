@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>PETRO HUB — Глобальні фінанси</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0e1a; --card: #111827; --card2: #1a2236;
+      --blue: #3b82f6; --blue-d: #1d4ed8; --green: #10b981;
+      --gold: #f59e0b; --red: #ef4444; --purple: #8b5cf6;
+      --text: #f1f5f9; --muted: #94a3b8; --border: rgba(255,255,255,.08);
+      --radius: 12px; --shadow: 0 4px 24px rgba(0,0,0,.4);
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── LOGIN ── */
+    #login {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at 50% 0%, #1e3a8a22 0%, transparent 70%);
+    }
+    .login-box {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 48px 40px; width: 360px; text-align: center;
+      box-shadow: 0 0 60px rgba(59,130,246,.15);
+    }
+    .login-box .logo { font-size: 48px; margin-bottom: 12px; }
+    .login-box h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+    .login-box p { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+    .login-box input {
+      width: 100%; padding: 12px 16px; background: var(--card2);
+      border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+      font-size: 15px; font-family: inherit; outline: none; margin-bottom: 12px;
+      transition: border .2s;
+    }
+    .login-box input:focus { border-color: var(--blue); }
+    .login-btn {
+      width: 100%; padding: 13px; background: var(--blue); color: #fff;
+      border: none; border-radius: 8px; font-size: 15px; font-weight: 700;
+      cursor: pointer; font-family: inherit; transition: background .2s;
+    }
+    .login-btn:hover { background: var(--blue-d); }
+    #login-err { color: var(--red); font-size: 13px; margin-top: 10px; display: none; }
+
+    /* ── LAYOUT ── */
+    #app { display: none; }
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 260px; background: var(--card); border-right: 1px solid var(--border);
+      position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto;
+      display: flex; flex-direction: column; z-index: 100;
+    }
+    .s-logo { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+    .s-logo .name { font-size: 18px; font-weight: 800; color: var(--gold); }
+    .s-logo .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .s-nav { padding: 8px 0; flex: 1; }
+    .s-section { padding: 14px 18px 4px; font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+    .s-item {
+      display: flex; align-items: center; gap: 10px; padding: 9px 18px;
+      color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 500;
+      border-left: 3px solid transparent; transition: all .15s; border-radius: 0 8px 8px 0; margin-right: 8px;
+    }
+    .s-item:hover { background: var(--card2); color: var(--text); }
+    .s-item.active { background: rgba(59,130,246,.15); color: var(--blue); border-left-color: var(--blue); }
+    .s-item .ic { font-size: 15px; width: 18px; text-align: center; }
+    .s-bottom { padding: 16px; border-top: 1px solid var(--border); }
+    .s-bottom .logout { color: var(--muted); font-size: 12px; cursor: pointer; }
+    .s-bottom .logout:hover { color: var(--red); }
+
+    /* ── MAIN ── */
+    .main { margin-left: 260px; flex: 1; }
+    .topbar {
+      background: var(--card); border-bottom: 1px solid var(--border);
+      padding: 14px 28px; display: flex; justify-content: space-between;
+      align-items: center; position: sticky; top: 0; z-index: 50;
+    }
+    .topbar h2 { font-size: 17px; font-weight: 700; }
+    .topbar-right { display: flex; align-items: center; gap: 14px; font-size: 13px; color: var(--muted); }
+    .live-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .content { padding: 24px 28px; }
+
+    /* ── CARDS ── */
+    .page { display: none; }
+    .page.active { display: block; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 20px; display: flex; align-items: center; gap: 14px;
+    }
+    .stat-ic { font-size: 28px; }
+    .stat-v { font-size: 22px; font-weight: 800; line-height: 1; }
+    .stat-l { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      margin-bottom: 20px; overflow: hidden;
+    }
+    .card-hd {
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .card-hd h3 { font-size: 14px; font-weight: 700; }
+    .card-body { padding: 20px; }
+    .btn {
+      padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--card2); color: var(--text); font-size: 13px; font-weight: 500;
+      cursor: pointer; font-family: inherit; transition: all .15s; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn:hover { background: rgba(59,130,246,.15); border-color: var(--blue); }
+    .btn-blue { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .btn-blue:hover { background: var(--blue-d); }
+
+    /* ── TABLE ── */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { padding: 10px 14px; text-align: left; color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid var(--border); }
+    td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,.02); }
+
+    /* ── BADGES ── */
+    .tag {
+      display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    }
+    .tag-blue { background: rgba(59,130,246,.15); color: var(--blue); }
+    .tag-green { background: rgba(16,185,129,.15); color: var(--green); }
+    .tag-gold { background: rgba(245,158,11,.15); color: var(--gold); }
+    .tag-red { background: rgba(239,68,68,.15); color: var(--red); }
+    .tag-purple { background: rgba(139,92,246,.15); color: var(--purple); }
+
+    /* ── LINKS GRID ── */
+    .links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 12px; }
+    .link-card {
+      background: var(--card2); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 16px; text-decoration: none; color: var(--text); transition: all .2s;
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .link-card:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,130,246,.15); }
+    .link-card .lic { font-size: 24px; flex-shrink: 0; }
+    .link-card .lin { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+    .link-card .lid { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+    /* ── SEARCH ── */
+    .search-bar {
+      width: 100%; padding: 11px 16px; background: var(--card2); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text); font-size: 14px; font-family: inherit;
+      outline: none; margin-bottom: 20px; transition: border .2s;
+    }
+    .search-bar:focus { border-color: var(--blue); }
+
+    /* ── TICKER ── */
+    .ticker-bar {
+      background: var(--card2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px 16px; margin-bottom: 20px; overflow: hidden; white-space: nowrap;
+    }
+    .ticker-inner { display: inline-flex; gap: 32px; animation: scroll 30s linear infinite; }
+    @keyframes scroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .tick-item { font-size: 12px; color: var(--muted); }
+    .tick-item span { font-weight: 700; margin-right: 4px; }
+    .tick-up { color: var(--green); }
+    .tick-dn { color: var(--red); }
+
+    /* ── NOTES ── */
+    .note-area {
+      width: 100%; min-height: 200px; background: var(--card2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px; color: var(--text); font-size: 14px;
+      font-family: 'Inter', sans-serif; resize: vertical; outline: none; transition: border .2s;
+    }
+    .note-area:focus { border-color: var(--blue); }
+
+    @media(max-width:768px){
+      .sidebar{transform:translateX(-100%)} .main{margin-left:0}
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <div class="logo">🌍</div>
+    <h1>PETRO FINANCIAL HUB</h1>
+    <p>Приватна база глобальних фінансів</p>
+    <input type="password" id="pwd" placeholder="Пароль доступу" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="login-btn" onclick="doLogin()">Увійти</button>
+    <div id="login-err">❌ Неправильний пароль</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="s-logo">
+        <div class="name">🌍 PETRO HUB</div>
+        <div class="sub">Глобальна фінансова база</div>
+      </div>
+      <div class="s-nav">
+        <div class="s-section">Огляд</div>
+        <div class="s-item active" onclick="go('dashboard')"><span class="ic">📊</span> Dashboard</div>
+        <div class="s-item" onclick="go('markets')"><span class="ic">📈</span> Ринки світу</div>
+        <div class="s-item" onclick="go('news')"><span class="ic">📰</span> Фінансові новини</div>
+
+        <div class="s-section">Банки &amp; Фонди</div>
+        <div class="s-item" onclick="go('banks-global')"><span class="ic">🏦</span> Топ-банки світу</div>
+        <div class="s-item" onclick="go('banks-sk')"><span class="ic">🇸🇰</span> Банки Словаччини</div>
+        <div class="s-item" onclick="go('funds')"><span class="ic">💼</span> Інвест фонди</div>
+        <div class="s-item" onclick="go('etf')"><span class="ic">📦</span> ETF &amp; Індекси</div>
+        <div class="s-item" onclick="go('central-banks')"><span class="ic">🏛️</span> Центральні банки</div>
+
+        <div class="s-section">Корпорації</div>
+        <div class="s-item" onclick="go('fortune500')"><span class="ic">🏢</span> Fortune 500</div>
+        <div class="s-item" onclick="go('tech-corps')"><span class="ic">💻</span> Tech гіганти</div>
+        <div class="s-item" onclick="go('energy')"><span class="ic">⚡</span> Енергетика</div>
+        <div class="s-item" onclick="go('fintech')"><span class="ic">🚀</span> Fintech компанії</div>
+
+        <div class="s-section">Спеціальні зони</div>
+        <div class="s-item" onclick="go('offshore')"><span class="ic">🏝️</span> Офшори та юрисдикції</div>
+        <div class="s-item" onclick="go('leasing')"><span class="ic">🚗</span> Лізинг компанії</div>
+        <div class="s-item" onclick="go('crypto')"><span class="ic">₿</span> Крипто біржі</div>
+        <div class="s-item" onclick="go('insurance')"><span class="ic">🛡️</span> Страхові компанії</div>
+
+        <div class="s-section">Інструменти</div>
+        <div class="s-item" onclick="go('calculator')"><span class="ic">🧮</span> Калькулятори</div>
+        <div class="s-item" onclick="go('rates')"><span class="ic">💱</span> Курси валют LIVE</div>
+        <div class="s-item" onclick="go('notes')"><span class="ic">📝</span> Нотатки</div>
+        <div class="s-item" onclick="go('links')"><span class="ic">🔗</span> Всі посилання</div>
+      </div>
+      <div class="s-bottom">
+        <div class="logout" onclick="logout()">🚪 Вийти</div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="topbar">
+        <h2 id="page-title">Dashboard</h2>
+        <div class="topbar-right">
+          <div class="live-dot"></div>
+          <span>LIVE</span>
+          <span id="clock"></span>
+        </div>
+      </div>
+      <div class="content">
+
+        <!-- DASHBOARD -->
+        <div class="page active" id="page-dashboard">
+          <div class="ticker-bar">
+            <div class="ticker-inner" id="ticker">
+              <span class="tick-item"><span>EUR/USD</span><b class="tick-up">1.0842</b></span>
+              <span class="tick-item"><span>S&amp;P 500</span><b class="tick-up">5,248</b></span>
+              <span class="tick-item"><span>DAX</span><b class="tick-up">18,492</b></span>
+              <span class="tick-item"><span>BTC</span><b class="tick-dn">$63,240</b></span>
+              <span class="tick-item"><span>GOLD</span><b class="tick-up">$2,318/oz</b></span>
+              <span class="tick-item"><span>OIL WTI</span><b class="tick-dn">$82.4</b></span>
+              <span class="tick-item"><span>EUR/CZK</span><b>25.08</b></span>
+              <span class="tick-item"><span>USD/UAH</span><b>39.6</b></span>
+              <span class="tick-item"><span>10Y US</span><b class="tick-dn">4.21%</b></span>
+              <span class="tick-item"><span>EUR/USD</span><b class="tick-up">1.0842</b></span>
+              <span class="tick-item"><span>S&amp;P 500</span><b class="tick-up">5,248</b></span>
+              <span class="tick-item"><span>DAX</span><b class="tick-up">18,492</b></span>
+              <span class="tick-item"><span>BTC</span><b class="tick-dn">$63,240</b></span>
+              <span class="tick-item"><span>GOLD</span><b class="tick-up">$2,318/oz</b></span>
+              <span class="tick-item"><span>OIL WTI</span><b class="tick-dn">$82.4</b></span>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="stat-card"><span class="stat-ic">🏦</span><div><div class="stat-v">200+</div><div class="stat-l">Топ банків світу</div></div></div>
+            <div class="stat-card"><span class="stat-ic">💼</span><div><div class="stat-v">500+</div><div class="stat-l">Інвест фондів</div></div></div>
+            <div class="stat-card"><span class="stat-ic">🏢</span><div><div class="stat-v">2,000+</div><div class="stat-l">Корпорацій</div></div></div>
+            <div class="stat-card"><span class="stat-ic">🏝️</span><div><div class="stat-v">42</div><div class="stat-l">Офшорних юрисдикцій</div></div></div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <div class="card">
+              <div class="card-hd"><h3>🔗 Швидкий доступ</h3></div>
+              <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+                <a class="btn" href="https://finance.yahoo.com" target="_blank">📈 Yahoo Finance</a>
+                <a class="btn" href="https://www.bloomberg.com/markets" target="_blank">📰 Bloomberg Markets</a>
+                <a class="btn" href="https://www.tradingview.com" target="_blank">📊 TradingView</a>
+                <a class="btn" href="https://www.investing.com" target="_blank">💹 Investing.com</a>
+                <a class="btn" href="https://coinmarketcap.com" target="_blank">₿ CoinMarketCap</a>
+                <a class="btn" href="https://www.reuters.com/finance" target="_blank">📡 Reuters Finance</a>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hd"><h3>🌍 Глобальні ринки сьогодні</h3></div>
+              <div class="card-body">
+                <table>
+                  <thead><tr><th>Ринок</th><th>Індекс</th><th>Зміна</th></tr></thead>
+                  <tbody>
+                    <tr><td>🇺🇸 США</td><td>S&amp;P 500 — 5,248</td><td class="tick-up">+0.4%</td></tr>
+                    <tr><td>🇩🇪 Нім.</td><td>DAX — 18,492</td><td class="tick-up">+0.6%</td></tr>
+                    <tr><td>🇯🇵 Японія</td><td>Nikkei — 40,168</td><td class="tick-up">+1.1%</td></tr>
+                    <tr><td>🇨🇳 Китай</td><td>CSI 300 — 3,560</td><td class="tick-dn">-0.3%</td></tr>
+                    <tr><td>🇬🇧 Брит.</td><td>FTSE — 7,950</td><td class="tick-up">+0.2%</td></tr>
+                    <tr><td>🇸🇰 Словач.</td><td>SAX — 420</td><td>0.0%</td></tr>
+                  </tbody>
+                </table>
+                <div style="margin-top:12px;text-align:right">
+                  <a class="btn btn-blue" href="https://www.msci.com/our-solutions/indexes" target="_blank">MSCI індекси →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MARKETS -->
+        <div class="page" id="page-markets">
+          <div class="links-grid">
+            <a class="link-card" href="https://www.tradingview.com/chart" target="_blank"><span class="lic">📊</span><div><div class="lin">TradingView</div><div class="lid">Графіки всіх активів світу в реальному часі</div></div></a>
+            <a class="link-card" href="https://finance.yahoo.com" target="_blank"><span class="lic">📈</span><div><div class="lin">Yahoo Finance</div><div class="lid">Акції, ETF, новини, дані компаній</div></div></a>
+            <a class="link-card" href="https://www.bloomberg.com/markets" target="_blank"><span class="lic">📰</span><div><div class="lin">Bloomberg Markets</div><div class="lid">Глобальні ринки, аналітика, дані</div></div></a>
+            <a class="link-card" href="https://www.investing.com" target="_blank"><span class="lic">💹</span><div><div class="lin">Investing.com</div><div class="lid">Форекс, акції, ф'ючерси, крипто</div></div></a>
+            <a class="link-card" href="https://markets.ft.com/data" target="_blank"><span class="lic">🗞️</span><div><div class="lin">Financial Times Markets</div><div class="lid">FT дані ринків і аналітика</div></div></a>
+            <a class="link-card" href="https://www.wsj.com/market-data" target="_blank"><span class="lic">📑</span><div><div class="lin">Wall Street Journal</div><div class="lid">Ринкові дані WSJ</div></div></a>
+            <a class="link-card" href="https://www.morningstar.com" target="_blank"><span class="lic">⭐</span><div><div class="lin">Morningstar</div><div class="lid">Рейтинги фондів і акцій</div></div></a>
+            <a class="link-card" href="https://fred.stlouisfed.org" target="_blank"><span class="lic">🏛️</span><div><div class="lin">FRED (ФРС)</div><div class="lid">Макроекономічні дані США</div></div></a>
+            <a class="link-card" href="https://www.msci.com" target="_blank"><span class="lic">🌐</span><div><div class="lin">MSCI</div><div class="lid">Глобальні індекси та ESG</div></div></a>
+            <a class="link-card" href="https://data.worldbank.org" target="_blank"><span class="lic">🌍</span><div><div class="lin">World Bank Data</div><div class="lid">ВВП, інфляція, борги країн</div></div></a>
+            <a class="link-card" href="https://www.imf.org/en/Data" target="_blank"><span class="lic">💰</span><div><div class="lin">МВФ Дані</div><div class="lid">Міжнародний валютний фонд</div></div></a>
+            <a class="link-card" href="https://stats.bis.org" target="_blank"><span class="lic">🏦</span><div><div class="lin">BIS Statistics</div><div class="lid">Банк міжнародних розрахунків</div></div></a>
+          </div>
+        </div>
+
+        <!-- NEWS -->
+        <div class="page" id="page-news">
+          <div class="links-grid">
+            <a class="link-card" href="https://www.bloomberg.com" target="_blank"><span class="lic">📰</span><div><div class="lin">Bloomberg</div><div class="lid">Провідне фінансове медіа світу</div></div></a>
+            <a class="link-card" href="https://www.ft.com" target="_blank"><span class="lic">🗞️</span><div><div class="lin">Financial Times</div><div class="lid">Фінансові новини Великобританії і світу</div></div></a>
+            <a class="link-card" href="https://www.reuters.com/finance" target="_blank"><span class="lic">📡</span><div><div class="lin">Reuters Finance</div><div class="lid">Новини ринків Reuters</div></div></a>
+            <a class="link-card" href="https://www.wsj.com" target="_blank"><span class="lic">📑</span><div><div class="lin">Wall Street Journal</div><div class="lid">Ділові новини США</div></div></a>
+            <a class="link-card" href="https://www.cnbc.com/finance" target="_blank"><span class="lic">📺</span><div><div class="lin">CNBC Finance</div><div class="lid">ТВ і онлайн фінансові новини</div></div></a>
+            <a class="link-card" href="https://www.theeconomist.com" target="_blank"><span class="lic">📚</span><div><div class="lin">The Economist</div><div class="lid">Аналітичні статті про економіку</div></div></a>
+            <a class="link-card" href="https://seekingalpha.com" target="_blank"><span class="lic">🔍</span><div><div class="lin">Seeking Alpha</div><div class="lid">Інвест аналітика і ідеї</div></div></a>
+            <a class="link-card" href="https://www.zerohedge.com" target="_blank"><span class="lic">⚡</span><div><div class="lin">ZeroHedge</div><div class="lid">Альтернативна фінансова аналітика</div></div></a>
+          </div>
+        </div>
+
+        <!-- BANKS GLOBAL -->
+        <div class="page" id="page-banks-global">
+          <input class="search-bar" placeholder="🔍 Пошук банку..." oninput="filterTable(this,'banks-tbl')"/>
+          <div class="card">
+            <div class="card-hd"><h3>🏦 Топ-50 банків світу за активами</h3><a class="btn btn-blue" href="https://www.relbanks.com/worlds-top-banks/assets" target="_blank">Повний список →</a></div>
+            <div class="card-body" style="padding:0">
+              <table id="banks-tbl">
+                <thead><tr><th>#</th><th>Банк</th><th>Країна</th><th>Активи</th><th>Тип</th><th>Сайт</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>Industrial & Commercial Bank of China (ICBC)</td><td>🇨🇳 Китай</td><td>$6.3 трлн</td><td><span class="tag tag-blue">Державний</span></td><td><a href="https://www.icbc-ltd.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>2</td><td>China Construction Bank</td><td>🇨🇳 Китай</td><td>$5.0 трлн</td><td><span class="tag tag-blue">Державний</span></td><td><a href="https://www.ccb.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>3</td><td>Agricultural Bank of China</td><td>🇨🇳 Китай</td><td>$4.9 трлн</td><td><span class="tag tag-blue">Державний</span></td><td><a href="https://www.abchina.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>4</td><td>Bank of China</td><td>🇨🇳 Китай</td><td>$4.2 трлн</td><td><span class="tag tag-blue">Державний</span></td><td><a href="https://www.boc.cn" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>5</td><td>JPMorgan Chase</td><td>🇺🇸 США</td><td>$3.9 трлн</td><td><span class="tag tag-green">Приватний</span></td><td><a href="https://www.jpmorganchase.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>6</td><td>Bank of America</td><td>🇺🇸 США</td><td>$3.3 трлн</td><td><span class="tag tag-green">Приватний</span></td><td><a href="https://www.bankofamerica.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>7</td><td>Wells Fargo</td><td>🇺🇸 США</td><td>$1.9 трлн</td><td><span class="tag tag-green">Приватний</span></td><td><a href="https://www.wellsfargo.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>8</td><td>HSBC Holdings</td><td>🇬🇧 Брит.</td><td>$3.0 трлн</td><td><span class="tag tag-green">Приватний</span></td><td><a href="https://www.hsbc.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>9</td><td>BNP Paribas</td><td>🇫🇷 Франц.</td><td>$3.1 трлн</td><td><span class="tag tag-green">Приватний</span></td><td><a href="https://www.bnpparibas.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>10</td><td>Citigroup</td><td>🇺🇸 США</td><td>$2.4 трлн</td><td><span class="tag tag-green">Приватний</span></td><td><a href="https://www.citi.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>11</td><td>Credit Agricole Group</td><td>🇫🇷 Франц.</td><td>$2.6 трлн</td><td><span class="tag tag-green">Приватний</span></td><td><a href="https://www.credit-agricole.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>12</td><td>Deutsche Bank</td><td>🇩🇪 Нім.</td><td>$1.5 трлн</td><td><span class="tag tag-green">Приватний</span></td><td><a href="https://www.db.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>13</td><td>Mitsubishi UFJ Financial (MUFG)</td><td>🇯🇵 Японія</td><td>$3.3 трлн</td><td><span class="tag tag-green">Приватний</span></td><td><a href="https://www.mufg.jp" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>14</td><td>Société Générale</td><td>🇫🇷 Франц.</td><td>$1.5 трлн</td><td><span class="tag tag-green">Приватний</span></td><td><a href="https://www.societegenerale.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>15</td><td>Barclays</td><td>🇬🇧 Брит.</td><td>$1.5 трлн</td><td><span class="tag tag-green">Приватний</span></td><td><a href="https://www.barclays.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- BANKS SK -->
+        <div class="page" id="page-banks-sk">
+          <div class="links-grid">
+            <a class="link-card" href="https://www.slsp.sk" target="_blank"><span class="lic">🏦</span><div><div class="lin">Slovenská sporiteľňa</div><div class="lid">Найбільший банк СР (Erste Group). Рахунки, іпотеки, інвест.</div></div></a>
+            <a class="link-card" href="https://www.vub.sk" target="_blank"><span class="lic">🏦</span><div><div class="lin">VÚB banka</div><div class="lid">Intesa Sanpaolo. 2-й за величиною банк Словаччини.</div></div></a>
+            <a class="link-card" href="https://www.tatrabanka.sk" target="_blank"><span class="lic">🏦</span><div><div class="lin">Tatra banka</div><div class="lid">RBI Group. Преміум сервіс, online banking, VISA.</div></div></a>
+            <a class="link-card" href="https://www.csob.sk" target="_blank"><span class="lic">🏦</span><div><div class="lin">ČSOB</div><div class="lid">KBC Group. Корпоративний і роздрібний банкінг.</div></div></a>
+            <a class="link-card" href="https://www.unicreditbank.sk" target="_blank"><span class="lic">🏦</span><div><div class="lin">UniCredit Bank</div><div class="lid">UniCredit Group. Корпоративні фінанси, торгове фінансування.</div></div></a>
+            <a class="link-card" href="https://www.365.bank" target="_blank"><span class="lic">📱</span><div><div class="lin">365.bank</div><div class="lid">Digital-first банк Словаччини. Мобільний банкінг.</div></div></a>
+            <a class="link-card" href="https://www.prima.sk" target="_blank"><span class="lic">🏦</span><div><div class="lin">Prima banka</div><div class="lid">Регіональний банк СР. Кредити і депозити.</div></div></a>
+            <a class="link-card" href="https://www.nbs.sk" target="_blank"><span class="lic">🏛️</span><div><div class="lin">NBS — Národná banka Slovenska</div><div class="lid">Центральний банк. Регулятор, курси, нагляд.</div></div></a>
+            <a class="link-card" href="https://www.postovabanka.sk" target="_blank"><span class="lic">📮</span><div><div class="lin">Poštová banka</div><div class="lid">Депозити, пенсії, споживчі кредити.</div></div></a>
+          </div>
+        </div>
+
+        <!-- FUNDS -->
+        <div class="page" id="page-funds">
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-hd"><h3>🏆 Найбільші інвестиційні фонди світу</h3></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>#</th><th>Фонд</th><th>AUM</th><th>Тип</th><th>Сайт</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>BlackRock</td><td>$10+ трлн</td><td><span class="tag tag-blue">Asset Manager</span></td><td><a href="https://www.blackrock.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>2</td><td>Vanguard Group</td><td>$8.1 трлн</td><td><span class="tag tag-blue">Mutual Fund</span></td><td><a href="https://www.vanguard.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>3</td><td>Fidelity Investments</td><td>$4.9 трлн</td><td><span class="tag tag-blue">Asset Manager</span></td><td><a href="https://www.fidelity.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>4</td><td>State Street Global Advisors</td><td>$4.1 трлн</td><td><span class="tag tag-blue">Asset Manager</span></td><td><a href="https://www.ssga.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>5</td><td>PIMCO</td><td>$1.9 трлн</td><td><span class="tag tag-purple">Bond Fund</span></td><td><a href="https://www.pimco.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>6</td><td>Invesco</td><td>$1.5 трлн</td><td><span class="tag tag-blue">Asset Manager</span></td><td><a href="https://www.invesco.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>7</td><td>Goldman Sachs AM</td><td>$2.8 трлн</td><td><span class="tag tag-gold">Investment Bank</span></td><td><a href="https://www.gsam.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>8</td><td>J.P. Morgan AM</td><td>$3.0 трлн</td><td><span class="tag tag-gold">Investment Bank</span></td><td><a href="https://am.jpmorgan.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>9</td><td>Allianz Global Investors</td><td>$0.7 трлн</td><td><span class="tag tag-blue">Insurance AM</span></td><td><a href="https://www.allianzgi.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>10</td><td>Amundi</td><td>$2.0 трлн</td><td><span class="tag tag-blue">European AM</span></td><td><a href="https://www.amundi.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><h3>🏦 Суверенні фонди (Sovereign Wealth Funds)</h3></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>Фонд</th><th>Країна</th><th>AUM</th><th>Сайт</th></tr></thead>
+                <tbody>
+                  <tr><td>Norway Government Pension Fund</td><td>🇳🇴 Норвегія</td><td>$1.7 трлн</td><td><a href="https://www.nbim.no" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>Abu Dhabi Investment Authority</td><td>🇦🇪 ОАЕ</td><td>$853 млрд</td><td><a href="https://www.adia.ae" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>China Investment Corporation</td><td>🇨🇳 Китай</td><td>$1.3 трлн</td><td><a href="https://www.china-inv.cn" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>Kuwait Investment Authority</td><td>🇰🇼 Кувейт</td><td>$769 млрд</td><td><a href="https://www.kia.gov.kw" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>GIC (Singapore)</td><td>🇸🇬 Сінгапур</td><td>$744 млрд</td><td><a href="https://www.gic.com.sg" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>Saudi PIF</td><td>🇸🇦 Саудівська</td><td>$925 млрд</td><td><a href="https://www.pif.gov.sa" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ETF -->
+        <div class="page" id="page-etf">
+          <div class="card">
+            <div class="card-hd"><h3>📦 Найбільші ETF та індекси</h3><a class="btn btn-blue" href="https://etfdb.com/compare/market-cap" target="_blank">Всі ETF →</a></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>Тикер</th><th>Назва</th><th>AUM</th><th>Провайдер</th><th>TradingView</th></tr></thead>
+                <tbody>
+                  <tr><td><b>SPY</b></td><td>S&amp;P 500 ETF Trust</td><td>$514 млрд</td><td>State Street</td><td><a href="https://www.tradingview.com/symbols/AMEX-SPY" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">📊</a></td></tr>
+                  <tr><td><b>IVV</b></td><td>iShares Core S&amp;P 500</td><td>$495 млрд</td><td>BlackRock</td><td><a href="https://www.tradingview.com/symbols/AMEX-IVV" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">📊</a></td></tr>
+                  <tr><td><b>VTI</b></td><td>Vanguard Total Stock Market</td><td>$380 млрд</td><td>Vanguard</td><td><a href="https://www.tradingview.com/symbols/AMEX-VTI" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">📊</a></td></tr>
+                  <tr><td><b>QQQ</b></td><td>Invesco Nasdaq-100</td><td>$260 млрд</td><td>Invesco</td><td><a href="https://www.tradingview.com/symbols/NASDAQ-QQQ" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">📊</a></td></tr>
+                  <tr><td><b>VEA</b></td><td>Vanguard Developed Markets</td><td>$180 млрд</td><td>Vanguard</td><td><a href="https://www.tradingview.com/symbols/AMEX-VEA" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">📊</a></td></tr>
+                  <tr><td><b>GLD</b></td><td>SPDR Gold Shares</td><td>$65 млрд</td><td>State Street</td><td><a href="https://www.tradingview.com/symbols/AMEX-GLD" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">📊</a></td></tr>
+                  <tr><td><b>VWO</b></td><td>Vanguard Emerging Markets</td><td>$110 млрд</td><td>Vanguard</td><td><a href="https://www.tradingview.com/symbols/AMEX-VWO" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">📊</a></td></tr>
+                  <tr><td><b>IEMG</b></td><td>iShares Core MSCI Emerging</td><td>$80 млрд</td><td>BlackRock</td><td><a href="https://www.tradingview.com/symbols/AMEX-IEMG" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">📊</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- CENTRAL BANKS -->
+        <div class="page" id="page-central-banks">
+          <div class="links-grid">
+            <a class="link-card" href="https://www.federalreserve.gov" target="_blank"><span class="lic">🇺🇸</span><div><div class="lin">Federal Reserve (ФРС)</div><div class="lid">Ставка: 5.25–5.50%. Баланс $7.5 трлн. FOMC протоколи.</div></div></a>
+            <a class="link-card" href="https://www.ecb.europa.eu" target="_blank"><span class="lic">🇪🇺</span><div><div class="lin">European Central Bank (ЄЦБ)</div><div class="lid">Ставка: 4.5%. Єврозона. Монетарна політика.</div></div></a>
+            <a class="link-card" href="https://www.bankofengland.co.uk" target="_blank"><span class="lic">🇬🇧</span><div><div class="lin">Bank of England</div><div class="lid">Ставка: 5.25%. MPC рішення.</div></div></a>
+            <a class="link-card" href="https://www.boj.or.jp/en" target="_blank"><span class="lic">🇯🇵</span><div><div class="lin">Bank of Japan</div><div class="lid">Ставка: -0.1% → 0.1%. YCC контроль.</div></div></a>
+            <a class="link-card" href="https://www.snb.ch" target="_blank"><span class="lic">🇨🇭</span><div><div class="lin">Swiss National Bank</div><div class="lid">Швейцарський франк. Ставка: 1.75%.</div></div></a>
+            <a class="link-card" href="https://www.pboc.gov.cn/en" target="_blank"><span class="lic">🇨🇳</span><div><div class="lin">People's Bank of China</div><div class="lid">Центральний банк КНР. LPR ставка.</div></div></a>
+            <a class="link-card" href="https://www.nbs.sk" target="_blank"><span class="lic">🇸🇰</span><div><div class="lin">NBS Slovensko</div><div class="lid">Частина ЄЦБ. Банківський нагляд СР.</div></div></a>
+            <a class="link-card" href="https://www.cnb.cz/en" target="_blank"><span class="lic">🇨🇿</span><div><div class="lin">Czech National Bank</div><div class="lid">Ставка: 5.75%. CZK курс.</div></div></a>
+            <a class="link-card" href="https://bank.gov.ua" target="_blank"><span class="lic">🇺🇦</span><div><div class="lin">НБУ (Україна)</div><div class="lid">Ставка: 15.5%. UAH курс.</div></div></a>
+            <a class="link-card" href="https://www.bis.org" target="_blank"><span class="lic">🌐</span><div><div class="lin">BIS — Bank of Intern. Settlements</div><div class="lid">Банк центральних банків. Базель III.</div></div></a>
+          </div>
+        </div>
+
+        <!-- FORTUNE 500 -->
+        <div class="page" id="page-fortune500">
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-hd"><h3>🏢 Fortune 500 — Топ корпорації</h3><a class="btn btn-blue" href="https://fortune.com/ranking/fortune500" target="_blank">Повний рейтинг →</a></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>#</th><th>Компанія</th><th>Сектор</th><th>Дохід</th><th>Сайт</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>Walmart</td><td><span class="tag tag-blue">Роздріб</span></td><td>$648 млрд</td><td><a href="https://www.walmart.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>2</td><td>Amazon</td><td><span class="tag tag-purple">Tech/Роздріб</span></td><td>$574 млрд</td><td><a href="https://www.amazon.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>3</td><td>ExxonMobil</td><td><span class="tag tag-gold">Енергетика</span></td><td>$398 млрд</td><td><a href="https://www.exxonmobil.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>4</td><td>Apple</td><td><span class="tag tag-purple">Tech</span></td><td>$394 млрд</td><td><a href="https://www.apple.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>5</td><td>UnitedHealth Group</td><td><span class="tag tag-green">Страх.</span></td><td>$371 млрд</td><td><a href="https://www.unitedhealthgroup.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>6</td><td>Berkshire Hathaway</td><td><span class="tag tag-gold">Конгломерат</span></td><td>$364 млрд</td><td><a href="https://www.berkshirehathaway.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>7</td><td>CVS Health</td><td><span class="tag tag-green">Здоров'я</span></td><td>$357 млрд</td><td><a href="https://www.cvshealth.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>8</td><td>McKesson</td><td><span class="tag tag-green">Фарма</span></td><td>$276 млрд</td><td><a href="https://www.mckesson.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>9</td><td>AT&T</td><td><span class="tag tag-blue">Телеком</span></td><td>$120 млрд</td><td><a href="https://www.att.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>10</td><td>Alphabet (Google)</td><td><span class="tag tag-purple">Tech</span></td><td>$307 млрд</td><td><a href="https://abc.xyz" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TECH CORPS -->
+        <div class="page" id="page-tech-corps">
+          <div class="links-grid">
+            <a class="link-card" href="https://investor.apple.com" target="_blank"><span class="lic">🍎</span><div><div class="lin">Apple (AAPL)</div><div class="lid">Капіталізація $2.9 трлн. iPhone, Mac, Services.</div></div></a>
+            <a class="link-card" href="https://www.microsoft.com/investor" target="_blank"><span class="lic">🪟</span><div><div class="lin">Microsoft (MSFT)</div><div class="lid">$3.0 трлн. Azure, Office, AI (OpenAI).</div></div></a>
+            <a class="link-card" href="https://abc.xyz/investor" target="_blank"><span class="lic">🔍</span><div><div class="lin">Alphabet/Google (GOOGL)</div><div class="lid">$2.0 трлн. Search, YouTube, GCP.</div></div></a>
+            <a class="link-card" href="https://www.aboutamazon.com/investor-relations" target="_blank"><span class="lic">📦</span><div><div class="lin">Amazon (AMZN)</div><div class="lid">$1.8 трлн. AWS, e-commerce, Prime.</div></div></a>
+            <a class="link-card" href="https://investor.fb.com" target="_blank"><span class="lic">📘</span><div><div class="lin">Meta Platforms (META)</div><div class="lid">$1.2 трлн. Facebook, Instagram, WhatsApp.</div></div></a>
+            <a class="link-card" href="https://ir.tesla.com" target="_blank"><span class="lic">⚡</span><div><div class="lin">Tesla (TSLA)</div><div class="lid">$600 млрд. EV, Energy, Robotics.</div></div></a>
+            <a class="link-card" href="https://www.nvidia.com/investor" target="_blank"><span class="lic">🟢</span><div><div class="lin">NVIDIA (NVDA)</div><div class="lid">$2.2 трлн. GPU, AI, Data Centers.</div></div></a>
+            <a class="link-card" href="https://ir.samsung.com" target="_blank"><span class="lic">📱</span><div><div class="lin">Samsung Electronics</div><div class="lid">$370 млрд. Semiconductors, Displays.</div></div></a>
+          </div>
+        </div>
+
+        <!-- ENERGY -->
+        <div class="page" id="page-energy">
+          <div class="links-grid">
+            <a class="link-card" href="https://www.aramco.com" target="_blank"><span class="lic">🛢️</span><div><div class="lin">Saudi Aramco</div><div class="lid">Найбільша нафтова компанія. $2+ трлн капіталізація.</div></div></a>
+            <a class="link-card" href="https://www.exxonmobil.com" target="_blank"><span class="lic">⛽</span><div><div class="lin">ExxonMobil (XOM)</div><div class="lid">Нафта, газ, хімія. $500 млрд.</div></div></a>
+            <a class="link-card" href="https://www.shell.com" target="_blank"><span class="lic">🐚</span><div><div class="lin">Shell</div><div class="lid">Нафта, LNG, відновлювана енергетика.</div></div></a>
+            <a class="link-card" href="https://www.bp.com/investors" target="_blank"><span class="lic">🔵</span><div><div class="lin">BP</div><div class="lid">Нафта і газ. Transition to renewables.</div></div></a>
+            <a class="link-card" href="https://www.totalenergies.com" target="_blank"><span class="lic">🇫🇷</span><div><div class="lin">TotalEnergies</div><div class="lid">Французький енергетичний гігант.</div></div></a>
+            <a class="link-card" href="https://www.chevron.com" target="_blank"><span class="lic">⚓</span><div><div class="lin">Chevron (CVX)</div><div class="lid">Нафта і газ США. $300 млрд.</div></div></a>
+            <a class="link-card" href="https://www.gazprom.com" target="_blank"><span class="lic">🇷🇺</span><div><div class="lin">Gazprom</div><div class="lid">Природний газ Росія (обмежений доступ).</div></div></a>
+            <a class="link-card" href="https://www.opec.org" target="_blank"><span class="lic">🌐</span><div><div class="lin">OPEC</div><div class="lid">Картель нафтових країн. Квоти, ціни.</div></div></a>
+          </div>
+        </div>
+
+        <!-- FINTECH -->
+        <div class="page" id="page-fintech">
+          <div class="links-grid">
+            <a class="link-card" href="https://stripe.com" target="_blank"><span class="lic">💳</span><div><div class="lin">Stripe</div><div class="lid">Платіжна інфраструктура. $95 млрд оцінка.</div></div></a>
+            <a class="link-card" href="https://www.paypal.com" target="_blank"><span class="lic">🅿️</span><div><div class="lin">PayPal</div><div class="lid">Цифрові платежі. 430 млн. активних акаунтів.</div></div></a>
+            <a class="link-card" href="https://revolut.com" target="_blank"><span class="lic">🔴</span><div><div class="lin">Revolut</div><div class="lid">Neobank. $45 млрд. 35+ млн. клієнтів.</div></div></a>
+            <a class="link-card" href="https://www.n26.com" target="_blank"><span class="lic">🔳</span><div><div class="lin">N26</div><div class="lid">Німецький необанк. Вся Європа.</div></div></a>
+            <a class="link-card" href="https://wise.com" target="_blank"><span class="lic">💚</span><div><div class="lin">Wise (TransferWise)</div><div class="lid">Міжнародні перекази. $11 млрд.</div></div></a>
+            <a class="link-card" href="https://www.klarna.com" target="_blank"><span class="lic">🌸</span><div><div class="lin">Klarna</div><div class="lid">BNPL — купи зараз, плати пізніше.</div></div></a>
+            <a class="link-card" href="https://www.nubank.com.br" target="_blank"><span class="lic">🟣</span><div><div class="lin">Nubank</div><div class="lid">Найбільший необанк Латинської Америки.</div></div></a>
+            <a class="link-card" href="https://monzo.com" target="_blank"><span class="lic">🔥</span><div><div class="lin">Monzo</div><div class="lid">Необанк Великобританії. 9 млн. клієнтів.</div></div></a>
+            <a class="link-card" href="https://www.ant.group" target="_blank"><span class="lic">🐜</span><div><div class="lin">Ant Group (Alipay)</div><div class="lid">Китайський фінтех гігант. 1+ млрд. користувачів.</div></div></a>
+            <a class="link-card" href="https://www.robinhood.com" target="_blank"><span class="lic">🏹</span><div><div class="lin">Robinhood</div><div class="lid">Брокер нового покоління. Акції, крипто.</div></div></a>
+          </div>
+        </div>
+
+        <!-- OFFSHORE -->
+        <div class="page" id="page-offshore">
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-hd"><h3>🏝️ Офшорні юрисдикції світу</h3></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>Юрисдикція</th><th>Регіон</th><th>Корпоративний податок</th><th>Переваги</th><th>Ресурс</th></tr></thead>
+                <tbody>
+                  <tr><td>🇻🇬 British Virgin Islands (BVI)</td><td>Карибський</td><td>0%</td><td>Конфіденційність, гнучкість</td><td><a href="https://www.bvifinance.vg" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>🇰🇾 Cayman Islands</td><td>Карибський</td><td>0%</td><td>Фонди, SPV, хедж-фонди</td><td><a href="https://www.cima.ky" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>🇨🇭 Швейцарія</td><td>Європа</td><td>8.5–12%</td><td>Банківська таємниця, стабільність</td><td><a href="https://www.sif.admin.ch" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>🇱🇺 Люксембург</td><td>Європа</td><td>17%</td><td>EU фонди, холдинги, SPV</td><td><a href="https://www.lhoft.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>🇳🇱 Нідерланди</td><td>Європа</td><td>19–25.8%</td><td>Холдинги, роялті, EU доступ</td><td><a href="https://business.gov.nl" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>🇦🇪 ОАЕ (Dubai/ADGM)</td><td>Близький Схід</td><td>0–9%</td><td>Крипто, фінтех, торгівля</td><td><a href="https://www.adgm.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>🇸🇬 Сінгапур</td><td>Азія</td><td>17%</td><td>Азійські ринки, фінтех, IP</td><td><a href="https://www.mas.gov.sg" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>🇮🇪 Ірландія</td><td>Європа</td><td>12.5%</td><td>EU + Tech компанії (Apple, Google, Meta)</td><td><a href="https://www.ifa.ie" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>🇲🇹 Мальта</td><td>Середземномор'я</td><td>5% (repatriation)</td><td>Гемблінг, крипто, EU юрисдикція</td><td><a href="https://www.mfsa.mt" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>🇭🇰 Гонконг</td><td>Азія</td><td>16.5%</td><td>Китайський міст, торгівля, фінанси</td><td><a href="https://www.hkma.gov.hk" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>🇵🇦 Панама</td><td>ЦА</td><td>0% offshore</td><td>Судноплавство, холдинги</td><td><a href="https://www.superbancos.gob.pa" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>🇲🇴 Маврикій</td><td>Африка</td><td>3–15%</td><td>Африканський міст, IP, фонди</td><td><a href="https://www.fscmauritius.org" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><h3>🔎 Ресурси для перевірки компаній</h3></div>
+            <div class="card-body" style="display:flex;flex-wrap:wrap;gap:10px">
+              <a class="btn" href="https://opencorporates.com" target="_blank">🌐 OpenCorporates</a>
+              <a class="btn" href="https://icij.org/investigations/panama-papers" target="_blank">📁 Panama Papers ICIJ</a>
+              <a class="btn" href="https://offshoreleaks.icij.org" target="_blank">🏝️ Offshore Leaks DB</a>
+              <a class="btn" href="https://www.gleif.org" target="_blank">🔑 GLEIF (LEI коди)</a>
+              <a class="btn" href="https://www.fatf-gafi.org" target="_blank">⚠️ FATF Чорні списки</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEASING -->
+        <div class="page" id="page-leasing">
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-hd"><h3>🚗 Топ лізингові компанії світу</h3></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>Компанія</th><th>Тип</th><th>Портфель</th><th>Сайт</th></tr></thead>
+                <tbody>
+                  <tr><td>ALD Automotive (Societe Generale)</td><td><span class="tag tag-blue">Авто</span></td><td>€55 млрд</td><td><a href="https://www.aldautomotive.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>LeasePlan Corporation</td><td><span class="tag tag-blue">Авто</span></td><td>€21 млрд</td><td><a href="https://www.leaseplan.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>Arval (BNP Paribas)</td><td><span class="tag tag-blue">Авто</span></td><td>€26 млрд</td><td><a href="https://www.arval.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>GE Capital Aviation Services</td><td><span class="tag tag-purple">Авіація</span></td><td>$35 млрд</td><td><a href="https://www.gecas.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>Air Lease Corporation</td><td><span class="tag tag-purple">Авіація</span></td><td>$25 млрд</td><td><a href="https://www.airleasecorp.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>GATX Corporation</td><td><span class="tag tag-gold">Rail/Industrial</span></td><td>$9 млрд</td><td><a href="https://www.gatx.com" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>VB Leasing (Словаччина)</td><td><span class="tag tag-green">СР авто</span></td><td>Local</td><td><a href="https://www.vbleasing.sk" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                  <tr><td>Tatra Leasing</td><td><span class="tag tag-green">СР авто</span></td><td>Local</td><td><a href="https://www.tatrabanka.sk/sk/pre-podnikatelov/financovanie" target="_blank" class="btn" style="padding:3px 8px;font-size:11px">→</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- CRYPTO -->
+        <div class="page" id="page-crypto">
+          <div class="links-grid">
+            <a class="link-card" href="https://coinmarketcap.com" target="_blank"><span class="lic">📊</span><div><div class="lin">CoinMarketCap</div><div class="lid">Ціни, капіталізація, обсяги всіх монет</div></div></a>
+            <a class="link-card" href="https://www.binance.com" target="_blank"><span class="lic">🟡</span><div><div class="lin">Binance</div><div class="lid">Найбільша крипто-біржа. $76 млрд обсяг/добу.</div></div></a>
+            <a class="link-card" href="https://www.coinbase.com" target="_blank"><span class="lic">🔵</span><div><div class="lin">Coinbase</div><div class="lid">Публічна біржа США (NASDAQ). Регульована.</div></div></a>
+            <a class="link-card" href="https://www.kraken.com" target="_blank"><span class="lic">🐙</span><div><div class="lin">Kraken</div><div class="lid">Безпечна біржа. Ф'ючерси, стейкінг.</div></div></a>
+            <a class="link-card" href="https://glassnode.com" target="_blank"><span class="lic">🔭</span><div><div class="lin">Glassnode</div><div class="lid">On-chain аналітика. SOPR, MVRV, whale flows.</div></div></a>
+            <a class="link-card" href="https://www.coinglass.com" target="_blank"><span class="lic">🔮</span><div><div class="lin">Coinglass</div><div class="lid">Деривативи. Funding rate, liquidations, OI.</div></div></a>
+            <a class="link-card" href="https://nansen.ai" target="_blank"><span class="lic">🧠</span><div><div class="lin">Nansen</div><div class="lid">Wallet аналітика. Smart money tracking.</div></div></a>
+            <a class="link-card" href="https://defillama.com" target="_blank"><span class="lic">🦙</span><div><div class="lin">DeFi Llama</div><div class="lid">TVL всіх DeFi протоколів. Cross-chain.</div></div></a>
+            <a class="link-card" href="https://etherscan.io" target="_blank"><span class="lic">🔍</span><div><div class="lin">Etherscan</div><div class="lid">Ethereum блок-експлорер. Транзакції, контракти.</div></div></a>
+          </div>
+        </div>
+
+        <!-- INSURANCE -->
+        <div class="page" id="page-insurance">
+          <div class="links-grid">
+            <a class="link-card" href="https://www.berkshirehathaway.com" target="_blank"><span class="lic">🏛️</span><div><div class="lin">Berkshire Hathaway</div><div class="lid">Warren Buffett. GEICO, General Re. $900 млрд.</div></div></a>
+            <a class="link-card" href="https://www.allianz.com" target="_blank"><span class="lic">🔵</span><div><div class="lin">Allianz</div><div class="lid">Найбільша страхова Європи. 125 країн. PIMCO.</div></div></a>
+            <a class="link-card" href="https://www.axa.com" target="_blank"><span class="lic">🔵</span><div><div class="lin">AXA</div><div class="lid">Французька страхова група. 94 млн клієнтів.</div></div></a>
+            <a class="link-card" href="https://www.swissre.com" target="_blank"><span class="lic">🇨🇭</span><div><div class="lin">Swiss Re</div><div class="lid">Найбільший перестрахувальник світу.</div></div></a>
+            <a class="link-card" href="https://www.munichre.com" target="_blank"><span class="lic">🇩🇪</span><div><div class="lin">Munich Re</div><div class="lid">Перестрахування. Кліматичні ризики.</div></div></a>
+            <a class="link-card" href="https://www.generali.com" target="_blank"><span class="lic">🦁</span><div><div class="lin">Generali</div><div class="lid">Найбільша страхова Італії. Словаччина теж.</div></div></a>
+            <a class="link-card" href="https://www.uniqa.sk" target="_blank"><span class="lic">🇸🇰</span><div><div class="lin">UNIQA Slovensko</div><div class="lid">Австрійська страхова на ринку СР.</div></div></a>
+            <a class="link-card" href="https://www.kooperativa.sk" target="_blank"><span class="lic">🤝</span><div><div class="lin">Kooperativa (Vienna Insurance)</div><div class="lid">Найбільша страхова Словаччини. VIG Group.</div></div></a>
+          </div>
+        </div>
+
+        <!-- CALCULATOR -->
+        <div class="page" id="page-calculator">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <div class="card">
+              <div class="card-hd"><h3>💸 Складні відсотки (Compound Interest)</h3></div>
+              <div class="card-body">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div><label style="font-size:12px;color:var(--muted)">Початкова сума (€)</label><input id="ci-principal" type="number" value="10000" style="width:100%;padding:8px 12px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;margin-top:4px"></div>
+                  <div><label style="font-size:12px;color:var(--muted)">Річна ставка (%)</label><input id="ci-rate" type="number" value="8" step="0.1" style="width:100%;padding:8px 12px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;margin-top:4px"></div>
+                  <div><label style="font-size:12px;color:var(--muted)">Роки</label><input id="ci-years" type="number" value="10" style="width:100%;padding:8px 12px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;margin-top:4px"></div>
+                  <div><label style="font-size:12px;color:var(--muted)">Щомісячний внесок (€)</label><input id="ci-monthly" type="number" value="200" style="width:100%;padding:8px 12px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;margin-top:4px"></div>
+                  <button class="btn btn-blue" onclick="calcCI()">Розрахувати</button>
+                  <div id="ci-result" style="background:var(--card2);border-radius:8px;padding:14px;font-size:14px;display:none"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hd"><h3>🏠 Іпотека / Кредит</h3></div>
+              <div class="card-body">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div><label style="font-size:12px;color:var(--muted)">Сума кредиту (€)</label><input id="loan-amount" type="number" value="150000" style="width:100%;padding:8px 12px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;margin-top:4px"></div>
+                  <div><label style="font-size:12px;color:var(--muted)">Річна ставка (%)</label><input id="loan-rate" type="number" value="4.5" step="0.1" style="width:100%;padding:8px 12px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;margin-top:4px"></div>
+                  <div><label style="font-size:12px;color:var(--muted)">Строк (роки)</label><input id="loan-years" type="number" value="25" style="width:100%;padding:8px 12px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;margin-top:4px"></div>
+                  <button class="btn btn-blue" onclick="calcLoan()">Розрахувати</button>
+                  <div id="loan-result" style="background:var(--card2);border-radius:8px;padding:14px;font-size:14px;display:none"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RATES -->
+        <div class="page" id="page-rates">
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-hd"><h3>💱 Курси валют (LIVE дані)</h3><a class="btn btn-blue" href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates" target="_blank">ЄЦБ офіційні →</a></div>
+            <div class="card-body">
+              <div id="rates-container">
+                <div style="text-align:center;color:var(--muted);padding:20px">Завантаження курсів...</div>
+              </div>
+            </div>
+          </div>
+          <div class="links-grid">
+            <a class="link-card" href="https://www.nbs.sk/sk/statisticke-udaje/kurzovy-listok" target="_blank"><span class="lic">🇸🇰</span><div><div class="lin">NBS Kurzový lístok</div><div class="lid">Офіційні курси НБС Словаччини</div></div></a>
+            <a class="link-card" href="https://bank.gov.ua/ua/markets/currency-exchange" target="_blank"><span class="lic">🇺🇦</span><div><div class="lin">НБУ Курси</div><div class="lid">Офіційні курси Нацбанку України</div></div></a>
+            <a class="link-card" href="https://www.xe.com" target="_blank"><span class="lic">💱</span><div><div class="lin">XE Currency</div><div class="lid">Конвертер і графіки валют</div></div></a>
+            <a class="link-card" href="https://wise.com/tools/exchange-rate" target="_blank"><span class="lic">💚</span><div><div class="lin">Wise Exchange Rate</div><div class="lid">Реальний ринковий курс без комісій</div></div></a>
+          </div>
+        </div>
+
+        <!-- NOTES -->
+        <div class="page" id="page-notes">
+          <div class="card">
+            <div class="card-hd">
+              <h3>📝 Приватні нотатки</h3>
+              <div style="display:flex;gap:8px">
+                <button class="btn" onclick="clearNotes()">🗑️ Очистити</button>
+                <button class="btn btn-blue" onclick="saveNotes()">💾 Зберегти</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <textarea id="notes-area" class="note-area" placeholder="Тут можна зберігати будь-які нотатки — контакти, ідеї, розрахунки, плани...&#10;Зберігається в браузері (localStorage)."></textarea>
+              <div style="margin-top:10px;font-size:12px;color:var(--muted)" id="notes-status">Остання зміна: —</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LINKS -->
+        <div class="page" id="page-links">
+          <div style="margin-bottom:24px">
+            <input class="search-bar" placeholder="🔍 Фільтрувати посилання..." oninput="filterLinks(this.value)"/>
+          </div>
+          <div id="all-links" class="links-grid">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+      </div><!-- /content -->
+    </div><!-- /main -->
+  </div><!-- /layout -->
+</div><!-- /app -->
+
+<script>
+  // ── AUTH ──────────────────────────────────────────────────────────────────
+  const ACCESS_PASSWORD = 'Petro2026!Hub';
+
+  function doLogin() {
+    const pwd = document.getElementById('pwd').value;
+    if (pwd === ACCESS_PASSWORD) {
+      sessionStorage.setItem('hub_auth', '1');
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('app').style.display = '';
+      init();
+    } else {
+      document.getElementById('login-err').style.display = 'block';
+      document.getElementById('pwd').value = '';
+      document.getElementById('pwd').focus();
+    }
+  }
+
+  function logout() {
+    sessionStorage.removeItem('hub_auth');
+    location.reload();
+  }
+
+  // Check auth on load
+  if (sessionStorage.getItem('hub_auth') === '1') {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('app').style.display = '';
+    setTimeout(init, 50);
+  } else {
+    document.getElementById('pwd').focus();
+  }
+
+  // ── NAVIGATION ────────────────────────────────────────────────────────────
+  const PAGE_TITLES = {
+    dashboard: 'Dashboard', markets: '📈 Ринки світу', news: '📰 Фінансові новини',
+    'banks-global': '🏦 Топ-банки світу', 'banks-sk': '🇸🇰 Банки Словаччини',
+    funds: '💼 Інвест фонди', etf: '📦 ETF та Індекси', 'central-banks': '🏛️ Центральні банки',
+    fortune500: '🏢 Fortune 500', 'tech-corps': '💻 Tech гіганти', energy: '⚡ Енергетика',
+    fintech: '🚀 Fintech компанії', offshore: '🏝️ Офшори та юрисдикції',
+    leasing: '🚗 Лізинг компанії', crypto: '₿ Крипто біржі', insurance: '🛡️ Страхові',
+    calculator: '🧮 Калькулятори', rates: '💱 Курси валют', notes: '📝 Нотатки', links: '🔗 Всі посилання'
+  };
+
+  function go(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.s-item').forEach(n => n.classList.remove('active'));
+    const el = document.getElementById('page-' + page);
+    if (el) el.classList.add('active');
+    document.querySelectorAll('.s-item').forEach(n => {
+      if (n.getAttribute('onclick') === `go('${page}')`) n.classList.add('active');
+    });
+    document.getElementById('page-title').textContent = PAGE_TITLES[page] || page;
+    if (page === 'rates') loadRates();
+    if (page === 'notes') loadNotes();
+    if (page === 'links') populateAllLinks();
+  }
+
+  // ── CLOCK ────────────────────────────────────────────────────────────────
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').textContent = now.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // ── INIT ─────────────────────────────────────────────────────────────────
+  function init() {
+    loadNotes();
+  }
+
+  // ── CALCULATORS ──────────────────────────────────────────────────────────
+  function calcCI() {
+    const P = parseFloat(document.getElementById('ci-principal').value) || 0;
+    const r = parseFloat(document.getElementById('ci-rate').value) / 100;
+    const n = parseInt(document.getElementById('ci-years').value) || 0;
+    const m = parseFloat(document.getElementById('ci-monthly').value) || 0;
+    const monthly_r = r / 12;
+    const months = n * 12;
+    let total = P * Math.pow(1 + r, n);
+    if (m > 0 && monthly_r > 0) {
+      total += m * (Math.pow(1 + monthly_r, months) - 1) / monthly_r;
+    } else if (m > 0) {
+      total += m * months;
+    }
+    const invested = P + m * months;
+    const profit = total - invested;
+    const el = document.getElementById('ci-result');
+    el.style.display = 'block';
+    el.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center">
+        <div><div style="font-size:20px;font-weight:800;color:var(--green)">€${total.toLocaleString('uk-UA', {maximumFractionDigits:0})}</div><div style="font-size:11px;color:var(--muted)">Підсумкова сума</div></div>
+        <div><div style="font-size:20px;font-weight:800;color:var(--gold)">€${profit.toLocaleString('uk-UA', {maximumFractionDigits:0})}</div><div style="font-size:11px;color:var(--muted)">Прибуток</div></div>
+        <div><div style="font-size:20px;font-weight:800">€${invested.toLocaleString('uk-UA', {maximumFractionDigits:0})}</div><div style="font-size:11px;color:var(--muted)">Вкладено</div></div>
+      </div>`;
+  }
+
+  function calcLoan() {
+    const P = parseFloat(document.getElementById('loan-amount').value) || 0;
+    const r = parseFloat(document.getElementById('loan-rate').value) / 100 / 12;
+    const n = parseInt(document.getElementById('loan-years').value) * 12;
+    let monthly;
+    if (r === 0) { monthly = P / n; }
+    else { monthly = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1); }
+    const total = monthly * n;
+    const interest = total - P;
+    const el = document.getElementById('loan-result');
+    el.style.display = 'block';
+    el.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center">
+        <div><div style="font-size:20px;font-weight:800;color:var(--blue)">€${monthly.toLocaleString('uk-UA', {maximumFractionDigits:0})}</div><div style="font-size:11px;color:var(--muted)">Щомісячний платіж</div></div>
+        <div><div style="font-size:20px;font-weight:800;color:var(--red)">€${interest.toLocaleString('uk-UA', {maximumFractionDigits:0})}</div><div style="font-size:11px;color:var(--muted)">Переплата відсотків</div></div>
+        <div><div style="font-size:20px;font-weight:800">€${total.toLocaleString('uk-UA', {maximumFractionDigits:0})}</div><div style="font-size:11px;color:var(--muted)">Загалом виплат</div></div>
+      </div>`;
+  }
+
+  // ── RATES ─────────────────────────────────────────────────────────────────
+  async function loadRates() {
+    const el = document.getElementById('rates-container');
+    try {
+      const r = await fetch('https://api.exchangerate-api.com/v4/latest/EUR');
+      const d = await r.json();
+      const currencies = ['USD','GBP','CHF','JPY','CZK','PLN','HUF','UAH','SKK','NOK','SEK','CAD','AUD','CNY','SGD','AED'];
+      let html = '<table><thead><tr><th>Валюта</th><th>1 EUR =</th><th>1 одиниця = EUR</th></tr></thead><tbody>';
+      currencies.forEach(c => {
+        if (d.rates[c]) {
+          html += `<tr><td>${c}</td><td><b>${d.rates[c].toFixed(4)}</b></td><td>${(1/d.rates[c]).toFixed(6)}</td></tr>`;
+        }
+      });
+      html += '</tbody></table>';
+      html += `<div style="margin-top:12px;font-size:11px;color:var(--muted)">Оновлено: ${new Date().toLocaleString('uk-UA')}</div>`;
+      el.innerHTML = html;
+    } catch(e) {
+      el.innerHTML = '<div style="color:var(--muted)">Помилка завантаження. Відкрийте: <a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates" target="_blank" style="color:var(--blue)">ЄЦБ →</a></div>';
+    }
+  }
+
+  // ── NOTES ─────────────────────────────────────────────────────────────────
+  function loadNotes() {
+    const saved = localStorage.getItem('hub_notes') || '';
+    const area = document.getElementById('notes-area');
+    if (area) area.value = saved;
+  }
+  function saveNotes() {
+    const val = document.getElementById('notes-area').value;
+    localStorage.setItem('hub_notes', val);
+    document.getElementById('notes-status').textContent = 'Збережено: ' + new Date().toLocaleString('uk-UA');
+  }
+  function clearNotes() {
+    if (confirm('Очистити всі нотатки?')) {
+      localStorage.removeItem('hub_notes');
+      document.getElementById('notes-area').value = '';
+    }
+  }
+  // Auto-save notes
+  setInterval(() => {
+    const area = document.getElementById('notes-area');
+    if (area && document.getElementById('page-notes').classList.contains('active')) {
+      localStorage.setItem('hub_notes', area.value);
+    }
+  }, 5000);
+
+  // ── SEARCH/FILTER ─────────────────────────────────────────────────────────
+  function filterTable(input, tableId) {
+    const q = input.value.toLowerCase();
+    document.querySelectorAll(`#${tableId} tbody tr`).forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+
+  // ── ALL LINKS ─────────────────────────────────────────────────────────────
+  const ALL_LINKS = [
+    {ic:'📊',n:'TradingView',d:'Графіки ринків',u:'https://www.tradingview.com',cat:'Ринки'},
+    {ic:'📰',n:'Bloomberg',d:'Фінансові новини',u:'https://www.bloomberg.com',cat:'Новини'},
+    {ic:'🗞️',n:'Financial Times',d:'FT аналітика',u:'https://www.ft.com',cat:'Новини'},
+    {ic:'📈',n:'Yahoo Finance',d:'Акції та дані',u:'https://finance.yahoo.com',cat:'Ринки'},
+    {ic:'💹',n:'Investing.com',d:'Форекс, акції',u:'https://www.investing.com',cat:'Ринки'},
+    {ic:'🏦',n:'JPMorgan Chase',d:'Найбільший банк США',u:'https://www.jpmorganchase.com',cat:'Банки'},
+    {ic:'🏦',n:'HSBC',d:'Британський глобальний банк',u:'https://www.hsbc.com',cat:'Банки'},
+    {ic:'🏦',n:'Slovenská sporiteľňa',d:'Банк СР',u:'https://www.slsp.sk',cat:'Банки СР'},
+    {ic:'🏦',n:'Tatra banka',d:'Банк СР',u:'https://www.tatrabanka.sk',cat:'Банки СР'},
+    {ic:'💼',n:'BlackRock',d:'$10 трлн AUM',u:'https://www.blackrock.com',cat:'Фонди'},
+    {ic:'💼',n:'Vanguard',d:'$8.1 трлн',u:'https://www.vanguard.com',cat:'Фонди'},
+    {ic:'🏝️',n:'Cayman Islands CIMA',d:'Офшор',u:'https://www.cima.ky',cat:'Офшор'},
+    {ic:'🏝️',n:'Offshore Leaks ICIJ',d:'База офшорів',u:'https://offshoreleaks.icij.org',cat:'Офшор'},
+    {ic:'₿',n:'Binance',d:'Топ крипто-біржа',u:'https://www.binance.com',cat:'Крипто'},
+    {ic:'🔭',n:'Glassnode',d:'On-chain аналітика',u:'https://glassnode.com',cat:'Крипто'},
+    {ic:'🏛️',n:'Federal Reserve',d:'ФРС США',u:'https://www.federalreserve.gov',cat:'ЦБ'},
+    {ic:'🇪🇺',n:'ЄЦБ',d:'Центробанк ЄС',u:'https://www.ecb.europa.eu',cat:'ЦБ'},
+    {ic:'🇸🇰',n:'NBS',d:'Центробанк СР',u:'https://www.nbs.sk',cat:'ЦБ'},
+    {ic:'💱',n:'XE Currency',d:'Конвертер валют',u:'https://www.xe.com',cat:'Валюти'},
+    {ic:'🌍',n:'World Bank Data',d:'ВВП, інфляція країн',u:'https://data.worldbank.org',cat:'Макро'},
+    {ic:'💰',n:'МВФ Дані',d:'Міжнародний валютний фонд',u:'https://www.imf.org/en/Data',cat:'Макро'},
+    {ic:'🌐',n:'OpenCorporates',d:'Реєстр компаній',u:'https://opencorporates.com',cat:'Реєстри'},
+    {ic:'🚗',n:'ALD Automotive',d:'Лізинг Європа',u:'https://www.aldautomotive.com',cat:'Лізинг'},
+    {ic:'🛡️',n:'Allianz',d:'Страхова група',u:'https://www.allianz.com',cat:'Страхові'},
+    {ic:'💳',n:'Stripe',d:'Платіжна система',u:'https://stripe.com',cat:'Fintech'},
+    {ic:'🔴',n:'Revolut',d:'Neobank',u:'https://revolut.com',cat:'Fintech'},
+  ];
+
+  let _linksPopulated = false;
+  function populateAllLinks() {
+    if (_linksPopulated) return;
+    _linksPopulated = true;
+    const cont = document.getElementById('all-links');
+    cont.innerHTML = ALL_LINKS.map(l => `
+      <a class="link-card" href="${l.u}" target="_blank">
+        <span class="lic">${l.ic}</span>
+        <div>
+          <div class="lin">${l.n}</div>
+          <div class="lid">${l.d} <span class="tag tag-blue" style="margin-left:4px;font-size:10px">${l.cat}</span></div>
+        </div>
+      </a>`).join('');
+  }
+
+  function filterLinks(q) {
+    const lower = q.toLowerCase();
+    document.querySelectorAll('#all-links .link-card').forEach(card => {
+      card.style.display = card.textContent.toLowerCase().includes(lower) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>

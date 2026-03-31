@@ -172,8 +172,16 @@ def health_check():
 
 @app.get("/", include_in_schema=False)
 def serve_frontend():
+    # Public facade — clown page for everyone
     frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend", "index.html")
     return FileResponse(frontend_path)
+
+
+@app.get("/hub", include_in_schema=False)
+def serve_hub():
+    """Private financial intelligence hub — owner only (auth is client-side password)."""
+    path = os.path.join(os.path.dirname(__file__), "..", "frontend", "hub.html")
+    return FileResponse(path, headers=NO_CACHE_HEADERS)
 
 
 @app.get("/robots.txt", include_in_schema=False)
