@@ -17,22 +17,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Deploy to Railway
+      - name: Trigger Railway deploy via API
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway up --service $SERVICE_ID --environment production --detach
-          echo "Deployed to service $SERVICE_ID (intuitive-illumination / finadvisor.sk)"
+          TS=$(date +%s)
+          RESPONSE=$(curl -s -X POST https://backboard.railway.com/graphql/v2 \
+            -H "Authorization: Bearer $RAILWAY_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"query\":\"mutation { variableUpsert(input: { projectId: \\\"$PROJECT_ID\\\", environmentId: \\\"$ENV_ID\\\", serviceId: \\\"$SERVICE_ID\\\", name: \\\"DEPLOY_TS\\\", value: \\\"$TS\\\" }) }\"}")
+          echo "Railway API response: $RESPONSE"
+          if echo "$RESPONSE" | grep -q '"variableUpsert":true'; then
+            echo "Deploy triggered successfully for service $SERVICE_ID"
+          else
+            echo "ERROR: Deploy trigger failed"
+            exit 1
+          fi
 
       - name: Update Telegram webhook
         run: |
           curl -s "https://api.telegram.org/bot$TG_TOKEN/setWebhook?url=https://finadvisor.sk/telegram/webhook"
-          echo "Webhook updated: https://finadvisor.sk/telegram/webhook"
+          echo "Webhook updated"
