@@ -4,21 +4,113 @@ on:
   push:
     branches: [main]
 
+env:
+  PROJECT_ID: "564a41ac-75f7-4be8-9ce2-e2dc57cfd8d0"
+  ENV_ID: "a8bd17a5-fd7f-47b0-9fc4-08311e9632d1"
+  CUSTOM_DOMAIN: "finadvisor.sk"
+  TG_TOKEN: "8428211519:AAHkiiy7iZdkvc-CMQY97zT5ERGbKoa3eh4"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Deploy to existing Railway service
+      - name: Deploy via githubRepoDeploy
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway up \
-            --service 16529c78-ce6b-4e59-84ed-d139fb4a9729 \
-            --environment a8bd17a5-fd7f-47b0-9fc4-08311e9632d1 \
-            --detach
-          echo "Deploy triggered for service 16529c78-ce6b-4e59-84ed-d139fb4a9729"
+          RESULT=$(curl -s -X POST "https://backboard.railway.com/graphql/v2" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $RAILWAY_TOKEN" \
+            -d '{"query":"mutation { githubRepoDeploy(input: { projectId: \"'"$PROJECT_ID"'\", repo: \"puneikopetro-cpu/poradca\", branch: \"main\" }) }"}')
+          echo "Deploy result: $RESULT"
+          NEW_SVC=$(echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['data']['githubRepoDeploy'])" 2>/dev/null)
+          if [ -z "$NEW_SVC" ] || [ "$NEW_SVC" = "None" ]; then
+            echo "ERROR: could not get new service ID"
+            echo "$RESULT"
+            exit 1
+          fi
+          echo "NEW_SERVICE_ID=$NEW_SVC" >> $GITHUB_ENV
+          echo "New service: $NEW_SVC"
+
+      - name: Set env vars on new service
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}
+        run: |
+          set_var() {
+            local name=$1
+            local value=$2
+            [ -z "$value" ] && return
+            curl -s -X POST "https://backboard.railway.com/graphql/v2" \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer $RAILWAY_TOKEN" \
+              -d "{\"query\":\"mutation { variableUpsert(input: { projectId: \\\"$PROJECT_ID\\\", environmentId: \\\"$ENV_ID\\\", serviceId: \\\"$NEW_SERVICE_ID\\\", name: \\\"$name\\\", value: \\\"$value\\\" }) }\"}" > /dev/null
+          }
+          set_var "SECRET_KEY" "$SECRET_KEY"
+          set_var "DATABASE_URL" "$DATABASE_URL"
+          set_var "STRIPE_SECRET_KEY" "$STRIPE_SECRET_KEY"
+          set_var "STRIPE_PUBLISHABLE_KEY" "$STRIPE_PUBLISHABLE_KEY"
+          set_var "TELEGRAM_BOT_TOKEN" "$TG_TOKEN"
+          set_var "ALGORITHM" "HS256"
+          set_var "ACCESS_TOKEN_EXPIRE_MINUTES" "10080"
+          echo "Env vars set"
+
+      - name: Wait for build
+        run: sleep 120
+
+      - name: Move custom domain to new service
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          # Find and delete existing custom domain
+          OLD_DOMAIN_RESULT=$(curl -s -X POST "https://backboard.railway.com/graphql/v2" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $RAILWAY_TOKEN" \
+            -d "{\"query\":\"{ project(id: \\\"$PROJECT_ID\\\") { services { edges { node { id domains { customDomains { id domain } } } } } } }\"}")
+          echo "Services: $OLD_DOMAIN_RESULT"
+          OLD_DOMAIN_ID=$(echo "$OLD_DOMAIN_RESULT" | python3 -c "
+          import sys,json
+          d=json.load(sys.stdin)
+          svcs=d['data']['project']['services']['edges']
+          for s in svcs:
+              for cd in s['node']['domains']['customDomains']:
+                  if cd['domain']=='$CUSTOM_DOMAIN':
+                      print(cd['id'])
+          " 2>/dev/null)
+          if [ -n "$OLD_DOMAIN_ID" ]; then
+            echo "Removing old domain $OLD_DOMAIN_ID"
+            curl -s -X POST "https://backboard.railway.com/graphql/v2" \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer $RAILWAY_TOKEN" \
+              -d "{\"query\":\"mutation { customDomainDelete(id: \\\"$OLD_DOMAIN_ID\\\") }\"}" > /dev/null
+            sleep 5
+          fi
+          # Add domain to new service
+          ADD_RESULT=$(curl -s -X POST "https://backboard.railway.com/graphql/v2" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $RAILWAY_TOKEN" \
+            -d "{\"query\":\"mutation { customDomainCreate(input: { domain: \\\"$CUSTOM_DOMAIN\\\", serviceId: \\\"$NEW_SERVICE_ID\\\", environmentId: \\\"$ENV_ID\\\" }) { id domain } }\"}")
+          echo "Domain add: $ADD_RESULT"
+
+      - name: Create Railway domain
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          DOMAIN_RESULT=$(curl -s -X POST "https://backboard.railway.com/graphql/v2" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $RAILWAY_TOKEN" \
+            -d "{\"query\":\"mutation { serviceDomainCreate(input: { serviceId: \\\"$NEW_SERVICE_ID\\\", environmentId: \\\"$ENV_ID\\\" }) { domain } }\"}")
+          NEW_URL=$(echo "$DOMAIN_RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['data']['serviceDomainCreate']['domain'])" 2>/dev/null)
+          echo "New Railway URL: $NEW_URL"
+          echo "NEW_URL=$NEW_URL" >> $GITHUB_ENV
+
+      - name: Update Telegram webhook
+        run: |
+          WEBHOOK_URL="https://$CUSTOM_DOMAIN/telegram/webhook"
+          curl -s "https://api.telegram.org/bot$TG_TOKEN/setWebhook?url=$WEBHOOK_URL"
+          echo "Webhook set to $WEBHOOK_URL"
