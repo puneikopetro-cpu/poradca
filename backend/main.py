@@ -4,6 +4,8 @@ from fastapi.responses import JSONResponse, FileResponse, HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import HTTPException as FastAPIHTTPException
 import os
+import json
+import time
 
 from backend.config import settings
 from backend.database import Base, engine
@@ -28,23 +30,64 @@ import backend.quiz.models  # noqa
 configure_logging()
 logger = get_logger(__name__)
 
+from contextlib import asynccontextmanager
+
+# ─── WATCHDOG BACKGROUND TASK ────────────────────────────────────────────────
+_watchdog_task = None
+
+async def _run_watchdog():
+    """24/7 self-healing monitor — runs as background asyncio task."""
+    import sys, pathlib
+    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
+    try:
+        from monitor.watchdog import main as watchdog_main
+        await watchdog_main()
+    except Exception as e:
+        logger.error(f"Watchdog crashed: {e}")
+
+
+@asynccontextmanager
+async def lifespan(app_instance):
+    global _watchdog_task
+    # Only run watchdog in production (when APP_URL is set)
+    if os.environ.get("APP_URL") or os.environ.get("RAILWAY_ENVIRONMENT"):
+        import asyncio
+        _watchdog_task = asyncio.create_task(_run_watchdog())
+        logger.info("Watchdog 24/7 started as background task")
+    yield
+    if _watchdog_task:
+        _watchdog_task.cancel()
+
+
 app = FastAPI(
     title="FinAdvisor SK — Educational Platform API",
     description="Vzdelávacia platforma pre financnu gramotnost — Slovakia",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 # Middleware
 app.add_middleware(RequestLoggingMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://finadvisor.sk", "https://intuitive-illumination-production-5103.up.railway.app", "http://localhost:3000", "http://localhost:8000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 register_exception_handlers(app)
+
+# ── SECURITY HEADERS ─────────────────────────────────────────────────────────
+@app.middleware("http")
+async def security_headers_middleware(request: Request, call_next):
+    resp = await call_next(request)
+    resp.headers["X-Frame-Options"] = "SAMEORIGIN"
+    resp.headers["X-Content-Type-Options"] = "nosniff"
+    resp.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    resp.headers["X-XSS-Protection"] = "1; mode=block"
+    resp.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+    return resp
 
 # ── MAINTENANCE MODE ─────────────────────────────────────────────────────────
 # Set MAINTENANCE_MODE=true in Railway env to hide site from public.
