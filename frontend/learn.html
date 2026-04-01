@@ -261,7 +261,8 @@ footer{
     <a href="/hub">Kalkulačky</a>
     <a href="/app">Kurzy</a>
   </div>
-  <a href="/app" class="nav-cta">Pokračovať v učení</a>
+  <a href="/app" class="nav-cta" data-i18n="nav_continue">Pokračovať v učení</a>
+  <div class="nav-actions"></div>
 </nav>
 
 <!-- ─── CONTENT ─── -->
@@ -492,7 +493,7 @@ Aktívny fond (priemer):               TER 1.50%  →  Konečná hodnota: <span 
 </div><!-- /container -->
 
 <!-- ─── FIXED COMPLETE BUTTON ─── -->
-<button id="finish-btn" onclick="finishLesson()">✅ Dokončiť lekciu</button>
+<button id="finish-btn" data-i18n="btn_finish" onclick="finishLesson()">✅ Dokončiť lekciu</button>
 <div id="xp-pop">⚡ +50 XP Získané!</div>
 
 <!-- ─── FOOTER ─── -->
@@ -607,5 +608,6 @@ function finishLesson(){
   setTimeout(()=>{ window.location.href = '/app'; }, 2800);
 }
 </script>
+<script src="/i18n.js"></script>
 </body>
 </html>

@@ -9,12 +9,21 @@ from pydantic import BaseModel
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
-SYSTEM_PROMPT = """Si FinAdvisor AI — odborný finančný vzdelávací asistent pre slovenský trh.
+SYSTEM_PROMPT_SK = """Si FinAdvisor AI — odborný finančný vzdelávací asistent pre slovenský trh.
 Pravidlá:
 - Odpovedáš na otázky o osobných financiách, investíciách, bankách, daniach, hypotékach, poistení, NBS, kryptomenách.
 - Odpovedáš vždy v slovenčine, stručne a konkrétne.
 - Na konci každej odpovede napíš: ⚠️ Toto je vzdelávacia informácia, nie licencované finančné poradenstvo.
 - Ak otázka nie je o financiách, zdvorilo odmietnuš."""
+
+SYSTEM_PROMPT_UK = """Ти FinAdvisor AI — фінансовий освітній асистент для словацького ринку.
+Правила:
+- Відповідаєш на питання про особисті фінанси, інвестиції, банки, податки, іпотеки, страхування, NBS, криптовалюти.
+- Відповідаєш ЗАВЖДИ українською мовою, стисло і конкретно.
+- В кінці кожної відповіді напиши: ⚠️ Це освітня інформація, а не ліцензована фінансова порада.
+- Якщо питання не стосується фінансів, ввічливо відмов."""
+
+SYSTEM_PROMPT = SYSTEM_PROMPT_SK
 
 # ─── KNOWLEDGE BASE ────────────────────────────────────────────────────────────
 KB = [
@@ -318,6 +327,7 @@ Pre konkrétnejšiu odpoveď skúste sa opýtať na:
 class ChatRequest(BaseModel):
     message: str
     history: list = []
+    lang: str = "sk"
 
 class ChatResponse(BaseModel):
     reply: str
@@ -327,13 +337,14 @@ class ChatResponse(BaseModel):
 @router.post("/chat", response_model=ChatResponse)
 async def ai_chat(req: ChatRequest):
     api_key = os.getenv("OPENAI_API_KEY", "").strip()
+    system_prompt = SYSTEM_PROMPT_UK if req.lang == "uk" else SYSTEM_PROMPT_SK
 
     # Use OpenAI if key is available
     if api_key and api_key.startswith("sk-"):
         try:
             from openai import AsyncOpenAI
             client = AsyncOpenAI(api_key=api_key)
-            messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+            messages = [{"role": "system", "content": system_prompt}]
             for h in req.history[-6:]:
                 if h.get("role") in ("user", "assistant") and h.get("content"):
                     messages.append({"role": h["role"], "content": h["content"]})
