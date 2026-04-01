@@ -196,6 +196,11 @@ def robots():
     return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "robots.txt"), media_type="text/plain")
 
 
+@app.get("/i18n.js", include_in_schema=False)
+def i18n_js():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "i18n.js"), media_type="application/javascript")
+
+
 @app.get("/sitemap.xml", include_in_schema=False)
 def sitemap():
     return FileResponse(os.path.join(os.path.dirname(__file__), "..", "frontend", "sitemap.xml"), media_type="application/xml")
