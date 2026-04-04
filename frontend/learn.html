@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Ako fungujú ETF — FinAdvisor SK</title>
-<meta name="description" content="Zistite, ako fungujú ETF fondy, prečo ich milujú dlhodobí investori a ako začať investovať na Slovensku."/>
+<title>Kurz — FinAdvisor SK</title>
+<meta name="description" content="Finančné vzdelávanie — FinAdvisor SK"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
@@ -285,13 +285,7 @@ footer{
         <button class="toc-toggle" onclick="toggleToc(this)">
           📋 Obsah článku <span id="toc-arrow">▼</span>
         </button>
-        <div class="toc-dropdown" id="toc-dropdown">
-          <a href="#sec-co-su">1. Čo sú ETF fondy?</a>
-          <a href="#sec-sp500">2. Ako funguje S&P 500 ETF?</a>
-          <a href="#sec-naklady">3. Náklady: TER a poplatky</a>
-          <a href="#sec-porovnanie">4. ETF vs. Podielový fond vs. Akcie</a>
-          <a href="#sec-ako-zacat">5. Ako začať investovať?</a>
-        </div>
+        <div class="toc-dropdown" id="toc-dropdown"></div>
       </div>
 
       <!-- Article header -->
@@ -301,169 +295,18 @@ footer{
           <span class="meta-badge badge-xp">⚡ +50 XP</span>
           <span class="meta-badge badge-diff">📊 Stredné</span>
         </div>
-        <h1 class="article-title">Ako fungujú ETF fondy a prečo ich milujú investori</h1>
-        <p class="article-lead">ETF (Exchange Traded Funds) sa stali jedným z najobľúbenejších nástrojov pre bežných investorov na celom svete. Zistite, ako fungujú, prečo sú lacné a ako ich využiť na Slovensku.</p>
+        <h1 class="article-title" id="article-title"></h1>
+        <p class="article-lead" id="article-lead"></p>
         <div class="article-divider"></div>
       </header>
 
       <!-- Article body -->
-      <article class="article-body">
-
-        <h2 id="sec-co-su">1. Čo sú ETF fondy?</h2>
-        <p>ETF (Exchange Traded Fund) je fond obchodovaný na burze cenných papierov — podobne ako bežná akcia. Na rozdiel od klasických podielových fondov môžete ETF kúpiť alebo predať kedykoľvek počas obchodovacích hodín za aktuálnu trhovú cenu.</p>
-        <p>Väčšina ETF je <strong>pasívnych</strong> — namiesto toho, aby sa manažéri snažili "poraziť trh", fond jednoducho kopíruje nejaký index (napr. S&P 500, MSCI World). Výsledkom sú <strong>minimálne náklady</strong> a <strong>vysoká diverzifikácia</strong>.</p>
-
-        <div class="info-box">
-          <strong>💡 Kľúčový poznatok:</strong> Viac ako 90% aktívne riadených fondov dlhodobo nedosahuje výkonnosť pasívnych indexových ETF po zaratúvaní poplatkov. Práve preto legendárni investori ako Warren Buffett odporúčajú indexové ETF pre väčšinu bežných investorov.
-        </div>
-
-        <h3>Typy ETF</h3>
-        <ul>
-          <li><strong>Akciové ETF</strong> — kopírujú akciové indexy (S&P 500, MSCI World, DAX)</li>
-          <li><strong>Dlhopisové ETF</strong> — sledujú koše dlhopisov (štátne, korporátne)</li>
-          <li><strong>Komoditné ETF</strong> — zlato, ropa, poľnohospodárske komodity</li>
-          <li><strong>Sektorové ETF</strong> — technológie, zdravotníctvo, energetika</li>
-          <li><strong>Tematické ETF</strong> — ESG, umelá inteligencia, čistá energia</li>
-        </ul>
-
-        <h2 id="sec-sp500">2. Ako funguje S&P 500 ETF?</h2>
-        <p>Index S&P 500 sleduje 500 najväčších amerických spoločností podľa trhovej kapitalizácie — Apple, Microsoft, Amazon, Google, Tesla a stovky ďalších. Keď kúpite ETF sledujúci S&P 500, vlastníte malú časť všetkých týchto spoločností naraz.</p>
-
-        <div class="calc-block">
-<span class="comment">// Príklad: Investícia 100 € do S&P 500 ETF</span>
-Váš podiel na <span class="highlight">Apple (AAPL)</span>:     ≈ 7.0 € (7,0% váha)
-Váš podiel na <span class="highlight">Microsoft (MSFT)</span>:  ≈ 6.8 € (6,8% váha)
-Váš podiel na <span class="highlight">Amazon (AMZN)</span>:     ≈ 3.5 € (3,5% váha)
-<span class="comment">... a 497 ďalších spoločností</span>
-
-Celkový <span class="highlight">historický priemerný výnos</span> S&P 500: ~10% ročne (nominálne)
-Po zohľadnení inflácie (~3%): ~7% ročne <span class="highlight">reálny výnos</span>
-        </div>
-
-        <h3>Distribučné vs. Akumulačné ETF</h3>
-        <p>Dôležitý rozdiel, ktorý ovplyvňuje zdanenie a zložený úrok:</p>
-        <ul>
-          <li><strong>Distribučné (Dist)</strong> — vyplácajú dividendy na váš účet, musíte ich zdaniť a reinvestovať sami</li>
-          <li><strong>Akumulačné (Acc)</strong> — dividendy automaticky reinvestujú späť do fondu, zložený úrok funguje automaticky</li>
-        </ul>
-
-        <div class="green-box">
-          <strong>✅ Odporúčanie pre slovenských investorov:</strong> Pre dlhodobé investovanie (5+ rokov) preferujte akumulačné ETF (Acc) kvôli automatickej reinvestícii a odloženému zdaneniu. Príklady: <strong>CSPX</strong> (iShares S&P 500 Acc), <strong>VWCE</strong> (Vanguard FTSE All-World Acc).
-        </div>
-
-        <h2 id="sec-naklady">3. Náklady: TER a poplatky</h2>
-        <p>Jednou z najväčších výhod ETF sú minimálne ročné náklady, vyjadrené ukazovateľom <strong>TER (Total Expense Ratio)</strong>. Je to percentuálny poplatok, ktorý fond každoročne odpočítava z vašej investície.</p>
-
-        <div class="calc-block">
-<span class="comment">// Porovnanie TER — vplyv na investíciu 10 000 € za 30 rokov (7% výnos)</span>
-
-<span class="highlight">SPY</span>   (SPDR S&P 500 ETF Trust):     TER 0.09%  →  Konečná hodnota: <span class="highlight">≈ 73 900 €</span>
-<span class="highlight">CSPX</span>  (iShares S&P 500 UCITS):      TER 0.07%  →  Konečná hodnota: <span class="highlight">≈ 74 300 €</span>
-<span class="highlight">VWCE</span>  (Vanguard All-World UCITS):   TER 0.22%  →  Konečná hodnota: <span class="highlight">≈ 70 100 €</span>
-
-Aktívny fond (priemer):               TER 1.50%  →  Konečná hodnota: <span class="highlight">≈ 52 200 €</span>
-<span class="comment">// Rozdiel: ~21 700 € len kvôli poplatkom!</span>
-        </div>
-
-        <div class="warn-box">
-          <strong>⚠️ Pozor na skryté náklady:</strong> Okrem TER sa pri nákupe/predaji ETF platia aj <strong>brokerské poplatky</strong> (od 0 do ~5 €) a <strong>spread</strong> (rozdiel medzi nákupnou a predajnou cenou). Zvoľte brokera s nízkymi poplatkami — Degiro, XTB alebo Interactive Brokers sú populárne voľby na Slovensku.
-        </div>
-
-        <h2 id="sec-porovnanie">4. ETF vs. Podielový fond vs. Akcie</h2>
-        <p>Porovnanie troch hlavných spôsobov investovania pre bežného investora:</p>
-
-        <table class="compare-table">
-          <thead>
-            <tr>
-              <th>Kritérium</th>
-              <th>ETF</th>
-              <th>Podielový fond</th>
-              <th>Jednotlivé akcie</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Ročné náklady (TER)</strong></td>
-              <td class="good">0.03% – 0.50%</td>
-              <td class="bad">0.80% – 2.50%</td>
-              <td class="good">0%</td>
-            </tr>
-            <tr>
-              <td><strong>Diverzifikácia</strong></td>
-              <td class="good">Vysoká (100–1000+ cenných papierov)</td>
-              <td class="mid">Stredná</td>
-              <td class="bad">Nízka (riziko jednej firmy)</td>
-            </tr>
-            <tr>
-              <td><strong>Likvidita</strong></td>
-              <td class="good">Obchodovanie v reálnom čase</td>
-              <td class="mid">1–3 pracovné dni</td>
-              <td class="good">Obchodovanie v reálnom čase</td>
-            </tr>
-            <tr>
-              <td><strong>Potrebné vedomosti</strong></td>
-              <td class="good">Nízke</td>
-              <td class="good">Nízke</td>
-              <td class="bad">Vysoké (analýza firiem)</td>
-            </tr>
-            <tr>
-              <td><strong>Minimálna investícia</strong></td>
-              <td class="good">Cena 1 podielu (~od 10 €)</td>
-              <td class="mid">Zvyčajne 50–1000 €</td>
-              <td class="mid">Cena 1 akcie</td>
-            </tr>
-            <tr>
-              <td><strong>Transparentnosť</strong></td>
-              <td class="good">Denné zverejnenie portfólia</td>
-              <td class="mid">Mesačné / kvartálne</td>
-              <td class="good">Plná transparentnosť</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2 id="sec-ako-zacat">5. Ako začať investovať do ETF?</h2>
-        <p>Investovanie do ETF na Slovensku je dostupné pre každého. Tu je postup krok za krokom:</p>
-        <ol>
-          <li><strong>Nastavte investičný cieľ</strong> — dôchodok, bývanie, finančná rezerva? Určte horizont a výšku mesačnej investície.</li>
-          <li><strong>Otvorte si brokerský účet</strong> — populárne voľby pre slovenských investorov: Degiro, XTB, Interactive Brokers. Registrácia trvá cca 15 minút.</li>
-          <li><strong>Vyberte ETF</strong> — pre začiatočníkov odporúčame CSPX alebo VWCE. Oba sú UCITS regulované a dostupné v EÚ.</li>
-          <li><strong>Nastavte pravidelný nákup (DCA)</strong> — Dollar Cost Averaging znižuje riziko zlého načasovania trhu. Investujte rovnakú sumu každý mesiac.</li>
-          <li><strong>Neinvestujte to, čo si nemôžete dovoliť stratiť</strong> — ponechajte si 3–6-mesačný núdzový fond v hotovosti/sporení pred investovaním.</li>
-        </ol>
-
-        <div class="info-box">
-          <strong>📌 Daňový tip pre SR:</strong> Na Slovensku platí <strong>19% daň z príjmu</strong> na zisky z predaja cenných papierov. Ak cenné papiere držíte dlhšie ako <strong>1 rok</strong> a celkové príjmy z ich predaja neprekročia 500 € ročne, zisk je od dane oslobodený. Vždy konzultujte aktuálne pravidlá s daňovým poradcom.
-        </div>
-
-        <div class="warn-box">
-          <strong>⚠️ Upozornenie:</strong> Investovanie je spojené s rizikom. Hodnota ETF môže klesať aj stúpať. Minulé výnosy nezaručujú budúce výsledky. Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.
-        </div>
-
-      </article>
+      <article class="article-body"><div id="article-body-mount"></div></article>
 
       <!-- Related articles -->
       <section class="related-section">
         <div class="related-title">📚 Súvisiace články</div>
-        <div class="related-grid">
-          <a href="/learn" class="related-card">
-            <div class="related-emoji">🌍</div>
-            <div class="related-card-title">Diverzifikácia portfólia: Prečo nevkladať vajcia do jedného košíka</div>
-            <div class="related-card-meta">⏱ 6 min · Investície</div>
-            <div class="related-xp">+40 XP</div>
-          </a>
-          <a href="/learn" class="related-card">
-            <div class="related-emoji">📊</div>
-            <div class="related-card-title">DCA stratégia: Ako investovať pravidelne bez stresu</div>
-            <div class="related-card-meta">⏱ 5 min · Investície</div>
-            <div class="related-xp">+35 XP</div>
-          </a>
-          <a href="/learn" class="related-card">
-            <div class="related-emoji">🏦</div>
-            <div class="related-card-title">Výber brokera: Degiro vs. XTB vs. Interactive Brokers</div>
-            <div class="related-card-meta">⏱ 7 min · Investície</div>
-            <div class="related-xp">+45 XP</div>
-          </a>
-        </div>
+        <div class="related-grid"><div id="related-grid"></div></div>
       </section>
 
     </main>
@@ -472,13 +315,7 @@ Aktívny fond (priemer):               TER 1.50%  →  Konečná hodnota: <span 
     <aside>
       <div class="toc-wrap">
         <div class="toc-title">Obsah článku</div>
-        <ul class="toc-list" id="toc-list">
-          <li><a href="#sec-co-su" class="active">1. Čo sú ETF fondy?</a></li>
-          <li><a href="#sec-sp500">2. Ako funguje S&P 500 ETF?</a></li>
-          <li><a href="#sec-naklady">3. Náklady: TER a poplatky</a></li>
-          <li><a href="#sec-porovnanie">4. ETF vs. Podielový fond vs. Akcie</a></li>
-          <li><a href="#sec-ako-zacat">5. Ako začať investovať?</a></li>
-        </ul>
+        <ul class="toc-list" id="toc-list"></ul>
         <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border)">
           <div style="font-size:11px;color:var(--muted2);margin-bottom:8px">Váš postup v kurze</div>
           <div style="height:5px;background:var(--border2);border-radius:3px;overflow:hidden">
@@ -513,7 +350,7 @@ Aktívny fond (priemer):               TER 1.50%  →  Konečná hodnota: <span 
 </footer>
 
 <script>
-// ─── COURSE LOOKUP BY URL PARAM ─────────────────────
+// ─── COURSES META ───────────────────────────────────
 const COURSES_META = {
   1:{title:'Osobný rozpočet a cashflow',cat:'Základy',emoji:'📖',xp:80,mins:45},
   2:{title:'Ako fungujú banky a úroky',cat:'Základy',emoji:'🏦',xp:70,mins:35},
@@ -534,32 +371,94 @@ const COURSES_META = {
   17:{title:'DeFi a stablecoiny',cat:'Krypto & DeFi',emoji:'🔷',xp:100,mins:40},
   18:{title:'Regulácia krypta v EÚ (MiCA)',cat:'Krypto & DeFi',emoji:'📜',xp:90,mins:35},
 };
+
+// ─── COURSES CONTENT ────────────────────────────────
+const CC = {};
+CC[1]={title:'Osobný rozpočet a cashflow',lead:'Naučte sa vytvoriť funkčný mesačný rozpočet, sledovať cashflow a nastaviť si automatické sporenie.',sections:[{id:'sec-1-1',heading:'1. Prečo je rozpočet základ?'},{id:'sec-1-2',heading:'2. Metóda 50/30/20'},{id:'sec-1-3',heading:'3. Sledovanie cashflow'},{id:'sec-1-4',heading:'4. Automatizácia sporenia'},{id:'sec-1-5',heading:'5. Mesačná revízia'}],html:'<h2 id="sec-1-1">1. Prečo je rozpočet základ?</h2><p>Osobný rozpočet je najdôležitejší nástroj finančného zdravia. Bez prehľadu o príjmoch a výdavkoch nemôžete efektívne sporiť, investovať ani plánovať budúcnosť. Prieskumy ukazujú, že ľudia s rozpočtom ušetria v priemere <strong>20% viac</strong> ako tí bez neho.</p><p>Rozpočet nie je o obmedzovaní — je o <strong>vedomom rozhodovaní</strong>, kam idú vaše peniaze.</p><div class="info-box"><strong>💡 Kľúčový poznatok:</strong> Podľa prieskumov na Slovensku až 62% domácností nemá žiadny formálny rozpočet. Tí, čo ho majú, dokážu ušetriť v priemere 200–400 € mesačne navyše.</div><h2 id="sec-1-2">2. Metóda 50/30/20</h2><p>Najpopulárnejšia metóda rozpočtovania rozdeľuje váš čistý príjem do troch kategórií:</p><div class="calc-block"><span class="comment">// Príklad: Čistý príjem 1 400 € mesačne</span>\n\n<span class="highlight">50% → Potreby</span>      = 700 €  (nájom, energie, jedlo, splátky)\n<span class="highlight">30% → Záľuby</span>      = 420 €  (reštaurácie, hobby, cestovanie)\n<span class="highlight">20% → Sporenie</span>     = 280 €  (fond núdzovky, investície)\n\n<span class="comment">// Za rok: 280 € × 12 = 3 360 € ušetrených!</span></div><h2 id="sec-1-3">3. Sledovanie cashflow</h2><p>Cashflow je tok peňazí — koľko prichádza a koľko odchádza. Pre efektívne sledovanie:</p><ul><li><strong>Zapíšte všetky príjmy</strong> — výplata, brigáda, pasívny príjem</li><li><strong>Kategorizujte výdavky</strong> — fixné a variabilné</li><li><strong>Používajte aplikácie</strong> — Spendee, Wallet, Money Manager</li><li><strong>Kontrolujte bankový výpis</strong> — hľadajte nepotrebné predplatné</li></ul><table class="compare-table"><thead><tr><th>Aplikácia</th><th>Cena</th><th>Funkcie</th><th>Hodnotenie</th></tr></thead><tbody><tr><td><strong>Spendee</strong></td><td class="good">Zadarmo / 2.49€</td><td>Auto kategórie</td><td class="good">4.7/5</td></tr><tr><td><strong>Wallet</strong></td><td class="good">Zadarmo / 1.99€</td><td>Rozpočty, export</td><td class="good">4.6/5</td></tr><tr><td><strong>Excel</strong></td><td class="good">Zadarmo</td><td>Plná kontrola</td><td class="mid">4.0/5</td></tr></tbody></table><h2 id="sec-1-4">4. Automatizácia sporenia</h2><p>Najúčinnejšia stratégia je <strong>„platiť najprv sebe"</strong>. V deň výplaty automaticky preveďte sumu na sporiaci účet.</p><div class="green-box"><strong>✅ Odporúčanie:</strong> Nastavte trvalý príkaz v deň výplaty. Začnite s 10% príjmu a postupne zvyšujte na 20%. Peniaze, ktoré nevidíte, nemíňate.</div><h2 id="sec-1-5">5. Mesačná revízia</h2><ol><li><strong>Dodržal som limity?</strong> — Porovnajte plánované vs. skutočné výdavky</li><li><strong>Kde som prekročil?</strong> — Identifikujte najväčšie prekročenia</li><li><strong>Čo môžem zlepšiť?</strong> — Zrušte nepotrebné predplatné</li><li><strong>Upravte plán</strong> — Zohľadnite sezónne výdavky</li></ol><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[2]={title:'Ako fungujú banky a úroky',lead:'Sporenie, bežné účty, termínované vklady, záruky DGS do 100 000 €. Pochopte, kde sú vaše peniaze.',sections:[{id:'sec-2-1',heading:'1. Typy bankových účtov'},{id:'sec-2-2',heading:'2. Jednoduché vs. zložené úroky'},{id:'sec-2-3',heading:'3. Garancia vkladov (DGS)'},{id:'sec-2-4',heading:'4. Sporiace produkty'},{id:'sec-2-5',heading:'5. Ako si vybrať banku'}],html:'<h2 id="sec-2-1">1. Typy bankových účtov</h2><p>Na Slovensku existuje niekoľko typov bankových účtov:</p><ul><li><strong>Bežný účet</strong> — pre denné operácie, úrok: 0–0.1% p.a.</li><li><strong>Sporiaci účet</strong> — krátkodobé úspory, úrok: 2–3.5% p.a.</li><li><strong>Termínovaný vklad</strong> — viazané na dobu, úrok: 3–4.5% p.a.</li><li><strong>Investičný účet</strong> — pre nákup cenných papierov</li></ul><div class="info-box"><strong>💡 Tip:</strong> Bežný účet by mal slúžiť len na 1-mesačné výdavky. Všetko nad to presúvajte na sporiaci účet.</div><h2 id="sec-2-2">2. Jednoduché vs. zložené úroky</h2><p>Rozdiel medzi jednoduchým a zloženým úrokom je kľúčový pre pochopenie rastu peňazí:</p><div class="calc-block"><span class="comment">// Príklad: 10 000 € pri 5% úroku na 20 rokov</span>\n\n<span class="highlight">Jednoduchý úrok:</span>  10 000 + (10 000 × 0.05 × 20) = <span class="highlight">20 000 €</span>\n<span class="highlight">Zložený úrok:</span>     10 000 × (1.05)^20             = <span class="highlight">26 533 €</span>\n\n<span class="comment">// Rozdiel: 6 533 € — sila zloženého úročenia!</span></div><h2 id="sec-2-3">3. Garancia vkladov (DGS)</h2><p><strong>Fond ochrany vkladov SR</strong> garantuje vklady do <strong>100 000 € na jednu banku</strong>. Ak banka skrachuje, dostanete peniaze do 7 pracovných dní.</p><div class="green-box"><strong>✅ Dôležité:</strong> Garancia sa vzťahuje na bežné, sporiace účty a vklady. Nevzťahuje sa na investície. Ak máte viac ako 100 000 €, rozložte medzi viaceré banky.</div><h2 id="sec-2-4">4. Sporiace produkty</h2><table class="compare-table"><thead><tr><th>Produkt</th><th>Úrok p.a.</th><th>Likvidita</th><th>Riziko</th></tr></thead><tbody><tr><td><strong>Bežný účet</strong></td><td class="bad">0–0.1%</td><td class="good">Okamžitá</td><td class="good">Nulové</td></tr><tr><td><strong>Sporiaci účet</strong></td><td class="mid">2–3.5%</td><td class="good">Okamžitá</td><td class="good">Nulové</td></tr><tr><td><strong>Termínovaný vklad</strong></td><td class="good">3–4.5%</td><td class="mid">Viazaná</td><td class="good">Nulové</td></tr><tr><td><strong>Štátne dlhopisy</strong></td><td class="good">3.5–4.5%</td><td class="mid">2–5 rokov</td><td class="good">Minimálne</td></tr></tbody></table><h2 id="sec-2-5">5. Ako si vybrať banku</h2><ol><li><strong>Poplatky za vedenie účtu</strong> — niektoré banky ponúkajú účet zadarmo</li><li><strong>Úroky na sporiacich účtoch</strong> — porovnajte aktuálne sadzby</li><li><strong>Kvalita internetbankingu</strong> — mobilná aplikácia, prevody</li><li><strong>Sieť bankomatov</strong></li><li><strong>Bonusy pre nových klientov</strong></li></ol><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[3]={title:'Fond núdzových situácií',lead:'Prečo potrebujete 3–6-mesačný rezervný fond? Kde ho uložiť? Ako ho vybudovať od nuly.',sections:[{id:'sec-3-1',heading:'1. Prečo potrebujete rezervný fond?'},{id:'sec-3-2',heading:'2. Koľko potrebujete?'},{id:'sec-3-3',heading:'3. Kde uložiť núdzový fond?'},{id:'sec-3-4',heading:'4. Ako ho vybudovať za 6 mesiacov'}],html:'<h2 id="sec-3-1">1. Prečo potrebujete rezervný fond?</h2><p>Život je nepredvídateľný — strata zamestnania, choroba, nečakaná oprava. Bez finančnej rezervy vás takáto situácia môže dostať do dlhov.</p><div class="info-box"><strong>💡 Štatistika:</strong> Až 40% Slovákov by nedokázalo pokryť nečakaný výdavok 500 € bez požičania si. Rezervný fond vás chráni.</div><h2 id="sec-3-2">2. Koľko potrebujete?</h2><div class="calc-block"><span class="comment">// Výpočet veľkosti núdzového fondu</span>\n\nMesačné výdavky:\n  Nájom/splátka:    550 €\n  Energie:          150 €\n  Jedlo:            300 €\n  Poistenie:         80 €\n  Doprava:          100 €\n  <span class="highlight">Celkom:</span>          1 180 €/mesiac\n\n<span class="highlight">3-mesačný fond:</span>  1 180 × 3 = <span class="highlight">3 540 €</span>  (minimum)\n<span class="highlight">6-mesačný fond:</span>  1 180 × 6 = <span class="highlight">7 080 €</span>  (odporúčaný)</div><ul><li><strong>3 mesiace</strong> — minimum pre zamestnancov</li><li><strong>6 mesiacov</strong> — odporúčané pre väčšinu</li><li><strong>9–12 mesiacov</strong> — pre SZČO a freelancerov</li></ul><h2 id="sec-3-3">3. Kde uložiť núdzový fond?</h2><div class="green-box"><strong>✅ Odporúčané:</strong> Sporiaci účet s úrokom 2–3.5% p.a. v banke s garancíou DGS. Peniaze dostupné okamžite. Nikdy neinvestujte núdzový fond do akcií alebo ETF!</div><h2 id="sec-3-4">4. Ako ho vybudovať za 6 mesiacov</h2><ol><li><strong>Zrušte nepotrebné predplatné</strong> — úspora ~50 €/mes</li><li><strong>Trvalý príkaz</strong> — 1 000 €/mes na sporiaci účet</li><li><strong>Predajte nepotrebné veci</strong> — Bazos.sk, Vinted</li><li><strong>Extra príjem</strong> — víkendová brigáda alebo freelance</li></ol><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[4]={title:'Daňový systém Slovenska',lead:'19% vs 25% sadzba, daňový bonus na deti, odpočty na III. pilier, daňové priznanie krok za krokom.',sections:[{id:'sec-4-1',heading:'1. Sadzby dane z príjmu'},{id:'sec-4-2',heading:'2. Nezdaniteľné časti'},{id:'sec-4-3',heading:'3. Daňový bonus na deti'},{id:'sec-4-4',heading:'4. Daňové odpočty'},{id:'sec-4-5',heading:'5. Daňové priznanie'}],html:'<h2 id="sec-4-1">1. Sadzby dane z príjmu</h2><p>Na Slovensku platí progresívna daň z príjmu:</p><table class="compare-table"><thead><tr><th>Príjem (ročne)</th><th>Sadzba</th><th>Príklad</th></tr></thead><tbody><tr><td>Do 41 445 €</td><td class="good">19%</td><td>Príjem 30 000 € → daň 5 700 €</td></tr><tr><td>Nad 41 445 €</td><td class="bad">25%</td><td>Z časti nad limit</td></tr></tbody></table><div class="info-box"><strong>💡 Príklad:</strong> Príjem 50 000 €: 19% z 41 445 € (= 7 874 €) + 25% z 8 555 € (= 2 139 €). Celková daň: 10 013 €.</div><h2 id="sec-4-2">2. Nezdaniteľné časti</h2><p><strong>NČZD</strong> znižuje základ dane:</p><ul><li><strong>Na daňovníka:</strong> 5 646 €/rok</li><li><strong>Na manžela/manželku:</strong> až 5 646 €</li><li><strong>III. pilier:</strong> až 180 €/rok</li></ul><div class="calc-block"><span class="comment">// Úspora vďaka NČZD</span>\n\nHrubý príjem:   <span class="highlight">25 000 €</span>\nMínus NČZD:     - 5 646 €\nZáklad dane:    <span class="highlight">19 354 €</span>\nDaň 19%:        <span class="highlight">3 677 €</span>\n\n<span class="comment">// Bez NČZD by daň bola: 4 750 € → úspora 1 073 €!</span></div><h2 id="sec-4-3">3. Daňový bonus na deti</h2><ul><li><strong>Dieťa do 15 rokov:</strong> 140 €/mesiac (1 680 €/rok)</li><li><strong>Dieťa 15–25 rokov:</strong> 50 €/mesiac (600 €/rok)</li></ul><h2 id="sec-4-4">4. Daňové odpočty</h2><ul><li><strong>III. pilier:</strong> odpočet až 180 €/rok → úspora 34 €</li><li><strong>Hypotéka (do 35r.):</strong> odpočet úrokov až 400 €/rok</li><li><strong>Životné poistenie:</strong> odpočet až 180 €/rok</li></ul><div class="green-box"><strong>✅ Tip:</strong> Kombinujte III. pilier + hypotéku + životné poistenie pre maximálnu legálnu daňovú optimalizáciu.</div><h2 id="sec-4-5">5. Daňové priznanie</h2><ol><li><strong>Zozbierajte doklady</strong> — potvrdenie o príjme, III. pilier, úroky</li><li><strong>Typ A alebo B</strong> — A pre zamestnancov, B ak máte aj iné príjmy</li><li><strong>Elektronicky</strong> — cez financnasprava.sk</li><li><strong>Termín:</strong> 31. marca (predĺženie do 30. júna)</li><li><strong>Preplatky</strong> sa vracajú do 40 dní</li></ol><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[5]={title:'Hypotéka krok za krokom',lead:'DSTI, DTI, fixácia úrokov, predčasné splatenie, štátny príspevok pre mladých.',sections:[{id:'sec-5-1',heading:'1. DTI, DSTI a LTV'},{id:'sec-5-2',heading:'2. Fixácia úrokovej sadzby'},{id:'sec-5-3',heading:'3. Predčasné splatenie'},{id:'sec-5-4',heading:'4. Štátny príspevok pre mladých'},{id:'sec-5-5',heading:'5. Postup krok za krokom'}],html:'<h2 id="sec-5-1">1. DTI, DSTI a LTV</h2><p>Banky posudzujú vašu schopnosť splácať:</p><table class="compare-table"><thead><tr><th>Ukazovateľ</th><th>Čo meria</th><th>Limit</th></tr></thead><tbody><tr><td><strong>DTI</strong></td><td>Celkový dlh / ročný príjem</td><td class="mid">Max 8×</td></tr><tr><td><strong>DSTI</strong></td><td>Mes. splátky / mes. príjem</td><td class="mid">Max 40%</td></tr><tr><td><strong>LTV</strong></td><td>Úver / hodnota nehnuteľnosti</td><td class="mid">Max 80–90%</td></tr></tbody></table><h2 id="sec-5-2">2. Fixácia úrokovej sadzby</h2><div class="calc-block"><span class="comment">// Porovnanie fixácií (úver 150 000 € na 25 rokov)</span>\n\n<span class="highlight">3-ročná:</span>   3.8% p.a.  →  splátka <span class="highlight">778 €/mes</span>\n<span class="highlight">5-ročná:</span>   3.5% p.a.  →  splátka <span class="highlight">751 €/mes</span>   (najpopulárnejšia)\n<span class="highlight">10-ročná:</span>  4.2% p.a.  →  splátka <span class="highlight">814 €/mes</span></div><div class="info-box"><strong>💡 Rada:</strong> Ak očakávate rast úrokov, zvoľte dlhšiu fixáciu. Ak pokles, kratšia vám umožní refinancovať.</div><h2 id="sec-5-3">3. Predčasné splatenie</h2><ul><li><strong>Na konci fixácie:</strong> bez poplatku</li><li><strong>Počas fixácie:</strong> max 20% zostatku ročne bez poplatku</li><li><strong>Nad 20%:</strong> poplatok max 1%</li></ul><h2 id="sec-5-4">4. Štátny príspevok pre mladých</h2><div class="green-box"><strong>✅ Pre mladých do 35 rokov:</strong> Štát poskytuje príspevok 3% z úveru, max zo 70 000 €. To je až 2 100 €! Podmienky: vek do 35r., príjem do 1.3× priemernej mzdy, prvá nehnuteľnosť.</div><h2 id="sec-5-5">5. Postup krok za krokom</h2><ol><li><strong>Zistite si bonitu</strong> — vypočítajte DTI a DSTI</li><li><strong>Oslovte min. 3 banky</strong> — porovnajte RPSN</li><li><strong>Znalecký posudok</strong> — stojí 150–350 €</li><li><strong>Podpíšte zmluvu</strong> — pozorne prečítajte</li><li><strong>Čerpanie úveru</strong></li></ol><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[6]={title:'ETF fondy pre začiatočníkov',lead:'ETF (Exchange Traded Funds) sa stali jedným z najobľúbenejších nástrojov pre bežných investorov. Zistite, ako fungujú, prečo sú lacné a ako ich využiť na Slovensku.',sections:[{id:'sec-6-1',heading:'1. Čo sú ETF fondy?'},{id:'sec-6-2',heading:'2. Ako funguje S&P 500 ETF?'},{id:'sec-6-3',heading:'3. Náklady: TER a poplatky'},{id:'sec-6-4',heading:'4. ETF vs. Podielový fond vs. Akcie'},{id:'sec-6-5',heading:'5. Ako začať investovať do ETF?'}],html:'<h2 id="sec-6-1">1. Čo sú ETF fondy?</h2><p>ETF (Exchange Traded Fund) je fond obchodovaný na burze cenných papierov — podobne ako bežná akcia. Na rozdiel od klasických podielových fondov môžete ETF kúpiť alebo predať kedykoľvek počas obchodovacích hodín za aktuálnu trhovú cenu.</p><p>Väčšina ETF je <strong>pasívnych</strong> — namiesto toho, aby sa manažéri snažili "poraziť trh", fond jednoducho kopíruje nejaký index (napr. S&P 500, MSCI World). Výsledkom sú <strong>minimálne náklady</strong> a <strong>vysoká diverzifikácia</strong>.</p><div class="info-box"><strong>💡 Kľúčový poznatok:</strong> Viac ako 90% aktívne riadených fondov dlhodobo nedosahuje výkonnosť pasívnych indexových ETF po zaratúvaní poplatkov. Práve preto legendárni investori ako Warren Buffett odporúčajú indexové ETF pre väčšinu bežných investorov.</div><h3>Typy ETF</h3><ul><li><strong>Akciové ETF</strong> — kopírujú akciové indexy (S&P 500, MSCI World, DAX)</li><li><strong>Dlhopisové ETF</strong> — sledujú koše dlhopisov (štátne, korporátne)</li><li><strong>Komoditné ETF</strong> — zlato, ropa, poľnohospodárske komodity</li><li><strong>Sektorové ETF</strong> — technológie, zdravotníctvo, energetika</li><li><strong>Tematické ETF</strong> — ESG, umelá inteligencia, čistá energia</li></ul><h2 id="sec-6-2">2. Ako funguje S&P 500 ETF?</h2><p>Index S&P 500 sleduje 500 najväčších amerických spoločností podľa trhovej kapitalizácie — Apple, Microsoft, Amazon, Google, Tesla a stovky ďalších. Keď kúpite ETF sledujúci S&P 500, vlastníte malú časť všetkých týchto spoločností naraz.</p><div class="calc-block"><span class="comment">// Príklad: Investícia 100 € do S&P 500 ETF</span>\nVáš podiel na <span class="highlight">Apple (AAPL)</span>:     ≈ 7.0 € (7,0% váha)\nVáš podiel na <span class="highlight">Microsoft (MSFT)</span>:  ≈ 6.8 € (6,8% váha)\nVáš podiel na <span class="highlight">Amazon (AMZN)</span>:     ≈ 3.5 € (3,5% váha)\n<span class="comment">... a 497 ďalších spoločností</span>\n\nCelkový <span class="highlight">historický priemerný výnos</span> S&P 500: ~10% ročne (nominálne)\nPo zohľadnení inflácie (~3%): ~7% ročne <span class="highlight">reálny výnos</span></div><h3>Distribučné vs. Akumulačné ETF</h3><p>Dôležitý rozdiel, ktorý ovplyvňuje zdanenie a zložený úrok:</p><ul><li><strong>Distribučné (Dist)</strong> — vyplácajú dividendy na váš účet, musíte ich zdaniť a reinvestovať sami</li><li><strong>Akumulačné (Acc)</strong> — dividendy automaticky reinvestujú späť do fondu, zložený úrok funguje automaticky</li></ul><div class="green-box"><strong>✅ Odporúčanie pre slovenských investorov:</strong> Pre dlhodobé investovanie (5+ rokov) preferujte akumulačné ETF (Acc) kvôli automatickej reinvestícii a odloženému zdaneniu. Príklady: <strong>CSPX</strong> (iShares S&P 500 Acc), <strong>VWCE</strong> (Vanguard FTSE All-World Acc).</div><h2 id="sec-6-3">3. Náklady: TER a poplatky</h2><p>Jednou z najväčších výhod ETF sú minimálne ročné náklady, vyjadrené ukazovateľom <strong>TER (Total Expense Ratio)</strong>.</p><div class="calc-block"><span class="comment">// Porovnanie TER — vplyv na investíciu 10 000 € za 30 rokov (7% výnos)</span>\n\n<span class="highlight">SPY</span>   TER 0.09%  →  <span class="highlight">≈ 73 900 €</span>\n<span class="highlight">CSPX</span>  TER 0.07%  →  <span class="highlight">≈ 74 300 €</span>\n<span class="highlight">VWCE</span>  TER 0.22%  →  <span class="highlight">≈ 70 100 €</span>\nAktívny fond TER 1.50% →  <span class="highlight">≈ 52 200 €</span>\n<span class="comment">// Rozdiel: ~21 700 € len kvôli poplatkom!</span></div><div class="warn-box"><strong>⚠️ Pozor na skryté náklady:</strong> Okrem TER sa pri nákupe/predaji ETF platia aj <strong>brokerské poplatky</strong> a <strong>spread</strong>. Zvoľte brokera s nízkymi poplatkami — Degiro, XTB alebo Interactive Brokers.</div><h2 id="sec-6-4">4. ETF vs. Podielový fond vs. Akcie</h2><table class="compare-table"><thead><tr><th>Kritérium</th><th>ETF</th><th>Podielový fond</th><th>Akcie</th></tr></thead><tbody><tr><td><strong>Ročné náklady</strong></td><td class="good">0.03–0.50%</td><td class="bad">0.80–2.50%</td><td class="good">0%</td></tr><tr><td><strong>Diverzifikácia</strong></td><td class="good">Vysoká</td><td class="mid">Stredná</td><td class="bad">Nízka</td></tr><tr><td><strong>Likvidita</strong></td><td class="good">Reálny čas</td><td class="mid">1–3 dni</td><td class="good">Reálny čas</td></tr><tr><td><strong>Vedomosti</strong></td><td class="good">Nízke</td><td class="good">Nízke</td><td class="bad">Vysoké</td></tr><tr><td><strong>Min. investícia</strong></td><td class="good">~od 10 €</td><td class="mid">50–1000 €</td><td class="mid">Cena 1 akcie</td></tr><tr><td><strong>Transparentnosť</strong></td><td class="good">Denná</td><td class="mid">Mesačná</td><td class="good">Plná</td></tr></tbody></table><h2 id="sec-6-5">5. Ako začať investovať do ETF?</h2><ol><li><strong>Nastavte investičný cieľ</strong> — dôchodok, bývanie, finančná rezerva</li><li><strong>Otvorte si brokerský účet</strong> — Degiro, XTB, Interactive Brokers</li><li><strong>Vyberte ETF</strong> — CSPX alebo VWCE pre začiatočníkov</li><li><strong>Nastavte pravidelný nákup (DCA)</strong> — rovnakú sumu každý mesiac</li><li><strong>Neinvestujte to, čo si nemôžete dovoliť stratiť</strong></li></ol><div class="info-box"><strong>📌 Daňový tip:</strong> Na Slovensku platí <strong>19% daň</strong> na zisky z predaja cenných papierov. Ak ich držíte dlhšie ako 1 rok a príjmy z predaja neprekročia 500 €/rok, zisk je od dane oslobodený.</div><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Investovanie je spojené s rizikom. Hodnota ETF môže klesať aj stúpať. Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[7]={title:'Diverzifikácia portfólia',lead:'Geografická, sektorová a triednová diverzifikácia. Korelácie aktív, rebalansovanie raz ročne.',sections:[{id:'sec-7-1',heading:'1. Prečo diverzifikovať?'},{id:'sec-7-2',heading:'2. Geografická diverzifikácia'},{id:'sec-7-3',heading:'3. Sektorová a triedová'},{id:'sec-7-4',heading:'4. Rebalansovanie'},{id:'sec-7-5',heading:'5. Portfólio podľa veku'}],html:'<h2 id="sec-7-1">1. Prečo diverzifikovať?</h2><p>Diverzifikácia znamená rozloženie investícií medzi rôzne aktíva, sektory a regióny. Cieľom je <strong>znížiť riziko</strong> bez výrazného zníženia výnosu.</p><div class="info-box"><strong>💡 Zlaté pravidlo:</strong> „Nevkladajte všetky vajcia do jedného košíka." Ak investujete 100% do jednej akcie a tá skrachuje, stratíte všetko.</div><h2 id="sec-7-2">2. Geografická diverzifikácia</h2><div class="calc-block"><span class="comment">// Príklad geograficky diverzifikovaného portfólia</span>\n\n<span class="highlight">USA (S&P 500):</span>         50%\n<span class="highlight">Európa (STOXX 600):</span>    20%\n<span class="highlight">Emerging Markets:</span>      15%\n<span class="highlight">Ázia-Pacifik:</span>          15%\n\n<span class="comment">// Alebo: 100% VWCE = celý svet v jednom ETF!</span></div><h2 id="sec-7-3">3. Sektorová a triedová</h2><table class="compare-table"><thead><tr><th>Trieda aktív</th><th>Výnos (hist.)</th><th>Riziko</th><th>Korelácia s akciami</th></tr></thead><tbody><tr><td><strong>Akcie (ETF)</strong></td><td class="good">7–10%</td><td class="mid">Stredné-vysoké</td><td>—</td></tr><tr><td><strong>Dlhopisy</strong></td><td class="mid">2–4%</td><td class="good">Nízke</td><td class="good">Nízka/záporná</td></tr><tr><td><strong>REITs</strong></td><td class="good">6–8%</td><td class="mid">Stredné</td><td class="mid">Stredná</td></tr><tr><td><strong>Zlato</strong></td><td class="mid">3–5%</td><td class="mid">Stredné</td><td class="good">Nízka/záporná</td></tr></tbody></table><h2 id="sec-7-4">4. Rebalansovanie</h2><p>Rebalansovanie znamená vrátenie portfólia k pôvodnému rozdeleniu.</p><div class="green-box"><strong>✅ Odporúčanie:</strong> Rebalansujte raz ročne alebo keď sa alokácia odchýli o viac ako 5%. Jednoducho nakúpte viac podvážených aktív z nových vkladov.</div><h2 id="sec-7-5">5. Portfólio podľa veku</h2><p>Pravidlo „110 mínus váš vek" určuje podiel akcií:</p><ul><li><strong>25 rokov:</strong> 85% akcie, 10% dlhopisy, 5% hotovosť</li><li><strong>40 rokov:</strong> 70% akcie, 20% dlhopisy, 10% hotovosť</li><li><strong>55 rokov:</strong> 55% akcie, 35% dlhopisy, 10% hotovosť</li></ul><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[8]={title:'Akcie a dividendy',lead:'P/E ratio, dividendový výnos, DRIP, aristokrati dividend.',sections:[{id:'sec-8-1',heading:'1. P/E ratio'},{id:'sec-8-2',heading:'2. Dividendový výnos'},{id:'sec-8-3',heading:'3. DRIP — reinvestovanie'},{id:'sec-8-4',heading:'4. Dividendoví aristokrati'},{id:'sec-8-5',heading:'5. Akcie vs. ETF'}],html:'<h2 id="sec-8-1">1. P/E ratio</h2><p><strong>P/E ratio</strong> (Price-to-Earnings) je najpoužívanejší ukazovateľ ocenenia akcie:</p><div class="calc-block"><span class="comment">// P/E = Cena akcie / Zisk na akciu (EPS)</span>\n\n<span class="highlight">Apple:</span>   cena 180 €, EPS 6 €   →  P/E = <span class="highlight">30</span>\n<span class="highlight">VW:</span>      cena 120 €, EPS 24 €  →  P/E = <span class="highlight">5</span>\n\n<span class="comment">// Historický priemer S&P 500: P/E ≈ 15-20</span></div><ul><li><strong>EPS</strong> — zisk na akciu</li><li><strong>P/B ratio</strong> — cena vs. účtovná hodnota</li><li><strong>ROE</strong> — návratnosť vlastného kapitálu</li><li><strong>Debt/Equity</strong> — zadlženosť firmy</li></ul><h2 id="sec-8-2">2. Dividendový výnos</h2><p><strong>Dividend Yield</strong> = ročná dividenda / cena akcie × 100.</p><div class="info-box"><strong>💡 Ideálny dividendový výnos:</strong> 2–5% p.a. Ak je výnos vyšší ako 6–8%, môže to signalizovať problémy firmy.</div><h2 id="sec-8-3">3. DRIP — reinvestovanie</h2><div class="calc-block"><span class="comment">// Príklad DRIP: 10 000 € v dividendovej akcii, yield 4%</span>\n\nBez DRIP (20 rokov):  <span class="highlight">18 000 €</span>\nS DRIP (20 rokov):    <span class="highlight">21 911 €</span>\n<span class="comment">// DRIP pridal takmer 4 000 € navyše!</span></div><h2 id="sec-8-4">4. Dividendoví aristokrati</h2><p>Spoločnosti zvyšujúce dividendu <strong>25+ rokov</strong>:</p><ul><li><strong>Coca-Cola</strong> — 60+ rokov, yield ~3%</li><li><strong>Johnson & Johnson</strong> — 60+ rokov, yield ~2.8%</li><li><strong>Procter & Gamble</strong> — 65+ rokov, yield ~2.5%</li></ul><div class="green-box"><strong>✅ Stratégia:</strong> Pre dividendové investovanie zvážte ETF <strong>SPYD</strong> alebo <strong>VHYL</strong>. Získate diverzifikáciu namiesto rizika jednej firmy.</div><h2 id="sec-8-5">5. Akcie vs. ETF</h2><p>Pre väčšinu začiatočníkov sú ETF lepšia voľba. Jednotlivé akcie odporúčame max <strong>5–10% portfólia</strong>.</p><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[9]={title:'Dlhopisy a dlhové nástroje',lead:'Štátne vs korporátne dlhopisy, YTM, duration, inverzná krivka výnosnosti.',sections:[{id:'sec-9-1',heading:'1. Štátne vs. korporátne'},{id:'sec-9-2',heading:'2. YTM — výnos do splatnosti'},{id:'sec-9-3',heading:'3. Duration a úrokové riziko'},{id:'sec-9-4',heading:'4. Inverzná krivka'},{id:'sec-9-5',heading:'5. Kedy do portfólia?'}],html:'<h2 id="sec-9-1">1. Štátne vs. korporátne</h2><p>Dlhopis je dlhový cenný papier — požičiavate peniaze emitentovi výmenou za úroky a vrátenie istiny.</p><table class="compare-table"><thead><tr><th>Typ</th><th>Výnos</th><th>Riziko</th></tr></thead><tbody><tr><td><strong>Štátne SR</strong></td><td class="mid">3–4.5%</td><td class="good">Minimálne</td></tr><tr><td><strong>Korporátne (invest. grade)</strong></td><td class="mid">4–6%</td><td class="mid">Nízke-stredné</td></tr><tr><td><strong>High-yield (junk)</strong></td><td class="good">6–10%</td><td class="bad">Vysoké</td></tr></tbody></table><div class="info-box"><strong>💡 Tip:</strong> Štátne dlhopisy si kúpite cez Ministerstvo financií SR (ardal.sk) od 100 €.</div><h2 id="sec-9-2">2. YTM — výnos do splatnosti</h2><div class="calc-block"><span class="comment">// Dlhopis 1 000 € kúpený za 950 €, kupón 4%, splatnosť 5r.</span>\n\nRočný kupón:       <span class="highlight">40 €</span>\nKapitálový zisk:   (1000-950)/5 = <span class="highlight">10 €/rok</span>\nYTM ≈ 50/950 = <span class="highlight">~5.3% p.a.</span></div><h2 id="sec-9-3">3. Duration a úrokové riziko</h2><ul><li><strong>Krátka duration (1–3r.)</strong> — nízka citlivosť na úroky</li><li><strong>Stredná (3–7r.)</strong> — vyvážené</li><li><strong>Dlhá (7–30r.)</strong> — vysoká citlivosť, vyšší výnos</li></ul><h2 id="sec-9-4">4. Inverzná krivka</h2><p>Keď krátkodobé dlhopisy majú vyšší výnos ako dlhodobé — historicky spoľahlivý signál blížiacej sa recesie.</p><div class="warn-box"><strong>⚠️ Pozor:</strong> Medzi inverziou a recesiou môže uplynúť 6–24 mesiacov.</div><h2 id="sec-9-5">5. Kedy do portfólia?</h2><p>Dlhopisy sú vhodné pre konzervatívnych investorov, ľudí blízko dôchodku a na diverzifikáciu.</p><div class="green-box"><strong>✅ ETF alternatívy:</strong> <strong>AGGH</strong> (iShares Global Aggregate Bond) alebo <strong>IBTS</strong> (iShares Treasury Bond).</div><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[10]={title:'REITs a nehnuteľnosti',lead:'REIT vs priama investícia. Ako investovať do nehnuteľností za 50 € mesačne bez hypotéky.',sections:[{id:'sec-10-1',heading:'1. Priama investícia vs. REITs'},{id:'sec-10-2',heading:'2. Ako fungujú REITs'},{id:'sec-10-3',heading:'3. Odporúčané fondy'},{id:'sec-10-4',heading:'4. Výnosnosť'},{id:'sec-10-5',heading:'5. Riziká'}],html:'<h2 id="sec-10-1">1. Priama investícia vs. REITs</h2><table class="compare-table"><thead><tr><th>Kritérium</th><th>Priama investícia</th><th>REITs (ETF)</th></tr></thead><tbody><tr><td><strong>Min. kapitál</strong></td><td class="bad">50 000+ €</td><td class="good">Od 50 €</td></tr><tr><td><strong>Likvidita</strong></td><td class="bad">Mesiace</td><td class="good">Okamžitá</td></tr><tr><td><strong>Diverzifikácia</strong></td><td class="bad">1 nehnuteľnosť</td><td class="good">Stovky budov</td></tr><tr><td><strong>Správa</strong></td><td class="bad">Nájomníci, opravy</td><td class="good">Žiadna</td></tr><tr><td><strong>Výnos</strong></td><td class="mid">3–5% (BA)</td><td class="good">4–7%</td></tr></tbody></table><h2 id="sec-10-2">2. Ako fungujú REITs</h2><p><strong>REIT</strong> je fond vlastniaci nehnuteľnosti — kancelárie, sklady, byty. Zo zákona musí vyplatiť min. <strong>90% zisku</strong> ako dividendu.</p><div class="info-box"><strong>💡 Výhoda:</strong> REITs kombinujú výhody nehnuteľností (stabilný príjem, ochrana pred infláciou) s výhodami akcií (likvidita, diverzifikácia).</div><h2 id="sec-10-3">3. Odporúčané fondy</h2><ul><li><strong>VNQ</strong> — Vanguard Real Estate (USA, TER 0.12%)</li><li><strong>IWDP</strong> — iShares Developed Markets Property (globálne)</li><li><strong>REET</strong> — iShares Global REIT (celý svet)</li></ul><h2 id="sec-10-4">4. Výnosnosť</h2><div class="calc-block"><span class="comment">// 200 €/mes do REIT ETF, yield 5%, 20 rokov</span>\n\nVložené:        <span class="highlight">48 000 €</span>\nKonečná hodnota: <span class="highlight">≈ 117 800 €</span>\n<span class="comment">// Zisk: ~69 800 € vďaka dividendám a rastu</span></div><h2 id="sec-10-5">5. Riziká</h2><ul><li><strong>Úrokové riziko</strong> — rast úrokov znižuje ceny</li><li><strong>Cyklickosť</strong> — nehnuteľnostný trh sa pohybuje v cykloch</li><li><strong>Regulačné riziko</strong></li><li><strong>Sektorová koncentrácia</strong> (napr. kancelárie po COVID)</li></ul><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[11]={title:'Komodity: zlato, ropa, striebro',lead:'Prečo zlato ako hedging? Commodity ETF vs fyzická komodita. Contango a backwardation.',sections:[{id:'sec-11-1',heading:'1. Zlato ako hedging'},{id:'sec-11-2',heading:'2. ETF vs. fyzická komodita'},{id:'sec-11-3',heading:'3. Contango a backwardation'},{id:'sec-11-4',heading:'4. Ropa'},{id:'sec-11-5',heading:'5. Striebro'}],html:'<h2 id="sec-11-1">1. Zlato ako hedging</h2><p>Zlato slúži ako <strong>bezpečný prístav</strong> v čase neistoty. Historicky má nízku koreláciu s akciami.</p><div class="info-box"><strong>💡 Odporúčanie:</strong> 5–10% portfólia v zlate môže znížiť volatilitu. Nie je to investícia pre rast — je to poistka.</div><h2 id="sec-11-2">2. ETF vs. fyzická komodita</h2><table class="compare-table"><thead><tr><th>Typ</th><th>Výhody</th><th>Nevýhody</th></tr></thead><tbody><tr><td><strong>Fyzické zlato</strong></td><td class="good">Hmatateľné, bez protistrany</td><td class="bad">Uloženie, poistenie</td></tr><tr><td><strong>Zlato ETF (IGLN)</strong></td><td class="good">Likvidné, nízke náklady</td><td class="mid">Protistrany riziko</td></tr><tr><td><strong>Ťažobné akcie</strong></td><td class="good">Pákový efekt na cenu zlata</td><td class="bad">Firemné riziko</td></tr></tbody></table><h2 id="sec-11-3">3. Contango a backwardation</h2><ul><li><strong>Contango:</strong> budúce kontrakty drahšie → ETF stráca pri rolovaní</li><li><strong>Backwardation:</strong> budúce kontrakty lacnejšie → ETF zarába</li></ul><div class="warn-box"><strong>⚠️ Pozor:</strong> Kvôli contangu väčšina komoditných ETF dlhodobo zaostáva za spotovou cenou.</div><h2 id="sec-11-4">4. Ropa</h2><ul><li><strong>Akcie ropných firiem</strong> — Shell, Exxon (dividendy + rast)</li><li><strong>Energetické ETF</strong> — XLE, IUES</li><li><strong>Futures ETF</strong> — USO (pozor na contango!)</li></ul><h2 id="sec-11-5">5. Striebro</h2><p>Striebro má duálne využitie — investičné aj priemyselné. Volatilnejšie ako zlato, vyšší potenciál rastu. ETF: <strong>ISLN</strong>.</p><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[12]={title:'Zákon č. 186/2009 Z.z.',lead:'Zákon o finančnom sprostredkovaní a poradenstve. Kategórie, registrácia, sankcie.',sections:[{id:'sec-12-1',heading:'1. Účel zákona'},{id:'sec-12-2',heading:'2. Kategórie sprostredkovateľov'},{id:'sec-12-3',heading:'3. Registrácia v NBS'},{id:'sec-12-4',heading:'4. Povinnosti'},{id:'sec-12-5',heading:'5. Sankcie'}],html:'<h2 id="sec-12-1">1. Účel zákona</h2><p><strong>Zákon č. 186/2009 Z.z.</strong> reguluje činnosť finančných sprostredkovateľov a poradcov na Slovensku. Cieľom je <strong>ochrana spotrebiteľa</strong>.</p><div class="info-box"><strong>💡 Dôležité:</strong> Bez registrácie v NBS a odbornej skúšky je finančné sprostredkovanie nezákonné.</div><h2 id="sec-12-2">2. Kategórie sprostredkovateľov</h2><table class="compare-table"><thead><tr><th>Kategória</th><th>Názov</th><th>Popis</th></tr></thead><tbody><tr><td><strong>SFA</strong></td><td>Samostatný fin. agent</td><td>Spolupracuje s viacerými inštitúciami</td></tr><tr><td><strong>PFA</strong></td><td>Podriadený fin. agent</td><td>Pracuje pod SFA</td></tr><tr><td><strong>VFA</strong></td><td>Viazaný fin. agent</td><td>Zastupuje jednu inštitúciu</td></tr><tr><td><strong>FP</strong></td><td>Finančný poradca</td><td>Nezávislý, platený klientom</td></tr></tbody></table><h2 id="sec-12-3">3. Registrácia v NBS</h2><ol><li><strong>Odborná skúška</strong> — min. 65% úspešnosť</li><li><strong>Dôveryhodnosť</strong> — bezúhonnosť</li><li><strong>Poistenie zodpovednosti</strong> — pre SFA a FP</li><li><strong>Zmluva s inštitúciou</strong> — pre VFA a PFA</li></ol><h2 id="sec-12-4">4. Povinnosti</h2><ul><li><strong>Informačná povinnosť</strong> — klient musí vedieť o vzťahu k inštitúcii</li><li><strong>Odborná starostlivosť</strong> — konať v záujme klienta</li><li><strong>Dokumentácia</strong> — písomný záznam</li><li><strong>Vzdelávanie</strong> — min. 15 hodín ročne</li></ul><h2 id="sec-12-5">5. Sankcie</h2><ul><li><strong>Pokuta</strong> — až 150 000 € FO, 500 000 € PO</li><li><strong>Pozastavenie činnosti</strong></li><li><strong>Vyradenie z registra</strong></li></ul><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[13]={title:'Typy finančných produktov SR',lead:'Životné poistenie, doplnkové dôchodkové sporenie, podielové fondy, úvery — regulácia v SR.',sections:[{id:'sec-13-1',heading:'1. Životné poistenie'},{id:'sec-13-2',heading:'2. DDS (III. pilier)'},{id:'sec-13-3',heading:'3. Podielové fondy'},{id:'sec-13-4',heading:'4. Úverové produkty'},{id:'sec-13-5',heading:'5. Regulácia'}],html:'<h2 id="sec-13-1">1. Životné poistenie</h2><ul><li><strong>Rizikové</strong> — čistá ochrana, najlacnejšie</li><li><strong>Kapitálové</strong> — ochrana + sporenie s garanciou</li><li><strong>Investičné (IŽP)</strong> — ochrana + investovanie do fondov</li></ul><div class="warn-box"><strong>⚠️ Pozor na IŽP:</strong> Vysoké poplatky (3–5% ročne). Pre investovanie sú ETF výrazne lacnejšie.</div><h2 id="sec-13-2">2. DDS (III. pilier)</h2><div class="calc-block"><span class="comment">// Výhody III. piliera</span>\n\nDaňový odpočet:         max <span class="highlight">180 €/rok</span> → úspora <span class="highlight">34 €</span>\nPríspevok zamestnávateľa: <span class="highlight">2–4% z hrubej mzdy</span> (nezdanený!)\nŠtátny príspevok:        až <span class="highlight">90 €/rok</span>\n\n<span class="comment">// 50 €/mes + zamestnávateľ 30 €/mes = 80 €/mes</span>\n<span class="comment">// Za 30 rokov pri 5%: ≈ 66 500 € na dôchodok!</span></div><h2 id="sec-13-3">3. Podielové fondy</h2><ul><li><strong>Peňažné</strong> — nízky výnos, nízke riziko</li><li><strong>Dlhopisové</strong> — stredný výnos</li><li><strong>Akciové</strong> — vysoký výnos, vysoké riziko</li><li><strong>Zmiešané</strong> — kombinácia</li></ul><div class="info-box"><strong>💡 ETF vs. podielové fondy:</strong> ETF majú 5–10× nižšie poplatky a dlhodobo lepšiu výkonnosť.</div><h2 id="sec-13-4">4. Úverové produkty</h2><table class="compare-table"><thead><tr><th>Typ</th><th>Úrok</th><th>Účel</th></tr></thead><tbody><tr><td><strong>Hypotéka</strong></td><td class="good">3–5%</td><td>Nehnuteľnosť</td></tr><tr><td><strong>Spotrebný úver</strong></td><td class="mid">5–15%</td><td>Čokoľvek</td></tr><tr><td><strong>Kreditná karta</strong></td><td class="bad">15–25%</td><td>Revolving</td></tr><tr><td><strong>SMS pôžičky</strong></td><td class="bad">100%+</td><td>Mikro</td></tr></tbody></table><h2 id="sec-13-5">5. Regulácia</h2><p>Všetky finančné produkty podliehajú regulácii <strong>NBS</strong> a európskym smerniciam (MiFID II, IDD, CRD).</p><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[14]={title:'Príprava na skúšku NBS',lead:'1 334 reálnych skúšobných otázok z databázy NBS. Štruktúra, stratégia, tipy.',sections:[{id:'sec-14-1',heading:'1. Štruktúra skúšky'},{id:'sec-14-2',heading:'2. Päť sektorov'},{id:'sec-14-3',heading:'3. Stratégia učenia'},{id:'sec-14-4',heading:'4. Simulácia skúšky'},{id:'sec-14-5',heading:'5. Tipy na úspech'}],html:'<h2 id="sec-14-1">1. Štruktúra skúšky</h2><div class="calc-block"><span class="comment">// Parametre skúšky NBS</span>\n\nPočet otázok:       <span class="highlight">25</span> (z databázy ~1 334)\nČas:                <span class="highlight">60 minút</span>\nÚspešnosť:          <span class="highlight">65% (min. 17/25)</span>\nForma:              <span class="highlight">Písomná, výber z odpovedí</span>\nPlatnosť:           <span class="highlight">Trvalá</span></div><h2 id="sec-14-2">2. Päť sektorov</h2><table class="compare-table"><thead><tr><th>Sektor</th><th>Oblasť</th><th>Témy</th></tr></thead><tbody><tr><td><strong>A</strong></td><td>Poistenie</td><td>Životné, neživotné, podmienky</td></tr><tr><td><strong>B</strong></td><td>Kapitálový trh</td><td>Cenné papiere, fondy</td></tr><tr><td><strong>C</strong></td><td>DDS</td><td>Dôchodkové sporenie</td></tr><tr><td><strong>D</strong></td><td>Prijímanie vkladov</td><td>Bankové produkty</td></tr><tr><td><strong>E</strong></td><td>Poskytovanie úverov</td><td>Hypotéky, spotrebné</td></tr></tbody></table><div class="info-box"><strong>💡 Tip:</strong> Skúšku skladáte za každý sektor zvlášť. Začnite tým, ktorý najlepšie poznáte.</div><h2 id="sec-14-3">3. Stratégia učenia</h2><ol><li><strong>Preštudujte zákon 186/2009</strong></li><li><strong>Precvičte všetkých 1 334 otázok</strong> — ideálne 2–3 krát</li><li><strong>Zamerajte sa na slabé oblasti</strong></li><li><strong>Robte simulácie na čas</strong></li><li><strong>30–60 minút denne, 2–4 týždne</strong></li></ol><h2 id="sec-14-4">4. Simulácia skúšky</h2><div class="green-box"><strong>✅ Postup:</strong> Keď dosahujete 80%+ v simuláciách, ste pripravení na reálnu skúšku.</div><h2 id="sec-14-5">5. Tipy na úspech</h2><ul><li><strong>Čítajte otázku pozorne</strong> — pozor na „nie", „okrem"</li><li><strong>Eliminujte nesprávne odpovede</strong></li><li><strong>Prvý inštinkt</strong> je často správny</li><li><strong>2.5 min na otázku</strong> — manažujte čas</li></ul><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[15]={title:'Etika finančného poradcu',lead:'Konflikt záujmov, fiduciárna povinnosť, transparentnosť odmien, sťažnosti klientov.',sections:[{id:'sec-15-1',heading:'1. Fiduciárna povinnosť'},{id:'sec-15-2',heading:'2. Konflikt záujmov'},{id:'sec-15-3',heading:'3. Transparentnosť odmien'},{id:'sec-15-4',heading:'4. Sťažnosti klientov'},{id:'sec-15-5',heading:'5. Budovanie dôvery'}],html:'<h2 id="sec-15-1">1. Fiduciárna povinnosť</h2><p>Finančný poradca má <strong>fiduciárnu povinnosť</strong> — konať v najlepšom záujme klienta.</p><div class="info-box"><strong>💡 Rozdiel:</strong> FP je platený klientom a je nezávislý. Sprostredkovateľ je platený finančnými inštitúciami formou provízií. Vždy sa pýtajte, kto a ako je platený.</div><h2 id="sec-15-2">2. Konflikt záujmov</h2><ul><li><strong>Provízne motivované odporúčania</strong></li><li><strong>Churning</strong> — zbytočné obchody pre poplatky</li><li><strong>Viazaný predaj</strong> — nutenie kúpiť nepotrebný produkt</li></ul><h2 id="sec-15-3">3. Transparentnosť odmien</h2><p>Poradca musí informovať o výške a forme odmeny, vzťahu k inštitúciám a všetkých poplatkoch.</p><div class="green-box"><strong>✅ Pravidlo:</strong> Dobrý poradca vám vždy povie, koľko zarába na vašom produkte. Ak sa vyhýba, hľadajte iného.</div><h2 id="sec-15-4">4. Sťažnosti klientov</h2><ol><li><strong>Reklamácia</strong> — písomne u sprostredkovateľa</li><li><strong>Sťažnosť na NBS</strong></li><li><strong>SOI</strong> — Slovenská obchodná inšpekcia</li><li><strong>Súdna cesta</strong></li></ol><h2 id="sec-15-5">5. Budovanie dôvery</h2><ul><li><strong>Pravidelná komunikácia</strong> — ročná revízia</li><li><strong>Vzdelávanie klienta</strong></li><li><strong>Čestnosť</strong></li><li><strong>Kontinuálne vzdelávanie</strong></li></ul><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[16]={title:'Bitcoin a blockchain základy',lead:'Proof of Work, halving, Lightning Network, cold wallet vs hot wallet, seed phrase bezpečnosť.',sections:[{id:'sec-16-1',heading:'1. Proof of Work a ťažba'},{id:'sec-16-2',heading:'2. Halving'},{id:'sec-16-3',heading:'3. Lightning Network'},{id:'sec-16-4',heading:'4. Bezpečnosť walletov'},{id:'sec-16-5',heading:'5. Kde kúpiť Bitcoin'}],html:'<h2 id="sec-16-1">1. Proof of Work a ťažba</h2><p><strong>Bitcoin</strong> využíva <strong>Proof of Work (PoW)</strong> — ťažiari riešia matematické úlohy, aby overili transakcie. Maximálna zásoba: <strong>21 miliónov BTC</strong>.</p><div class="info-box"><strong>💡 Zaujímavosť:</strong> Aktuálne je v obehu ~19.5 mil. BTC. Posledný sa vyťaží okolo roku 2140.</div><h2 id="sec-16-2">2. Halving</h2><p><strong>Halving</strong> nastáva každé ~4 roky — odmena pre ťažiarov sa zníži na polovicu:</p><div class="calc-block"><span class="comment">// História halvingov</span>\n\n2009: <span class="highlight">50 BTC</span>/blok\n2012: <span class="highlight">25 BTC</span>    (cena: ~12 → 1 100 €)\n2016: <span class="highlight">12.5 BTC</span>  (cena: ~650 → 19 000 €)\n2020: <span class="highlight">6.25 BTC</span>  (cena: ~8 700 → 60 000 €)\n2024: <span class="highlight">3.125 BTC</span></div><h2 id="sec-16-3">3. Lightning Network</h2><p>Druhá vrstva nad Bitcoinom pre okamžité a lacné transakcie. Hlavný blockchain: ~7 tx/s. Lightning: milióny.</p><h2 id="sec-16-4">4. Bezpečnosť walletov</h2><table class="compare-table"><thead><tr><th>Typ</th><th>Bezpečnosť</th><th>Pohodlnosť</th><th>Príklady</th></tr></thead><tbody><tr><td><strong>Cold wallet</strong></td><td class="good">Najvyššia</td><td class="mid">Nižšia</td><td>Ledger, Trezor</td></tr><tr><td><strong>Hot wallet</strong></td><td class="mid">Stredná</td><td class="good">Vysoká</td><td>MetaMask, Trust</td></tr><tr><td><strong>Burza</strong></td><td class="bad">Najnižšia</td><td class="good">Najvyššia</td><td>Coinbase, Binance</td></tr></tbody></table><div class="warn-box"><strong>⚠️ Seed phrase:</strong> 12/24 slov = jediný spôsob obnovenia. Nikdy nefotografujte, nikomu neposielajte. Zapíšte na papier.</div><h2 id="sec-16-5">5. Kde kúpiť Bitcoin</h2><ul><li><strong>Coinbase</strong> — najjednoduchšie pre začiatočníkov</li><li><strong>Binance</strong> — najnižšie poplatky</li><li><strong>Kraken</strong> — regulovaná v EÚ</li><li><strong>Bitcoinmaty</strong> — fyzické automaty na Slovensku</li></ul><div class="info-box"><strong>💡 Odporúčanie:</strong> Max 5–10% portfólia v kryptomenách. Len suma, ktorú si môžete dovoliť stratiť.</div><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[17]={title:'DeFi a stablecoiny',lead:'Liquidity pools, yield farming, impermanent loss, USDC vs DAI. Riziká DeFi protokolov.',sections:[{id:'sec-17-1',heading:'1. Liquidity pools'},{id:'sec-17-2',heading:'2. Yield farming'},{id:'sec-17-3',heading:'3. Impermanent loss'},{id:'sec-17-4',heading:'4. USDC vs DAI'},{id:'sec-17-5',heading:'5. Riziká DeFi'}],html:'<h2 id="sec-17-1">1. Liquidity pools</h2><p><strong>Liquidity pool</strong> je smart contract s pármi tokenov (napr. ETH/USDC) pre decentralizované obchodovanie. Za poskytovanie likvidity dostávate podiel z poplatkov.</p><div class="info-box"><strong>💡 Populárne DEX:</strong> Uniswap (Ethereum), PancakeSwap (BNB Chain), Curve (stablecoiny), Aave (lending).</div><h2 id="sec-17-2">2. Yield farming</h2><div class="calc-block"><span class="comment">// Typické výnosy v DeFi (APY)</span>\n\n<span class="highlight">Stablecoin lending (Aave):</span>    3–8%\n<span class="highlight">Liquidity pool (Uniswap):</span>     10–30%\n<span class="highlight">Yield farming (nové projekty):</span> 50–500% (vysoké riziko!)\n\n<span class="comment">// Vysoké APY = vysoké riziko!</span></div><h2 id="sec-17-3">3. Impermanent loss</h2><p>Ak sa cena jedného z tokenov v poole výrazne zmení, môžete prísť o časť hodnoty oproti HODL.</p><div class="warn-box"><strong>⚠️ Príklad:</strong> ETH/USDC pool, cena ETH +100% → impermanent loss ~5.7% oproti HODL.</div><h2 id="sec-17-4">4. USDC vs DAI</h2><table class="compare-table"><thead><tr><th>Stablecoin</th><th>Krytie</th><th>Decentralizácia</th><th>Riziko</th></tr></thead><tbody><tr><td><strong>USDC</strong></td><td class="good">1:1 USD</td><td class="bad">Centralizovaný</td><td class="good">Nízke</td></tr><tr><td><strong>DAI</strong></td><td class="mid">Crypto-collateral</td><td class="good">Decentralizovaný</td><td class="mid">Stredné</td></tr><tr><td><strong>USDT</strong></td><td class="mid">Zmiešané aktíva</td><td class="bad">Centralizovaný</td><td class="mid">Stredné</td></tr></tbody></table><h2 id="sec-17-5">5. Riziká DeFi</h2><ul><li><strong>Smart contract riziko</strong> — chyba v kóde</li><li><strong>Rug pull</strong> — tvorcovia utečú s peniazmi</li><li><strong>Oracle riziko</strong> — manipulácia cien</li><li><strong>Regulačné riziko</strong> — MiCA</li></ul><div class="green-box"><strong>✅ Ochrana:</strong> Len overené protokoly (Aave, Uniswap). Max 5% portfólia v DeFi. Vždy overte audit smart contractu.</div><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+CC[18]={title:'Regulácia krypta v EÚ (MiCA)',lead:'Markets in Crypto-Assets Regulation — čo sa mení, ako ovplyvňuje slovenských investorov.',sections:[{id:'sec-18-1',heading:'1. Čo je MiCA?'},{id:'sec-18-2',heading:'2. Povinné licencie'},{id:'sec-18-3',heading:'3. Regulácia stablecoinov'},{id:'sec-18-4',heading:'4. Reporting povinnosti'},{id:'sec-18-5',heading:'5. Dopad na SR'}],html:'<h2 id="sec-18-1">1. Čo je MiCA?</h2><p><strong>MiCA (Markets in Crypto-Assets)</strong> je prvá komplexná regulácia kryptomien v EÚ, platná od 2024.</p><div class="info-box"><strong>💡 Cieľ MiCA:</strong> Ochrana investorov, prevencia prania peňazí, stabilita fin. systému, jednotný rámec pre celú EÚ.</div><h2 id="sec-18-2">2. Povinné licencie</h2><ul><li><strong>Krypto burzy</strong> — musia získať licenciu v EÚ</li><li><strong>Custody služby</strong></li><li><strong>Krypto poradenstvo</strong></li><li><strong>Transfer služby</strong></li></ul><p>Licencia z jedného štátu platí v celej EÚ (passporting).</p><h2 id="sec-18-3">3. Regulácia stablecoinov</h2><table class="compare-table"><thead><tr><th>Typ</th><th>Popis</th><th>Regulátor</th></tr></thead><tbody><tr><td><strong>ARTs</strong></td><td>Asset-Referenced Tokens</td><td>EBA</td></tr><tr><td><strong>EMTs</strong></td><td>E-Money Tokens (1 fiat mena)</td><td>EBA</td></tr></tbody></table><div class="warn-box"><strong>⚠️ Pozor:</strong> Algoritmické stablecoiny (ako Terra/LUNA) budú pod prísnymi pravidlami alebo zakázané.</div><h2 id="sec-18-4">4. Reporting povinnosti</h2><ul><li><strong>Transakcie nad 1 000 €</strong> — povinná identifikácia (KYC)</li><li><strong>Travel Rule</strong> — info o odosielateľovi a príjemcovi</li><li><strong>Daňový reporting</strong> — burzy budú hlásiť zisky (DAC8)</li><li><strong>White paper</strong> — povinný pre nové projekty</li></ul><h2 id="sec-18-5">5. Dopad na SR</h2><ul><li><strong>Väčšia ochrana</strong> — licencované burzy</li><li><strong>Menej scamov</strong> — povinný white paper a audit</li><li><strong>Automatický daňový reporting</strong></li><li><strong>Možný odchod menších búrz</strong></li></ul><div class="green-box"><strong>✅ Záver:</strong> MiCA je pozitívna zmena pre serióznych investorov. Regulácia zvýši dôveru a priláka inštitucionálnych investorov.</div><div class="warn-box"><strong>⚠️ Upozornenie:</strong> Tento článok slúži výlučne na vzdelávacie účely — nie je finančným poradenstvom podľa §1 ods. 2 zákona č. 186/2009 Z.z.</div>'};
+
+const COURSES_CONTENT = CC;
+
+// ─── COURSE RENDERING ───────────────────────────────
 const urlId = parseInt(new URLSearchParams(window.location.search).get('id'))||6;
 const course = COURSES_META[urlId] || COURSES_META[6];
+const content = COURSES_CONTENT[urlId] || COURSES_CONTENT[6];
+
 // Update page meta
-if(course){
-  document.title = course.title + ' — FinAdvisor SK';
-  const bcTitle = document.getElementById('bc-title');
-  const bcCat = document.getElementById('bc-cat');
-  if(bcTitle) bcTitle.textContent = course.title;
-  if(bcCat) bcCat.textContent = course.cat;
-  const xpBadge = document.querySelector('.badge-xp');
-  if(xpBadge) xpBadge.textContent = '⚡ +'+course.xp+' XP';
-  const timeBadge = document.querySelector('.badge-time');
-  if(timeBadge) timeBadge.textContent = '⏱ '+course.mins+' min';
-  const xpPop = document.getElementById('xp-pop');
-  if(xpPop) xpPop.textContent = '⚡ +'+course.xp+' XP Získané!';
+document.title = course.title + ' — FinAdvisor SK';
+var bcTitle = document.getElementById('bc-title');
+var bcCat = document.getElementById('bc-cat');
+if(bcTitle) bcTitle.textContent = course.title;
+if(bcCat) bcCat.textContent = course.cat;
+var xpBadge = document.querySelector('.badge-xp');
+if(xpBadge) xpBadge.textContent = '⚡ +'+course.xp+' XP';
+var timeBadge = document.querySelector('.badge-time');
+if(timeBadge) timeBadge.textContent = '⏱ '+course.mins+' min';
+var xpPopEl = document.getElementById('xp-pop');
+if(xpPopEl) xpPopEl.textContent = '⚡ +'+course.xp+' XP Získané!';
+
+function renderCourse(id){
+  var c = COURSES_CONTENT[id] || COURSES_CONTENT[6];
+  var m = COURSES_META[id] || COURSES_META[6];
+  document.getElementById('article-title').textContent = c.title;
+  document.getElementById('article-lead').textContent = c.lead;
+  document.getElementById('article-body-mount').innerHTML = c.html;
+  document.getElementById('toc-list').innerHTML = c.sections.map(function(s,i){
+    return '<li><a href="#'+s.id+'"'+(i===0?' class="active"':'')+'>'+s.heading+'</a></li>';
+  }).join('');
+  document.getElementById('toc-dropdown').innerHTML = c.sections.map(function(s){
+    return '<a href="#'+s.id+'">'+s.heading+'</a>';
+  }).join('');
+  SECTIONS.length = 0;
+  c.sections.forEach(function(s){ SECTIONS.push(s.id); });
+  buildRelated(id, m.cat);
 }
 
-// ─── READING PROGRESS ──────────────────────────────
-const prog = document.getElementById('read-progress');
-const tocProg = document.getElementById('toc-progress');
-const tocPct = document.getElementById('toc-pct');
+function buildRelated(currentId, currentCat){
+  var allIds = Object.keys(COURSES_META).map(Number);
+  var sameCat = allIds.filter(function(id){ return id !== currentId && COURSES_META[id].cat === currentCat; });
+  var otherCat = allIds.filter(function(id){ return id !== currentId && COURSES_META[id].cat !== currentCat; });
+  var picks = sameCat.concat(otherCat).slice(0, 3);
+  var grid = document.getElementById('related-grid');
+  if(!grid) return;
+  grid.innerHTML = picks.map(function(id){
+    var m = COURSES_META[id];
+    return '<a href="/learn?id='+id+'" class="related-card">'
+      +'<div class="related-emoji">'+m.emoji+'</div>'
+      +'<div class="related-card-title">'+m.title+'</div>'
+      +'<div class="related-card-meta">⏱ '+m.mins+' min · '+m.cat+'</div>'
+      +'<div class="related-xp">+'+m.xp+' XP</div>'
+      +'</a>';
+  }).join('');
+}
 
-window.addEventListener('scroll', ()=>{
-  const scrollTop = window.scrollY;
-  const docH = document.documentElement.scrollHeight - window.innerHeight;
-  const pct = docH > 0 ? Math.min(100, (scrollTop/docH)*100) : 0;
+renderCourse(urlId);
+
+// ─── READING PROGRESS ──────────────────────────────
+var prog = document.getElementById('read-progress');
+var tocProg = document.getElementById('toc-progress');
+var tocPct = document.getElementById('toc-pct');
+
+window.addEventListener('scroll', function(){
+  var scrollTop = window.scrollY;
+  var docH = document.documentElement.scrollHeight - window.innerHeight;
+  var pct = docH > 0 ? Math.min(100, (scrollTop/docH)*100) : 0;
   prog.style.width = pct+'%';
   if(tocProg){tocProg.style.width=pct+'%'}
   if(tocPct){tocPct.textContent=Math.round(pct)+'% prečítané'}
@@ -567,46 +466,48 @@ window.addEventListener('scroll', ()=>{
 });
 
 // ─── NAVBAR SCROLL EFFECT ───────────────────────────
-const navbar = document.getElementById('navbar');
-window.addEventListener('scroll',()=>{
+var navbar = document.getElementById('navbar');
+window.addEventListener('scroll',function(){
   navbar.classList.toggle('scrolled', window.scrollY>20);
 },{passive:true});
 
 // ─── TOC ACTIVE HIGHLIGHTING ────────────────────────
-const SECTIONS = ['sec-co-su','sec-sp500','sec-naklady','sec-porovnanie','sec-ako-zacat'];
+var SECTIONS = [];
 
 function updateActiveToc(){
-  let current = SECTIONS[0];
-  SECTIONS.forEach(id=>{
-    const el=document.getElementById(id);
+  if(!SECTIONS.length) return;
+  var current = SECTIONS[0];
+  SECTIONS.forEach(function(id){
+    var el=document.getElementById(id);
     if(el && window.scrollY >= el.offsetTop - 110) current=id;
   });
-  document.querySelectorAll('.toc-list a').forEach(a=>{
+  document.querySelectorAll('.toc-list a').forEach(function(a){
     a.classList.toggle('active', a.getAttribute('href')==='#'+current);
   });
 }
 
 // ─── MOBILE TOC TOGGLE ──────────────────────────────
 function toggleToc(btn){
-  const dd = document.getElementById('toc-dropdown');
-  const arrow = document.getElementById('toc-arrow');
+  var dd = document.getElementById('toc-dropdown');
+  var arrow = document.getElementById('toc-arrow');
   dd.classList.toggle('open');
   arrow.textContent = dd.classList.contains('open') ? '▲' : '▼';
 }
 
 // ─── FINISH LESSON ──────────────────────────────────
-let finished = false;
+var finished = false;
 function finishLesson(){
   if(finished) return;
   finished = true;
-  const btn = document.getElementById('finish-btn');
-  const pop = document.getElementById('xp-pop');
+  var btn = document.getElementById('finish-btn');
+  var pop = document.getElementById('xp-pop');
   btn.textContent = '🎉 Lekcia dokončená!';
   btn.classList.add('done');
   pop.classList.add('show');
-  setTimeout(()=>pop.classList.remove('show'), 2500);
-  setTimeout(()=>{ window.location.href = '/app'; }, 2800);
+  setTimeout(function(){pop.classList.remove('show')}, 2500);
+  setTimeout(function(){ window.location.href = '/app'; }, 2800);
 }
+
 </script>
 <script src="/i18n.js"></script>
 </body>

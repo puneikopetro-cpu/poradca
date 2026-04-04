@@ -49,6 +49,7 @@ log = logging.getLogger("watchdog")
 fail_counts: dict[str, int] = defaultdict(int)
 last_alert: dict[str, float] = {}
 ALERT_COOLDOWN = 300  # don't spam same alert for 5 min
+_bg_tasks: set = set()  # keep strong references to background tasks
 
 # ─── TELEGRAM ALERT ──────────────────────────────────────────────────────────
 async def send_telegram(msg: str, client: httpx.AsyncClient):
@@ -90,22 +91,20 @@ async def trigger_redeploy(client: httpx.AsyncClient):
                 "User-Agent": "FinAdvisor-Watchdog/1.0",
             },
             json={"query": f"""mutation {{
-                variableUpsert(input: {{
-                    projectId: "{RAILWAY_PROJECT_ID}",
+                serviceInstanceRedeploy(
                     serviceId: "{RAILWAY_SERVICE_ID}",
-                    environmentId: "{RAILWAY_ENV_ID}",
-                    name: "WATCHDOG_REDEPLOY",
-                    value: "{int(time.time())}"
-                }})
+                    environmentId: "{RAILWAY_ENV_ID}"
+                )
             }}"""},
             timeout=15,
         )
         data = resp.json()
-        if data.get("data", {}).get("variableUpsert"):
-            log.info("Railway redeploy triggered successfully")
-            return True
-        log.error(f"Railway redeploy failed: {data}")
-        return False
+        errors = data.get("errors")
+        if errors:
+            log.error(f"Railway redeploy error: {errors}")
+            return False
+        log.info("Railway redeploy triggered successfully")
+        return True
     except Exception as e:
         log.error(f"Railway API error: {e}")
         return False
@@ -163,9 +162,12 @@ async def check_endpoint(ep: dict, client: httpx.AsyncClient) -> dict:
     return result
 
 
-# ─── SECURITY: Rate-limit / Brute-force detection ────────────────────────────
-# This runs inside the app as a separate background check.
-# It polls the /health endpoint for anomalies and alerts on sustained errors.
+def fire(coro):
+    """Schedule a coroutine as a background task, keeping a strong reference."""
+    task = asyncio.create_task(coro)
+    _bg_tasks.add(task)
+    task.add_done_callback(_bg_tasks.discard)
+
 
 _DOWN_SINCE: dict[str, datetime] = {}
 
@@ -190,7 +192,7 @@ async def run_checks(client: httpx.AsyncClient):
             if fail_counts[name] > 0:
                 log.info(f"  ✅ {name} recovered ({ms}ms)")
                 if should_alert(f"recover_{name}"):
-                    asyncio.create_task(send_telegram(
+                    fire(send_telegram(
                         f"✅ <b>FinAdvisor SK — ВІДНОВЛЕНО</b>\n"
                         f"Сервіс <code>{name}</code> знову працює ({ms}ms)",
                         client,
@@ -208,14 +210,14 @@ async def run_checks(client: httpx.AsyncClient):
                     f"Послідовних збоїв: {fail_counts[name]}\n"
                     f"Час: {now_str}"
                 )
-                asyncio.create_task(send_telegram(msg, client))
+                fire(send_telegram(msg, client))
 
                 # Auto-redeploy if health endpoint is down
                 if name == "health" and fail_counts[name] >= FAIL_THRESHOLD * 2:
                     log.warning("Health endpoint down — triggering Railway redeploy")
                     redeployed = await trigger_redeploy(client)
                     if redeployed:
-                        asyncio.create_task(send_telegram(
+                        fire(send_telegram(
                             "🔄 <b>Watchdog</b>: автоматично тригернуто редеплой на Railway",
                             client,
                         ))
